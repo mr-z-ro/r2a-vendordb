@@ -537,6 +537,10 @@ p.button.bempty:hover,
 p.button.edit {
 	width: 116px;
 }
+p.button.full-list {
+	width: 175px;
+    margin-left: 10px;
+}
 p.button.vendorlist:hover {
 	background-color: rgba(2, 59, 72, 0.1);
 	transition: .35s;
@@ -588,4 +592,13 @@ p.link:hover {
 .tags li {
 	list-style: none;
 	font-size: 14px;
+}
+
+#google_translate_element {
+    text-align: right;
+    padding: 0.2em 0.2em 0 0;
+}
+
+.header-inner {
+    padding: 0 0 20px 0;
 }

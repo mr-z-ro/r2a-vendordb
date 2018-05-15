@@ -76,6 +76,8 @@
 
         <div class="sqs-announcement-bar-dropzone"></div>
 
+        <div id="google_translate_element"></div>
+
         <div id="sidecarNav">
             <div id="mobileNavWrapper" class="nav-wrapper" data-content-field="navigation-mobileNav">
                 <nav id="mobileNavigation">
@@ -408,7 +410,7 @@
                                         <div class="sqs-block image-block sqs-block-image sqs-text-ready" data-block-type="5" id="block-yui_3_17_2_72_1481311138865_7160">
                                             <div class="sqs-block-content" id="yui_3_17_2_1_1509478945824_112">
                                                 <p>Select an area of expertise you're looking to augment with an innovative technical solution. If you're not ready for this process, but are still curious about the regtech vendors that are out there, check out the full <a href="list.html">vendor list</a>.</p>
-                                                <p><i class="material-icons">help_outline</i>Need help with objectives? <a href="https://www.dropbox.com/s/fwtpesrqij1gcn7/How%20to%20Use%20Vendor%20Database%20-%20Step%201%20-%20Objectives.pdf?dl=0" onclick="ga('send', 'event', 'Materials', 'download_objective_guide', '');" target="_blank"><br/>Try our collaborative brainstorming guide</a></p>
+                                                <p><i class="material-icons notranslate">help_outline</i>Need help with objectives? <a href="https://www.dropbox.com/s/fwtpesrqij1gcn7/How%20to%20Use%20Vendor%20Database%20-%20Step%201%20-%20Objectives.pdf?dl=0" onclick="ga('send', 'event', 'Materials', 'download_objective_guide', '');" target="_blank"><br/>Try our collaborative brainstorming guide</a></p>
                                             </div>
                                         </div>
                                         <div class="sqs-block html-block sqs-block-html" data-block-type="2" id="block-577fc909ebbd1af4c46fa423"></div>
@@ -432,7 +434,8 @@
                                         <div class="sqs-block html-block sqs-block-html" data-block-type="2" id="block-577fc909ebbd1af4c46fa423">
                                             <div class="sqs-block-content">
                                                 <h2 class="box-title left fleft oldtitle">Objective</h2>
-                                                <a href="step-1.html"><p class="edit button bsmall binactive fright" data-step="1">Edit</p></a>
+                                                <a href="list.html"><p class="full-list button bsmall binactive fright" data-step="1">Full vendor list</p></a>
+                                                <a href="step-1.html"><p class="edit button bsmall binactive fright" data-step="1">Change</p></a>
                                             </div>
                                         </div>
                                         <div class="sqs-block image-block sqs-block-image sqs-text-ready" data-block-type="5" id="block-yui_3_17_2_72_1481311138865_7160">
@@ -753,7 +756,7 @@
                                                 </select>
                                                 <div conv-fork="will_share_contact">
                                                     <div conv-case="yes">
-                                                        <select name="contact_type" conv-question="Great, thanks, {name}:0! How might we contact you?" callback="botga">
+                                                        <select name="contact_type" multiline-options="true" conv-question="Great, thanks, {name}:0! How might we contact you?" callback="botga">
                                                             <option value="email">send an email</option>
                                                             <option value="phone">call a phone number</option>
                                                             <option value="other">contact via other means</option>
@@ -769,9 +772,9 @@
                                                 <input type="text" conv-question="Just one last question, if you don't mind..." no-answer="true">
                                                 <input type="text" conv-question="Once you've answered this question, I'll reset myself and we can start another exciting conversation." no-answer="true">
                                                 <select name="nps" conv-question="On a scale from 1 to 5, how likely are you to recommend this resource to friends and colleagues?" callback="botga">
-                                                        <option value="4">1</option>
-                                                        <option value="4">2</option>
-                                                        <option value="4">3</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
                                                         <option value="4">4</option>
                                                         <option value="5">5</option>
                                                 </select>
@@ -799,5 +802,11 @@
         <script type="text/javascript" src="static/js/autosize.min.js"></script>
         <script type="text/javascript" src="static/js/jquery/jquery.convform.js"></script>
         <script type="text/javascript" src="static/js/chatbot_management.js"></script>
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.FloatPosition.TOP_RIGHT, autoDisplay: true}, 'google_translate_element');
+            }
+        </script>
+        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     </body>
 </html>
