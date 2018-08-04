@@ -87,6 +87,7 @@
     // start the map in South-East England
     map.setView(new L.LatLng(25.307577, 1.743395), 2);
     map.addLayer(osm);
+    map.invalidateSize()
 
     Promise.all([
         d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTYPKjQhh6VuHPB0fezf1fOH4s90BSbrVNjYP5QHGAwtJTeYmB1vGxrZQHKtkgHlNxAsdITJu5g5J6p/pub?gid=553555379&single=true&output=csv"),
@@ -240,5 +241,7 @@
             function (n) {
                 return this.substr(0, n - 1) + (this.length > n ? '&hellip;' : '');
             };
+
+        map.invalidateSize()
     })
 </script>
