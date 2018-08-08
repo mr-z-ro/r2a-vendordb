@@ -131,6 +131,10 @@
                           <div class="collection">
                             <a href="https://www.r2accelerator.org/learningnetwork/">Learning Network</a>
                           </div>
+                          
+                          <div class="collection">
+                            <a href="http://vendors.r2accelerator.org?v=deployments-tracker">RegTech Deployment Tracker</a>
+                          </div>
                         </div>
                     </div>
 
@@ -182,6 +186,9 @@
                           </div>
                           <div class="collection">
                             <a href="https://www.r2accelerator.org/authorities/">Authorities</a>
+                          </div>
+                          <div class="collection">
+                            <a href="http://vendors.r2accelerator.org">Vendor Database</a>
                           </div>
                         </div>
                     </div>
@@ -275,9 +282,11 @@
                                       <div class="collection">
                                         <a href="https://www.r2accelerator.org/publications/">Knowledge Products</a>
                                       </div>
-
                                       <div class="collection">
                                         <a href="https://www.r2accelerator.org/learningnetwork/">Learning Network</a>
+                                      </div>
+                                      <div class="collection">
+                                        <a href="http://vendors.r2accelerator.org?v=deployments-tracker">RegTech Deployment Tracker</a>
                                       </div>
                                     </div>
                                 </div>
@@ -333,6 +342,9 @@
                                       <div class="collection">
                                         <a href="https://www.r2accelerator.org/authorities/">Authorities</a>
                                       </div>
+                                      <div class="collection">
+                                        <a href="http://vendors.r2accelerator.org">Vendor Database</a>
+                                      </div>
                                     </div>
                                 </div>
 
@@ -357,91 +369,7 @@
             <div id="postHeader" class="">
             </div>
             <main id="page" role="main">
-                <div class="sqs-layout sqs-grid-12 columns-12 content">
-                    <div class="row sqs-row vendors-header">
-                        <div class="col sqs-col-12 span-12">
-                            Regtech for Regulators Vendor Database<span class="vendors-number"></span> vendors
-                        </div>
-                    </div>
-                    <div class="row sqs-row">
-                        <div class="col sqs-col-4 filtering-column">
-                            <div class="row sqs-row filtering-column-content">
-                                <div class="col sqs-col-12 filter-box" data-step="0">
-                                    <div class="col sqs-col-12 filter-title-box">
-                                        <div class="row sqs-row">
-                                            <span class="filter-title">
-                                                <i class="fa fa-angle-down m-r-sm angle"></i>
-                                                Category
-                                                <i class="fa fa-industry m-l-sm"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="col sqs-col-12 selected-filter selected-filter-0 hidden" data-step="0">
-                                        <i class="fa fa-filter"></i>
-                                        <i class="fa fa-times"></i>
-                                        <span></span>
-                                    </div>
-                                    <div class="col sqs-col-12 choices-box choices-step-0">
-                                    </div>
-                                </div>
-
-                                <div class="col sqs-col-12 span-12 filter-box" data-step="1">
-                                    <div class="col sqs-col-12 filter-title-box">
-                                        <span class="filter-title">
-                                            <i class="fa fa-angle-right m-r-sm angle"></i>
-                                            Use case
-                                            <i class="fa fa-list m-l-sm"></i>
-                                        </span>
-                                    </div>
-                                    <div class="col sqs-col-12 selected-filter selected-filter-1 hidden" data-step="1">
-                                        <i class="fa fa-filter"></i>
-                                        <i class="fa fa-times"></i>
-                                        <span></span>
-                                    </div>
-                                    <div class="col sqs-col-12 choices-box choices-step-1 hidden" data-step="1">
-                                    </div>
-                                </div>
-
-                                <div class="col sqs-col-12 span-12 filter-box" data-step="2">
-                                    <div class="col sqs-col-12 filter-title-box">
-                                        <span class="filter-title">
-                                            <i class="fa fa-angle-right m-r-sm angle"></i>
-                                            Technology
-                                            <i class="fa fa-cogs m-l-sm"></i>
-                                        </span>
-                                    </div>
-                                    <div class="col sqs-col-12 selected-filter selected-filter-2 hidden" data-step="2">
-                                        <i class="fa fa-filter"></i>
-                                        <i class="fa fa-times"></i>
-                                        <span></span>
-                                    </div>
-                                    <div class="col sqs-col-12 choices-box choices-step-2 hidden">
-                                    </div>
-                                </div>
-
-                                <div class="col sqs-col-12 span-12 filter-box" data-step="3">
-                                    <div class="col sqs-col-12 filter-title-box">
-                                        <span class="filter-title">
-                                            <i class="fa fa-angle-right m-r-sm angle"></i>
-                                            Location availability
-                                            <i class="fa fa-map m-l-sm"></i>
-                                        </span>
-                                    </div>
-                                    <div class="col sqs-col-12 selected-filter selected-filter-3 hidden" data-step="3">
-                                        <i class="fa fa-filter"></i>
-                                        <i class="fa fa-times"></i>
-                                        <span></span>
-                                    </div>
-                                    <div class="col sqs-col-12 choices-box choices-step-3 hidden">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col sqs-col-8 vendors-list">
-                        </div>
-                    </div>
-                </div>
+                <!-- Content Dynamically Loaded -->
             </main>
 
             <section id="chatbot">
@@ -586,3 +514,30 @@
         <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     </body>
 </html>
+
+
+<script>
+    $(document).ready(function loadpage() {
+        var params = window.location.search.substr(1).split('&').reduce(function (q, query) {
+            var chunks = query.split('=');
+            var key = chunks[0];
+            var value = chunks[1];
+            return (q[key] = value, q);
+        }, {});
+
+        page = "vendors";
+        if (params["v"]) {
+            page = params['v'];
+        }
+
+        $.ajax({
+            url: page + '.html',
+            success: function (output) {
+                $("main").html(output);
+            },
+            error: function () {
+                window.location.href = "https://www.r2accelerator.org/404";
+            }
+        });
+    })
+</script>
