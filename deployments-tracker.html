@@ -21,7 +21,7 @@
     }
 
     #mapid {
-        height: 60vw;
+        height: 50vw;
     }
 
     .loading {
@@ -94,6 +94,8 @@
 <script>
 
     // setTimeout(function () { //Simulate loading conditions
+    var categories = ['Exploratory', 'Developmental', 'Operational']
+
 
     Promise.all([
         d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTYPKjQhh6VuHPB0fezf1fOH4s90BSbrVNjYP5QHGAwtJTeYmB1vGxrZQHKtkgHlNxAsdITJu5g5J6p/pub?gid=553555379&single=true&output=csv"),
@@ -109,7 +111,7 @@
         // create the tile layer with correct attribution
         var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         var osmAttrib = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
-        var osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 4, attribution: osmAttrib});
+        var osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 4, attribution: osmAttrib });
 
         // start the map in South-East England
         var initialZoom = 2.25
@@ -148,21 +150,29 @@
             return acc
         }, []);
 
+        console.log("Map Data", mapData)
+
         var geojson;
         geojson = L.geoJson(mapData, { style: style }).addTo(map);
 
         function getColor(d) {
-            return d > 11 ? '#0b2229' :
-                d > 9 ? '#0e3639' :
-                    d > 5 ? '#104949' :
-                        d > 4 ? '#135d5a' :
-                            d > 3 ? '#16716a' :
-                                d > 2 ? '#18847a' :
-                                    '#1b988a';
+            return d >= 2 ? '#1b988a' :
+                d >= 1 ? '#16716a' :
+                    '#104949';
+        }
+
+        function highestIndexOfDeplyments(deployments) {
+            var found = -1
+            categories.slice().reverse().forEach((cat, idx) => {
+                if (deployments.filter(e => { return e.Status.trim() === categories[idx] }).length > 0) {
+                    found = idx
+                }
+            })
+            return found
         }
 
         function style(feature) {
-            var color = getColor(feature.properties.deployments.length)
+            var color = getColor(highestIndexOfDeplyments(feature.properties.deployments))
             return {
                 fillColor: color,
                 fillOpacity: 0.5,
@@ -174,7 +184,7 @@
         }
 
         function highlightFeature(e) {
-            var color = getColor(e.target.feature.properties.deployments.length)
+            var color = getColor(highestIndexOfDeplyments(e.target.feature.properties.deployments))
             var layer = e.target;
 
             layer.setStyle({
@@ -249,15 +259,13 @@
         legend.onAdd = function (map) {
 
             var div = L.DomUtil.create('div', 'info legend'),
-                grades = [1, 2, 3, 4, 5, 9, 11],
                 labels = [];
 
             // div.innerHTML += '<h4>Deployments</h4>'
             // loop through our density intervals and generate a label with a colored square for each interval
-            for (var i = 0; i < grades.length; i++) {
+            for (var i = 0; i < categories.length; i++) {
                 div.innerHTML +=
-                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                    grades[i] + (grades[i + 1] ? '<br>' : '+');
+                    '<i style="background:' + getColor(i) + '"></i> ' + categories[i] + '<br>';
             }
 
             return div;
@@ -273,5 +281,7 @@
         map.invalidateSize()
     })
     // }, 3000);
+
+
 
 </script>

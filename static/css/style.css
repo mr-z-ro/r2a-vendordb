@@ -1,0 +1,7 @@
+.fa-times {
+    color: #20988A;
+}
+
+.choice-selected > span .fa-times {
+    font-size: 1em;
+}

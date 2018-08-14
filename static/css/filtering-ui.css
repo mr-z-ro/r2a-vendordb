@@ -168,7 +168,7 @@ body {
 /* chatbot */
 #chatbot {
 	position: fixed;
-	bottom: -10px;
+	bottom: -0px;
 	right: 20px;
 	z-index: 9999;
     background: #ebebeb;
@@ -184,13 +184,13 @@ body {
 	line-height: 1.4em;
     font-weight: 400;
     background: #622269;
-    background: #00a69c;
+    background: #1B988A;
     color: white;
     border-radius: 16px 16px 0 0;
 }
 
 .chatbot-title {
-	display: none;
+	/* display: none; */
 	cursor: pointer;
 }
 
