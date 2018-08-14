@@ -219,7 +219,7 @@ function refreshUI() {
 }
 
 function showNumberOfVendors() {
-    $(".vendors-number").html(": " + parseInt(vendorsToShow.length));
+    $(".vendors-number").html(parseInt(vendorsToShow.length));
 }
 
 function attachTooltipPlugin() {
