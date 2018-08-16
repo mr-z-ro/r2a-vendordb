@@ -1,3 +1,5 @@
+<!-- <link rel="stylesheet" href="static/css/filtering-ui.css"> -->
+<link rel="stylesheet" href="static/css/site.css">
 <link rel="stylesheet" href="static/js/leaflet/leaflet.css" />
 <!-- Make sure you put this AFTER Leaflet's CSS -->
 <script src="static/js/leaflet/leaflet.js"></script>
@@ -5,16 +7,34 @@
 
 
 <style>
-    /* Needs Media Queries! */
-
-    /* .header {
-        margin: 20px 20px;
-        font-weight: normal;
+    .vendor-image {
+        /* display: block; */
+        max-width: calc(100% - 10px);
+        max-height: calc(100% - 10px);
+        width: auto;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        vertical-align: middle;
     }
 
-    .header>h1 {
-        margin-top: 50px;
-    } */
+    .new-vendor {
+        text-align: center;
+        vertical-align: middle;
+        padding: 5px;
+        white-space: nowrap;
+        display: flex;
+        /*Uncomment below to center horizontally*/
+        /*justify-content: center;*/
+        align-items: center;
+
+    }
+
+    .helper {
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+    }
 
     .header>p>a {
         color: #2C9385;
@@ -60,16 +80,6 @@
         margin-right: 8px;
         opacity: 0.7;
     }
-
-    /* @media only screen and (min-width: 768px) { */
-
-    /* For mobile phones: */
-
-    /* .header {
-            margin: 20px 188px;
-            font-weight: normal;
-        }
-    } */
 </style>
 
 
@@ -89,15 +99,15 @@
                             data-image="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/"
                             data-image-dimensions="2500x20" data-image-focal-point="0.5,0.5" data-load="false" data-image-id="58ae0a57be659483ad503888"
                             data-type="image" data-position-mode="standard" src="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/?format=1000w"
-                            data-image-resolution="1000w" style="left: -2.30126%; top: 0%; width: 104.603%; height: 100%; position: absolute;">
+                            data-image-resolution="1000w" style="left: -2.30126%; top: 0%; width: 104.603%; height: 100%; position: absolute; noWrap: true;">
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <p>This map will be updated to reflect RegTech deployments around the world. Don't see your country's solution listed? Contact
-        us at
+    <p>This map will be updated to reflect RegTech deployments around the world. Don't see your country's solution listed?
+        Contact us at
         <a href="mailto:R2A@bfaglobal.com">R2A@bfaglobal.com</a>.</p>
 </div>
 
@@ -111,6 +121,9 @@
     </div>
 </div>
 
+
+<div class="deployment-list">
+</div>
 
 
 <script>
@@ -127,6 +140,7 @@
         var contents = document.getElementById('contents');
         contents.innerHTML = '<div id="mapid"></div>'
         var map = L.map('mapid', {
+            zoomControl: false,
             zoomSnap: 0.05
         });
 
@@ -144,6 +158,11 @@
             [62.613873, 178.533777]
         ])
         map.addLayer(osm);
+
+        L.control.zoom({
+            position: 'bottomleft'
+        }).addTo(map);
+
 
         const deployments = data[0]
         const countryShapes = data[1]['features']
@@ -167,7 +186,7 @@
                     countryShape.properties.deployments = [deployment];
                     acc.push(countryShape)
                 }
-            } else { console.warn("Could Not Find Shape for Country", deployment.Country, ) }
+            } else { console.warn("Could Not Find Shape for Country", deployment.Country) }
 
             return acc
         }, []);
@@ -205,28 +224,34 @@
             };
         }
 
-        function highlightFeature(e) {
-            var color = getColor(highestIndexOfDeplyments(e.target.feature.properties.deployments))
-            var layer = e.target;
+        // function highlightFeature(e) {
+        //     var color = getColor(highestIndexOfDeplyments(e.target.feature.properties.deployments))
+        //     var layer = e.target;
 
-            layer.setStyle({
-                // weight: 5,
-                color: color,
-                dashArray: '',
-                opacity: 1,
-                fillOpacity: 0.7
-            });
+        //     layer.setStyle({
+        //         // weight: 5,
+        //         color: color,
+        //         dashArray: '',
+        //         opacity: 1,
+        //         fillOpacity: 0.7
+        //     });
 
-            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-                layer.bringToFront();
-            }
+        //     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        //         layer.bringToFront();
+        //     }
 
-            info.update(layer.feature.properties);
-        }
+        //     info.update(layer.feature.properties);
+        // }
 
-        function resetHighlight(e) {
-            geojson.resetStyle(e.target);
-            info.update();
+        // function resetHighlight(e) {
+        //     geojson.resetStyle(e.target);
+        //     info.update();
+        // }
+
+        function selectedCountry(e) {
+            console.log(e.target)
+            showDeployments(e.target.feature.properties.deployments)
+            zoomToFeature(e)
         }
 
         function zoomToFeature(e) {
@@ -235,9 +260,9 @@
 
         function onEachFeature(feature, layer) {
             layer.on({
-                mouseover: highlightFeature,
-                mouseout: resetHighlight,
-                click: zoomToFeature
+                // mouseover: highlightFeature,
+                // mouseout: resetHighlight,
+                click: selectedCountry
             });
         }
 
@@ -245,6 +270,21 @@
             style: style,
             onEachFeature: onEachFeature
         }).addTo(map);
+
+        var filter = L.control({ position: 'topleft' })
+        filter.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'sqs-block-content'); // create a div with a class "info"
+            this._div.innerHTML = `
+            <div class="sqs-block button-block sqs-block-button" data-block-type="53" id="block-yui_3_17_2_1_1524083958927_9987" style="padding-top: 0px;">
+                <div class="sqs-block-content" id="yui_3_17_2_1_1534259152465_183">
+                    <div class="sqs-block-button-container--center" data-alignment="center" data-button-size="small" id="yui_3_17_2_1_1534259152465_182">
+                        <a href="" class="sqs-block-button-element--small sqs-block-button-element" data-initialized="true" target="_blank" id="yui_3_17_2_1_1534259152465_387">Filter</a>
+                    </div>
+                </div>
+            </div>            `
+            return this._div;
+        }
+        filter.addTo(map)
 
         // Hover over
 
@@ -301,6 +341,40 @@
             };
 
         map.invalidateSize()
+
+        jQuery(document).bind('leaflet.map', function (event, map, lMap) {
+            lMap.zoomControl.setPosition('bottomleft');
+        });
+
+        function showDeployments(deploymentsToShow) {
+            console.log(deploymentsToShow);
+
+            var deployments = d3.nest()
+                .key(function (d) { return d.Agency; })
+                .entries(deploymentsToShow);
+
+            console.log(deployments);
+
+            var targetElement = $(".deployment-list");
+            targetElement.html("");
+            if (!deployments.length) {
+                console.log("no deployments to show");
+                var noVendorsMessage = '<p class="no-vendors-message">There are no deployments available with the active filters.<br />\
+        Review current filters on the left-hand side.</p>';
+                targetElement.append(noVendorsMessage);
+            }
+
+            deployments.forEach(deployment => {
+                console.log(deployment);
+
+                targetElement.append($(`
+                    <div class="new-vendor" data-vendor-id="1` + deployment.key + `">
+
+                        <img class="vendor-image" src="` + deployment.values[0]["Image"] + `" />
+                    </div>`
+                ));
+            })
+        }
     })
     // }, 3000);
 
