@@ -7,41 +7,12 @@
 
 
 <style>
-    .vendor-image {
-        /* display: block; */
-        max-width: calc(100% - 10px);
-        max-height: calc(100% - 10px);
-        width: auto;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-        vertical-align: middle;
-    }
-
-    .new-vendor {
-        text-align: center;
-        vertical-align: middle;
-        padding: 5px;
-        white-space: nowrap;
-        display: flex;
-        /*Uncomment below to center horizontally*/
-        /*justify-content: center;*/
-        align-items: center;
-
-    }
-
-    .helper {
-        display: inline-block;
-        height: 100%;
-        vertical-align: middle;
-    }
-
     .header>p>a {
         color: #2C9385;
     }
 
     #mapid {
-        height: 40vw;
+        height: 400px;
     }
 
     .loading {
@@ -80,12 +51,34 @@
         margin-right: 8px;
         opacity: 0.7;
     }
+
+    .vendor-image {
+        /* display: block; */
+        max-width: calc(100% - 10px);
+        max-height: calc(100% - 10px);
+        width: auto;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        vertical-align: middle;
+    }
+
+    .new-vendor {
+        text-align: center;
+        vertical-align: middle;
+        padding: 5px;
+        white-space: nowrap;
+        display: flex;
+        /*Uncomment below to center horizontally*/
+        /*justify-content: center;*/
+        align-items: center;
+    }
 </style>
 
 
 
 <div class="header">
-    <h1>RegTech Deployment Tracker</h1>
+    <h1>RegTech<sup>2</sup>/SupTech Solution Tracker</h1>
 
     <div class="sqs-block image-block sqs-block-image sqs-text-ready" data-block-type="5" id="block-bb71bcf01551221b5acb">
         <div class="sqs-block-content" id="yui_3_17_2_1_1534208712486_120">
@@ -106,23 +99,119 @@
         </div>
     </div>
 
-    <p>This map will be updated to reflect RegTech deployments around the world. Don't see your country's solution listed?
-        Contact us at
+    <p>This map will be updated to reflect RegTech solution around the world. Don't see your country's solution listed? Contact
+        us at
         <a href="mailto:R2A@bfaglobal.com">R2A@bfaglobal.com</a>.</p>
 </div>
 
 <!-- <iframe width="100%" height="520" frameborder="0" src="https://bfaglobal.carto.com/u/bfglobal-admin/builder/c2a72170-bd93-436a-9fb2-067fd9706bcb/embed"
     allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe> -->
 
-<div id="contents">
-    <div class="loading">
-        <h4>Loading...</h4>
-        <i class="fas fa-circle-notch fa-spin"></i>
+<div class="sqs-layout sqs-grid-12 columns-12 content">
+    <div class="row sqs-row">
+        <div class="col sqs-col-4 filtering-column">
+            <div class="row sqs-row filtering-column-content">
+                <div class="col sqs-col-12 filter-box vendors-header" data-step="0" style="padding-left:20px;">
+                    <span class="vendors-number"></span> solutions
+                </div>
+                <div class="col sqs-col-12 filter-box" data-step="0">
+                    <div class="col sqs-col-12 filter-title-box">
+                        <div class="row sqs-row">
+                            <span class="filter-title">
+                                <i class="fa fa-angle-down m-r-sm angle"></i>
+                                Category
+                                <i class="fa fa-industry m-l-sm"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col sqs-col-12 selected-filter selected-filter-0 hidden" data-step="0">
+                        <i class="fa fa-filter"></i>
+                        <i class="fa fa-times"></i>
+                        <span></span>
+                    </div>
+                    <div class="col sqs-col-12 choices-box choices-step-0">
+                    </div>
+                </div>
+
+                <div class="col sqs-col-12 span-12 filter-box" data-step="1">
+                    <div class="col sqs-col-12 filter-title-box">
+                        <span class="filter-title">
+                            <i class="fa fa-angle-right m-r-sm angle"></i>
+                            Use case
+                            <i class="fa fa-list m-l-sm"></i>
+                        </span>
+                    </div>
+                    <div class="col sqs-col-12 selected-filter selected-filter-1 hidden" data-step="1">
+                        <i class="fa fa-filter"></i>
+                        <i class="fa fa-times"></i>
+                        <span></span>
+                    </div>
+                    <div class="col sqs-col-12 choices-box choices-step-1 hidden" data-step="1">
+                    </div>
+                </div>
+
+                <div class="col sqs-col-12 span-12 filter-box" data-step="2">
+                    <div class="col sqs-col-12 filter-title-box">
+                        <span class="filter-title">
+                            <i class="fa fa-angle-right m-r-sm angle"></i>
+                            Technology
+                            <i class="fa fa-cogs m-l-sm"></i>
+                        </span>
+                    </div>
+                    <div class="col sqs-col-12 selected-filter selected-filter-2 hidden" data-step="2">
+                        <i class="fa fa-filter"></i>
+                        <i class="fa fa-times"></i>
+                        <span></span>
+                    </div>
+                    <div class="col sqs-col-12 choices-box choices-step-2 hidden">
+                    </div>
+                </div>
+
+                <div class="col sqs-col-12 span-12 filter-box" data-step="3">
+                    <div class="col sqs-col-12 filter-title-box">
+                        <span class="filter-title">
+                            <i class="fa fa-angle-right m-r-sm angle"></i>
+                            Location availability
+                            <i class="fa fa-map m-l-sm"></i>
+                        </span>
+                    </div>
+                    <div class="col sqs-col-12 selected-filter selected-filter-3 hidden" data-step="3">
+                        <i class="fa fa-filter"></i>
+                        <i class="fa fa-times"></i>
+                        <span></span>
+                    </div>
+                    <div class="col sqs-col-12 choices-box choices-step-3 hidden">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col sqs-col-8">
+
+
+            <div id="contents">
+                <div class="loading">
+                    <h4>Loading...</h4>
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                </div>
+            </div>
+
+
+            <div class="deployment-list">
+            </div>
+
+            <!-- <div class="sqs-block button-block sqs-block-button" data-block-type="53" id="block-yui_3_17_2_1_1524083958927_9987" style="padding-top: 20px;">
+                    <div class="sqs-block-content" id="yui_3_17_2_1_1534259152465_183">
+                        <div class="sqs-block-button-container--center" data-alignment="center" data-button-size="medium" id="yui_3_17_2_1_1534259152465_182">
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSc4srjLTgwozGTdQbWDyH6BHTFWpO7YREbJ8qu8Am6JrEWl4Q/viewform" class="sqs-block-button-element--medium sqs-block-button-element"
+                                data-initialized="true" target="_blank" id="yui_3_17_2_1_1534259152465_387">Don't see your solution listed? Let us know.</a>
+                        </div>
+                    </div>
+                </div> -->
+        </div>
     </div>
-</div>
 
 
-<div class="deployment-list">
 </div>
 
 
@@ -140,7 +229,6 @@
         var contents = document.getElementById('contents');
         contents.innerHTML = '<div id="mapid"></div>'
         var map = L.map('mapid', {
-            zoomControl: false,
             zoomSnap: 0.05
         });
 
@@ -159,9 +247,6 @@
         ])
         map.addLayer(osm);
 
-        L.control.zoom({
-            position: 'bottomleft'
-        }).addTo(map);
 
 
         const deployments = data[0]
@@ -271,52 +356,52 @@
             onEachFeature: onEachFeature
         }).addTo(map);
 
-        var filter = L.control({ position: 'topleft' })
-        filter.onAdd = function (map) {
-            this._div = L.DomUtil.create('div', 'sqs-block-content'); // create a div with a class "info"
-            this._div.innerHTML = `
-            <div class="sqs-block button-block sqs-block-button" data-block-type="53" id="block-yui_3_17_2_1_1524083958927_9987" style="padding-top: 0px;">
-                <div class="sqs-block-content" id="yui_3_17_2_1_1534259152465_183">
-                    <div class="sqs-block-button-container--center" data-alignment="center" data-button-size="small" id="yui_3_17_2_1_1534259152465_182">
-                        <a href="" class="sqs-block-button-element--small sqs-block-button-element" data-initialized="true" target="_blank" id="yui_3_17_2_1_1534259152465_387">Filter</a>
-                    </div>
-                </div>
-            </div>            `
-            return this._div;
-        }
-        filter.addTo(map)
+        // var filter = L.control({ position: 'topleft' })
+        // filter.onAdd = function (map) {
+        //     this._div = L.DomUtil.create('div', 'sqs-block-content'); // create a div with a class "info"
+        //     this._div.innerHTML = `
+        //     <div class="sqs-block button-block sqs-block-button" data-block-type="53" id="block-yui_3_17_2_1_1524083958927_9987" style="padding-top: 0px;">
+        //         <div class="sqs-block-content" id="yui_3_17_2_1_1534259152465_183">
+        //             <div class="sqs-block-button-container--center" data-alignment="center" data-button-size="small" id="yui_3_17_2_1_1534259152465_182">
+        //                 <a href="" class="sqs-block-button-element--small sqs-block-button-element" data-initialized="true" target="_blank" id="yui_3_17_2_1_1534259152465_387">Filter</a>
+        //             </div>
+        //         </div>
+        //     </div>            `
+        //     return this._div;
+        // }
+        // filter.addTo(map)
 
         // Hover over
 
-        var info = L.control();
+        // var info = L.control();
 
-        info.onAdd = function (map) {
-            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-            this.update();
-            return this._div;
-        };
+        // info.onAdd = function (map) {
+        //     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+        //     this.update();
+        //     return this._div;
+        // };
 
-        // method that we will use to update the control based on feature properties passed
-        info.update = function (properties) {
-            var infoText = ""
-            if (properties) {
-                infoText += '<b>' + properties.country_name + '</b><br />' + properties.deployments.length + ' use cases:<p><ul>'
-                properties.deployments.forEach(deployment => {
-                    infoText += "<li>" + deployment["Use case"].trunc(30) + "</li>"
-                })
-                infoText += "</ul>"
+        // // method that we will use to update the control based on feature properties passed
+        // info.update = function (properties) {
+        //     var infoText = ""
+        //     if (properties) {
+        //         infoText += '<b>' + properties.country_name + '</b><br />' + properties.deployments.length + ' use cases:<p><ul>'
+        //         properties.deployments.forEach(deployment => {
+        //             infoText += "<li>" + deployment["Use case"].trunc(30) + "</li>"
+        //         })
+        //         infoText += "</ul>"
 
-            } else {
-                infoText = 'Hover over a country'
-            }
-            this._div.innerHTML = infoText
-        };
+        //     } else {
+        //         infoText = 'Hover over a country'
+        //     }
+        //     this._div.innerHTML = infoText
+        // };
 
-        info.addTo(map);
+        // info.addTo(map);
 
         // Legend
 
-        var legend = L.control({ position: 'bottomright' });
+        var legend = L.control({ position: 'topright' });
 
         legend.onAdd = function (map) {
 
