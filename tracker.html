@@ -17,7 +17,7 @@
 
     .loading {
         text-align: center;
-        margin: 275px 0px;
+        margin: 125px 0px;
     }
 
     .loading>i {
@@ -73,6 +73,39 @@
         /*justify-content: center;*/
         align-items: center;
     }
+
+    .uk-accordion-title,
+    .uk-accordion-title:focus,
+    .uk-accordion-title:hover,
+    .uk-accordion-title::after {
+        font-size: 1.2em;
+        font-weight: 400;
+        color: #00a69c;
+        fill: #00a69c;
+    }
+
+    a.uk-accordion-title>i {
+        margin: 0px 10px;
+    }
+
+    /* ul>li {
+        border-color: #0a2d37;
+        border-width: 2px;
+        border-style: solid;
+        padding: 20px;
+    } */
+
+    .filtering-column>ul {
+        margin:0px 20px 0px 35px;
+    }
+    ul>li>div {
+        margin-left: 10px;
+    }
+
+    .uk-badge {
+        background-color: #00a69c;
+        margin: 0px 10px;
+    }
 </style>
 
 
@@ -110,80 +143,41 @@
 <div class="sqs-layout sqs-grid-12 columns-12 content">
     <div class="row sqs-row">
         <div class="col sqs-col-4 filtering-column">
-            <div class="row sqs-row filtering-column-content">
-                <div class="col sqs-col-12 filter-box vendors-header" data-step="0" style="padding-left:20px;">
-                    <span class="vendors-number"></span> solutions
-                </div>
-                <div class="col sqs-col-12 filter-box" data-step="0">
-                    <div class="col sqs-col-12 filter-title-box">
-                        <div class="row sqs-row">
-                            <span class="filter-title">
-                                <i class="fa fa-angle-down m-r-sm angle"></i>
-                                Category
-                                <i class="fa fa-industry m-l-sm"></i>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col sqs-col-12 selected-filter selected-filter-0 hidden" data-step="0">
-                        <i class="fa fa-filter"></i>
-                        <i class="fa fa-times"></i>
-                        <span></span>
-                    </div>
-                    <div class="col sqs-col-12 choices-box choices-step-0">
-                    </div>
-                </div>
+                <!-- <div class="col sqs-col-12 filter-box vendors-header" data-step="0" style="padding-left:20px;"> -->
+                    <!-- <span class="vendors-number"></span> solutions -->
+                <!-- </div> -->
 
-                <div class="col sqs-col-12 span-12 filter-box" data-step="1">
-                    <div class="col sqs-col-12 filter-title-box">
-                        <span class="filter-title">
-                            <i class="fa fa-angle-right m-r-sm angle"></i>
-                            Use case
-                            <i class="fa fa-list m-l-sm"></i>
-                        </span>
-                    </div>
-                    <div class="col sqs-col-12 selected-filter selected-filter-1 hidden" data-step="1">
-                        <i class="fa fa-filter"></i>
-                        <i class="fa fa-times"></i>
-                        <span></span>
-                    </div>
-                    <div class="col sqs-col-12 choices-box choices-step-1 hidden" data-step="1">
-                    </div>
-                </div>
 
-                <div class="col sqs-col-12 span-12 filter-box" data-step="2">
-                    <div class="col sqs-col-12 filter-title-box">
-                        <span class="filter-title">
-                            <i class="fa fa-angle-right m-r-sm angle"></i>
+                <ul id="filters" uk-accordion="multiple: false">
+                    <li>
+                        <a class="uk-accordion-title" href="#">
+                            Use Cases
+                            <i class="fa fa-list m-l-sm"></i> 
+                        </a>
+                        <div id='use-case-choices' class="uk-accordion-content"> </div>
+                    </li>
+                    <li>
+                        <a class="uk-accordion-title" href="#">
                             Technology
-                            <i class="fa fa-cogs m-l-sm"></i>
-                        </span>
-                    </div>
-                    <div class="col sqs-col-12 selected-filter selected-filter-2 hidden" data-step="2">
-                        <i class="fa fa-filter"></i>
-                        <i class="fa fa-times"></i>
-                        <span></span>
-                    </div>
-                    <div class="col sqs-col-12 choices-box choices-step-2 hidden">
-                    </div>
-                </div>
+                            <i class="fa fa-cogs m-l-sm"></i> 
+                        </a>
+                        <div class="uk-accordion-content">
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                consequat. Duis aute irure dolor reprehenderit.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="uk-accordion-title" href="#">
+                            Location
+                            <i class="fa fa-map m-l-sm"></i> 
+                        </a>
+                        <div class="uk-accordion-content">
+                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                pariatur. Excepteur sint occaecat cupidatat proident.</p>
+                        </div>
+                    </li>
+                </ul>
 
-                <div class="col sqs-col-12 span-12 filter-box" data-step="3">
-                    <div class="col sqs-col-12 filter-title-box">
-                        <span class="filter-title">
-                            <i class="fa fa-angle-right m-r-sm angle"></i>
-                            Location availability
-                            <i class="fa fa-map m-l-sm"></i>
-                        </span>
-                    </div>
-                    <div class="col sqs-col-12 selected-filter selected-filter-3 hidden" data-step="3">
-                        <i class="fa fa-filter"></i>
-                        <i class="fa fa-times"></i>
-                        <span></span>
-                    </div>
-                    <div class="col sqs-col-12 choices-box choices-step-3 hidden">
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="col sqs-col-8">
@@ -200,14 +194,6 @@
             <div class="deployment-list">
             </div>
 
-            <!-- <div class="sqs-block button-block sqs-block-button" data-block-type="53" id="block-yui_3_17_2_1_1524083958927_9987" style="padding-top: 20px;">
-                    <div class="sqs-block-content" id="yui_3_17_2_1_1534259152465_183">
-                        <div class="sqs-block-button-container--center" data-alignment="center" data-button-size="medium" id="yui_3_17_2_1_1534259152465_182">
-                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSc4srjLTgwozGTdQbWDyH6BHTFWpO7YREbJ8qu8Am6JrEWl4Q/viewform" class="sqs-block-button-element--medium sqs-block-button-element"
-                                data-initialized="true" target="_blank" id="yui_3_17_2_1_1534259152465_387">Don't see your solution listed? Let us know.</a>
-                        </div>
-                    </div>
-                </div> -->
         </div>
     </div>
 
@@ -215,10 +201,34 @@
 </div>
 
 
+<script src="./static/js/map-utils.js"></script>
+<script src="./static/js/data-formatter.js"></script>
+<script src="./static/js/accordian.js"></script>
 <script>
 
     // setTimeout(function () { //Simulate loading conditions
     var categories = ['Exploratory', 'Developmental', 'Operational']
+    var allCountryShapes = []
+
+    var allDeployments = [];
+    var uniqueUseCases = []
+    var mapData = []
+
+    var mapConfig = {
+        containerElementId: 'contents',
+        mapId: 'mapid',
+        osmUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        zoomSnap: 0.05,
+        minZoom: 1,
+        maxZoom: 4,
+        mapStyle: 'margin-right: 15px;',
+        latLonBounds: [
+            [66.263456, -177.891759],
+            [-27.816707, 144.109652],
+            [62.613873, 178.533777]
+        ]
+    }
 
 
     Promise.all([
@@ -226,60 +236,30 @@
         d3.json("./static/js/leaflet/countries.json")
     ]).then((data) => {
 
-        var contents = document.getElementById('contents');
-        contents.innerHTML = '<div id="mapid"></div>'
-        var map = L.map('mapid', {
-            zoomSnap: 0.05
-        });
+        // Format Data
+        formatData(data)
 
-        // create the tile layer with correct attribution
-        var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        var osmAttrib = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
-        var osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 4, attribution: osmAttrib });
+        // Display Formatted Data
+        displayAccordianValues(uniqueUseCases, { 
+            elementId: '#use-case-choices',
+            selected: (event => {
+                console.log("Selected", event.target.innerText)
+            }),
+            mouseover: (event => {
+                console.log("Badge Count", event.target.innerText)
+                $(event.target).append('<span class="uk-badge">100</span>')
+            }),
+            mouseout: (event => {
+                console.log("Remove", event.target.innerHTML)
+                $('.uk-badge').remove()
+            })
+         })
+        // setTimeout(()=>{
+        //     UIkit.accordion('#filters').toggle(0, true);
+        // }, 1500)
 
-        // start the map in South-East England
-        var initialZoom = 2.25
-        map.setView(new L.LatLng(25.307577, 1.743395), initialZoom);
-        map.fitBounds([
-            [66.263456, -177.891759],
-            [-27.816707, 144.109652],
-            [62.613873, 178.533777]
-        ])
-        map.addLayer(osm);
-
-
-
-        const deployments = data[0]
-        const countryShapes = data[1]['features']
-
-        console.log(countryShapes)
-        const mapData = deployments.reduce((acc, deployment) => {
-            deployment.Country = deployment.Country.trim()
-
-            var countryShape = countryShapes.filter(shape => {
-                return shape.properties.country_name === deployment.Country |
-                    (shape.properties.alternative_names.indexOf(deployment.Country) !== -1)
-            })[0]
-
-            if (countryShape !== undefined) {
-                var foundShapeDeployment = acc.filter(shapeDeployments => {
-                    return shapeDeployments.properties.country_name === countryShape.properties.country_name
-                })[0]
-                if (foundShapeDeployment !== undefined) {
-                    foundShapeDeployment.properties.deployments.push(deployment)
-                } else {
-                    countryShape.properties.deployments = [deployment];
-                    acc.push(countryShape)
-                }
-            } else { console.warn("Could Not Find Shape for Country", deployment.Country) }
-
-            return acc
-        }, []);
-
-        console.log("Map Data", mapData)
-
-        var geojson;
-        geojson = L.geoJson(mapData, { style: style }).addTo(map);
+        var map = createMap(mapConfig)
+        var geojson = L.geoJson(mapData, { style: style }).addTo(map);
 
         function getColor(d) {
             return d >= 2 ? '#1b988a' :
@@ -309,30 +289,6 @@
             };
         }
 
-        // function highlightFeature(e) {
-        //     var color = getColor(highestIndexOfDeplyments(e.target.feature.properties.deployments))
-        //     var layer = e.target;
-
-        //     layer.setStyle({
-        //         // weight: 5,
-        //         color: color,
-        //         dashArray: '',
-        //         opacity: 1,
-        //         fillOpacity: 0.7
-        //     });
-
-        //     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-        //         layer.bringToFront();
-        //     }
-
-        //     info.update(layer.feature.properties);
-        // }
-
-        // function resetHighlight(e) {
-        //     geojson.resetStyle(e.target);
-        //     info.update();
-        // }
-
         function selectedCountry(e) {
             console.log(e.target)
             showDeployments(e.target.feature.properties.deployments)
@@ -356,48 +312,6 @@
             onEachFeature: onEachFeature
         }).addTo(map);
 
-        // var filter = L.control({ position: 'topleft' })
-        // filter.onAdd = function (map) {
-        //     this._div = L.DomUtil.create('div', 'sqs-block-content'); // create a div with a class "info"
-        //     this._div.innerHTML = `
-        //     <div class="sqs-block button-block sqs-block-button" data-block-type="53" id="block-yui_3_17_2_1_1524083958927_9987" style="padding-top: 0px;">
-        //         <div class="sqs-block-content" id="yui_3_17_2_1_1534259152465_183">
-        //             <div class="sqs-block-button-container--center" data-alignment="center" data-button-size="small" id="yui_3_17_2_1_1534259152465_182">
-        //                 <a href="" class="sqs-block-button-element--small sqs-block-button-element" data-initialized="true" target="_blank" id="yui_3_17_2_1_1534259152465_387">Filter</a>
-        //             </div>
-        //         </div>
-        //     </div>            `
-        //     return this._div;
-        // }
-        // filter.addTo(map)
-
-        // Hover over
-
-        // var info = L.control();
-
-        // info.onAdd = function (map) {
-        //     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-        //     this.update();
-        //     return this._div;
-        // };
-
-        // // method that we will use to update the control based on feature properties passed
-        // info.update = function (properties) {
-        //     var infoText = ""
-        //     if (properties) {
-        //         infoText += '<b>' + properties.country_name + '</b><br />' + properties.deployments.length + ' use cases:<p><ul>'
-        //         properties.deployments.forEach(deployment => {
-        //             infoText += "<li>" + deployment["Use case"].trunc(30) + "</li>"
-        //         })
-        //         infoText += "</ul>"
-
-        //     } else {
-        //         infoText = 'Hover over a country'
-        //     }
-        //     this._div.innerHTML = infoText
-        // };
-
-        // info.addTo(map);
 
         // Legend
 
@@ -463,6 +377,46 @@
     })
     // }, 3000);
 
+    function formatData(data) {
+        allDeployments = data[0]
+        allDeployments.forEach((dataEl) => {
+            const useCasePropName = 'Use case'
+            if (useCasePropName in dataEl) {
+                dataEl.useCases = dataEl[useCasePropName].split(';')
+            }
+        })
+        console.log('allDeployments', allDeployments)
 
+        allCountryShapes = data[1]['features']
+        console.log('allCountryShapes', allCountryShapes)
+
+        uniqueUseCases = uniqueProperties(allDeployments, 'useCases').sort()
+        console.log('uniqueUseCases', uniqueUseCases)
+
+        mapData = allDeployments.reduce((acc, deployment) => {
+            deployment.Country = deployment.Country.trim()
+
+            var countryShape = allCountryShapes.filter(shape => {
+                return shape.properties.country_name === deployment.Country |
+                    (shape.properties.alternative_names.indexOf(deployment.Country) !== -1)
+            })[0]
+
+            if (countryShape !== undefined) {
+                var foundShapeDeployment = acc.filter(shapeDeployments => {
+                    return shapeDeployments.properties.country_name === countryShape.properties.country_name
+                })[0]
+                if (foundShapeDeployment !== undefined) {
+                    foundShapeDeployment.properties.deployments.push(deployment)
+                } else {
+                    countryShape.properties.deployments = [deployment];
+                    acc.push(countryShape)
+                }
+            } else { console.warn("Could Not Find Shape for Country", deployment.Country) }
+
+            return acc
+        }, []);
+
+        console.log("Map Data", mapData)
+    }
 
 </script>
