@@ -327,7 +327,9 @@
         deployments.forEach(deployment => {
             targetElement.append($(`
                 <div class="new-vendor" id="` + deployment.key + `">
-                    <img class="vendor-image" src="` + deployment.values[0]["Image"] + `" />
+                    <object class="vendor-image" data="./static/images/agency-icons/`+ deployment.key +`.png" type="image/png">
+                        <img class="vendor-image" src="` + deployment.values[0]["Image"] + `" />
+                    </object>
                 </div>`
             ));
         })
@@ -607,7 +609,11 @@
                 <i class="fa fa-times vendor-modal-close-times" onclick="modal.close();"></i>`
 
         content = `
-            <div class="sqs-row vendor-modal-logo"> <img src="`+ deployments[0].Image + `" class="vendor-modal-logo-image"> </div>
+            <div class="sqs-row vendor-modal-logo"> 
+                <object class="vendor-modal-logo-image" data="./static/images/agency-icons/`+ deploymentId +`.png" type="image/png">
+                    <img src="`+ deployments[0].Image + `" class="vendor-modal-logo-image"> 
+                </object>
+            </div>
             <br>
             <p><span><strong>Region:</strong> ` + deployments[0].Region + `</span></p>
             <p><span><strong>Country:</strong> ` + deployments[0].Country + `</span></p>
