@@ -359,7 +359,7 @@
         $('#selected-filter').html(filterHTML)
 
         $('.filter').click((event) => {
-            removeFilter(event.target.innerText)
+            removeFilter(event.currentTarget.innerText)
         })
     }
 
