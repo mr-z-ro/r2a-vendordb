@@ -180,27 +180,21 @@
                         Use Cases
                         <i class="fa fa-list m-l-sm"></i>
                     </a>
-                    <div id='use-case-choices' class="uk-accordion-content"> </div>
+                    <div id='useCases-choices' class="uk-accordion-content"> </div>
                 </li>
                 <li>
                     <a class="uk-accordion-title" href="#">
                         Technology
                         <i class="fa fa-cogs m-l-sm"></i>
                     </a>
-                    <div class="uk-accordion-content">
-                        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                            consequat. Duis aute irure dolor reprehenderit.</p>
-                    </div>
+                    <div id='tech-choices' class="uk-accordion-content"> </div>
                 </li>
                 <li>
                     <a class="uk-accordion-title" href="#">
                         Location
                         <i class="fa fa-map m-l-sm"></i>
                     </a>
-                    <div class="uk-accordion-content">
-                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat proident.</p>
-                    </div>
+                    <div id='locations-choices' class="uk-accordion-content"> </div>
                 </li>
             </ul>
         </div>
@@ -277,7 +271,7 @@
 
         setTimeout(() => {
             UIkit.accordion('#filters').toggle(0, true);
-        }, 1500)
+        }, 1000)
 
 
         // Legend
@@ -289,8 +283,6 @@
             var div = L.DomUtil.create('div', 'info legend'),
                 labels = [];
 
-            // div.innerHTML += '<h4>Deployments</h4>'
-            // loop through our density intervals and generate a label with a colored square for each interval
             for (var i = 0; i < categories.length; i++) {
                 div.innerHTML +=
                     '<i style="background:' + getColor(i) + '"></i> ' + categories[i] + '<br>';
@@ -408,37 +400,54 @@
     }
 
     function updateAccordianFilters() {
+        displayAccordianValues(filteredFilters('useCases', selectedFilters.useCases), accordianConfigForFilterKey('useCases'))
+        displayAccordianValues(filteredFilters('technology', selectedFilters.tech), accordianConfigForFilterKey('tech'))
+        displayAccordianValues(filteredFilters('Country', selectedFilters.locations), accordianConfigForFilterKey('locations'))
+    }
 
-        remainingUseCases = uniqueProperties(selectedDeployments, 'useCases').sort();
-        selectedFilters.useCases.forEach(useCase => {
-            console.log("remainig", remainingUseCases)
-            index = remainingUseCases.indexOf(useCase)
+    function filteredFilters(key, selections) {
+        remainingFilters = uniqueProperties(selectedDeployments, key).sort();
+        selections.forEach(filter => {
+            console.log("remainig", remainingFilters)
+            index = remainingFilters.indexOf(filter)
             if (index !== -1) {
-                console.log("removing", useCase)
-                remainingUseCases.splice(index, 1)
+                console.log("removing", filter)
+                remainingFilters.splice(index, 1)
             }
         })
-        console.log("remainig", remainingUseCases)
+        return remainingFilters
+    }
 
-        displayAccordianValues(remainingUseCases, {
-            elementId: '#use-case-choices',
-            selected: (event => {
-                $('.uk-badge').remove()
-                addFilter('useCases', event.target.innerText)
-            }),
-            mouseover: (event => {
-                // console.log("Badge Count", event.target.innerText)
-                copiedFilters = jQuery.extend(true, {}, selectedFilters);
-                copiedFilters['useCases'].push(event.target.innerText)
-                matched = deploymentsMatchingFilters(selectedDeployments, copiedFilters)
-                $(event.target).append('<span class="uk-badge">' + matched.length + '</span>')
-            }),
-            mouseout: (event => {
-                $('.uk-badge').remove()
-            }),
+    function accordianConfigForFilterKey(key) {
+        return {
+            elementId: '#' + key + '-choices',
+            selected: accordianSelectionForFilterType(key),
+            mouseover: accordianMouseoverForFilterType(key),
+            mouseout: accordianMouseOut(),
             emptyText: "All options selected"
-        })
+        }
+    }
 
+    function accordianSelectionForFilterType(filterType) {
+        return (event) => {
+            $('.uk-badge').remove()
+            addFilter(filterType, event.target.innerText)
+        }
+    }
+
+    function accordianMouseoverForFilterType(filterType) {
+        return (event) => {
+            copiedFilters = jQuery.extend(true, {}, selectedFilters);
+            copiedFilters[filterType].push(event.target.innerText)
+            matched = deploymentsMatchingFilters(selectedDeployments, copiedFilters)
+            $(event.target).append('<span class="uk-badge">' + matched.length + '</span>')
+        }
+    }
+
+    function accordianMouseOut() {
+        return (event) => {
+            $('.uk-badge').remove()
+        }
     }
 
     function deploymentsMatchingFilters(deployments, matchFilters) {
@@ -451,6 +460,20 @@
                 if (filterKey === 'useCases') {
                     filters.forEach(filter => {
                         if (deployment.useCases.indexOf(filter) === -1) {
+                            matchesAllFilters = false
+                        }
+                    })
+                }
+                if (filterKey === 'tech') {
+                    filters.forEach(filter => {
+                        if (deployment.technology.indexOf(filter) === -1) {
+                            matchesAllFilters = false
+                        }
+                    })
+                }
+                if (filterKey === 'locations') {
+                    filters.forEach(filter => {
+                        if (filter !== deployment.Country) {
                             matchesAllFilters = false
                         }
                     })
@@ -477,6 +500,12 @@
                     return el.trim()
                 })
             }
+            const techPropName = 'Tech'
+            if (techPropName in dataEl) {
+                dataEl.technology = dataEl[techPropName].split(';').map(el => {
+                    return el.trim()
+                })
+            }
         })
         console.log('allDeployments', allDeployments)
 
@@ -488,12 +517,14 @@
             acc[element.key] = element.values
             return acc
         }, {})
-        console.log("Nested Deployment", groupedSolutions)
-
 
 
         filterOptions.useCases = uniqueProperties(allDeployments, 'useCases').sort()
         console.log('filterOptions.useCases', filterOptions.useCases)
+        filterOptions.tech = uniqueProperties(allDeployments, 'Tech').sort()
+        console.log('filterOptions.tech', filterOptions.tech)
+        filterOptions.locations = uniqueProperties(allDeployments, 'Country').sort()
+        console.log('filterOptions.locations', filterOptions.locations)
 
     }
 
@@ -552,19 +583,14 @@
     }
 
     function selectedCountry(e) {
-        console.log(e.target)
-        showDeployments(e.target.feature.properties.deployments)
-        zoomToFeature(e)
-    }
-
-    function zoomToFeature(e) {
-        map.fitBounds(e.target.getBounds());
+        var country = e.target.feature.properties.country_name
+        if (selectedFilters.locations.indexOf(country) === -1) {
+            addFilter('locations', country)
+        }
     }
 
     function onEachFeature(feature, layer) {
         layer.on({
-            // mouseover: highlightFeature,
-            // mouseout: resetHighlight,
             click: selectedCountry
         });
     }
