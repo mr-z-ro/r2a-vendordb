@@ -8,26 +8,32 @@ function displayAccordianValues(values, configOptions) {
     }
 
     if (validConfig(config)) {
-        valueEls = ''
-        values.forEach(value => {
-            valueEls += '<li>' + value + '</li>'
-        });
-        console.log('valueEls', valueEls)
+        $(config[elementIdKey]).empty();
 
-        $(configOptions[elementIdKey]).append($('<ul class="uk-list uk-list-large">' + valueEls + '</ul>'))
+        if (values.length > 0) {
+            valueEls = ''
+            values.forEach(value => {
+                valueEls += '<li>' + value + '</li>'
+            });
+            console.log('valueEls', valueEls)
 
-        var listElement = $(configOptions[elementIdKey] + '> ul')
+            $(config[elementIdKey]).append($('<ul class="uk-list uk-list-large">' + valueEls + '</ul>'))
 
-        if ('selected' in config) {
-            listElement.click(config.selected)
-        }
+            var listElement = $(config[elementIdKey] + '> ul')
 
-        if ('mouseover' in config) {
-            listElement.mouseover(config.mouseover)
-        }
-        if ('mouseout' in config) {
-            listElement.mouseout(config.mouseout)
-        }
+            if ('selected' in config) {
+                listElement.click(config.selected)
+            }
+
+            if ('mouseover' in config) {
+                listElement.mouseover(config.mouseover)
+            }
+            if ('mouseout' in config) {
+                listElement.mouseout(config.mouseout)
+            }
+        } else {
+            $(config[elementIdKey]).html(config.emptyText);
+        } 
     }
 
 }

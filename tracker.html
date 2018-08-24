@@ -94,10 +94,21 @@
         border-style: solid;
         padding: 20px;
     } */
+    .filter {
+        border-color: #0a2d37;
+        color: #0a2d37;
+        border-width: 2px;
+        border-style: solid;
+        padding: 10px;
+        margin-right: 5px;
+        margin-bottom: 10px;
+        display: inline-block;
+    }
 
     .filtering-column>ul {
-        margin:0px 20px 0px 35px;
+        margin: 0px 10px 0px 24px;
     }
+
     ul>li>div {
         margin-left: 10px;
     }
@@ -105,6 +116,11 @@
     .uk-badge {
         background-color: #00a69c;
         margin: 0px 10px;
+    }
+
+    .sqs-layout>.sqs-row {
+        margin-left: 0px;
+        margin-right: 0px;
     }
 </style>
 
@@ -137,51 +153,61 @@
         <a href="mailto:R2A@bfaglobal.com">R2A@bfaglobal.com</a>.</p>
 </div>
 
-<!-- <iframe width="100%" height="520" frameborder="0" src="https://bfaglobal.carto.com/u/bfglobal-admin/builder/c2a72170-bd93-436a-9fb2-067fd9706bcb/embed"
-    allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe> -->
+
+<!-- <div class="sqs-layout sqs-grid-12 columns-12" style="margin:20px 0px;">
+    <div class="row sqs-row">
+        <div class="col sqs-col-4">
+        </div>
+    </div>
+</div> -->
+
 
 <div class="sqs-layout sqs-grid-12 columns-12 content">
     <div class="row sqs-row">
         <div class="col sqs-col-4 filtering-column">
-                <!-- <div class="col sqs-col-12 filter-box vendors-header" data-step="0" style="padding-left:20px;"> -->
-                    <!-- <span class="vendors-number"></span> solutions -->
-                <!-- </div> -->
+
+            <div style="margin:10px 0px 20px 24px">
+                <span id="solutions-number"></span> solutions
+            </div>
 
 
-                <ul id="filters" uk-accordion="multiple: false">
-                    <li>
-                        <a class="uk-accordion-title" href="#">
-                            Use Cases
-                            <i class="fa fa-list m-l-sm"></i> 
-                        </a>
-                        <div id='use-case-choices' class="uk-accordion-content"> </div>
-                    </li>
-                    <li>
-                        <a class="uk-accordion-title" href="#">
-                            Technology
-                            <i class="fa fa-cogs m-l-sm"></i> 
-                        </a>
-                        <div class="uk-accordion-content">
-                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                consequat. Duis aute irure dolor reprehenderit.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <a class="uk-accordion-title" href="#">
-                            Location
-                            <i class="fa fa-map m-l-sm"></i> 
-                        </a>
-                        <div class="uk-accordion-content">
-                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                                pariatur. Excepteur sint occaecat cupidatat proident.</p>
-                        </div>
-                    </li>
-                </ul>
+            <ul id="filters" uk-accordion="multiple: false">
+                <li>
+                    <a class="uk-accordion-title" href="#">
+                        Use Cases
+                        <i class="fa fa-list m-l-sm"></i>
+                    </a>
+                    <div id='use-case-choices' class="uk-accordion-content"> </div>
+                </li>
+                <li>
+                    <a class="uk-accordion-title" href="#">
+                        Technology
+                        <i class="fa fa-cogs m-l-sm"></i>
+                    </a>
+                    <div class="uk-accordion-content">
+                        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            consequat. Duis aute irure dolor reprehenderit.</p>
+                    </div>
+                </li>
+                <li>
+                    <a class="uk-accordion-title" href="#">
+                        Location
+                        <i class="fa fa-map m-l-sm"></i>
+                    </a>
+                    <div class="uk-accordion-content">
+                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat proident.</p>
+                    </div>
+                </li>
+            </ul>
 
         </div>
 
         <div class="col sqs-col-8">
 
+            <div id="selected-filter">
+
+            </div>
 
             <div id="contents">
                 <div class="loading">
@@ -211,8 +237,21 @@
     var allCountryShapes = []
 
     var allDeployments = [];
-    var uniqueUseCases = []
     var mapData = []
+
+    var selectedDeployments = [];
+
+    var filterOptions = {
+        useCases: [],
+        tech: [],
+        locations: [],
+    }
+
+    var selectedFilters = {
+        useCases: [],
+        tech: [],
+        locations: [],
+    }
 
     var mapConfig = {
         containerElementId: 'contents',
@@ -240,20 +279,9 @@
         formatData(data)
 
         // Display Formatted Data
-        displayAccordianValues(uniqueUseCases, { 
-            elementId: '#use-case-choices',
-            selected: (event => {
-                console.log("Selected", event.target.innerText)
-            }),
-            mouseover: (event => {
-                console.log("Badge Count", event.target.innerText)
-                $(event.target).append('<span class="uk-badge">100</span>')
-            }),
-            mouseout: (event => {
-                console.log("Remove", event.target.innerHTML)
-                $('.uk-badge').remove()
-            })
-         })
+
+        updateSelectedDeployments()
+
         // setTimeout(()=>{
         //     UIkit.accordion('#filters').toggle(0, true);
         // }, 1500)
@@ -377,12 +405,126 @@
     })
     // }, 3000);
 
+
+    function addFilter(key, value) {
+        selectedFilters[key].push(value);
+        updateFilterBarList()
+        updateSelectedDeployments()
+    }
+
+
+
+    function updateFilterBarList() {
+
+        $('#selected-filter').empty()
+        var filterHTML = ''
+        Object.keys(selectedFilters).forEach(filterKey => {
+            var filters = selectedFilters[filterKey]
+            console.log(filters);
+            filters.forEach(filter => {
+                filterHTML += '<div class="filter">' + filter + ' <i class="fa fa-times" aria-hidden="true"></i></div>'
+            });
+        });
+        $('#selected-filter').html(filterHTML)
+
+        $('.filter').click((event) => {
+            removeFilter(event.target.innerText)
+        })
+    }
+
+    function removeFilter(value) {
+        removeSelectedFilter(value)
+        updateFilterBarList()
+        updateSelectedDeployments()
+    }
+
+    function removeSelectedFilter(value) {
+        Object.keys(selectedFilters).forEach(filterKey => {
+            var index = selectedFilters[filterKey].indexOf(value.trim())
+            if (index !== -1) {
+                selectedFilters[filterKey].splice(index, 1)
+            }
+        });
+    }
+
+    function updateSelectedDeployments() {
+        selectedDeployments = deploymentsMatchingFilters(allDeployments, selectedFilters)
+        $('#solutions-number').html(selectedDeployments.length)
+
+        updateAccordianFilters()
+        // Update Map Here!
+    }
+
+    function updateAccordianFilters() {
+
+        remainingUseCases = uniqueProperties(selectedDeployments, 'useCases').sort();
+        selectedFilters.useCases.forEach(useCase => {
+            console.log("remainig",remainingUseCases)
+            index = remainingUseCases.indexOf(useCase)
+            if (index !== -1) {
+                console.log("removing",useCase)
+                remainingUseCases.splice(index, 1)
+            }
+        })
+        console.log("remainig",remainingUseCases)
+
+        displayAccordianValues(remainingUseCases, {
+            elementId: '#use-case-choices',
+            selected: (event => {
+                // console.log("Selected", event.target.innerText)
+                $('.uk-badge').remove()
+                addFilter('useCases', event.target.innerText)
+            }),
+            mouseover: (event => {
+                // console.log("Badge Count", event.target.innerText)
+                copiedFilters = jQuery.extend(true, {}, selectedFilters);
+                copiedFilters['useCases'].push(event.target.innerText)
+                console.log(copiedFilters)
+                matched = deploymentsMatchingFilters(selectedDeployments, copiedFilters)
+                console.log("matched", matched)
+                $(event.target).append('<span class="uk-badge">' + matched.length + '</span>')
+            }),
+            mouseout: (event => {
+                // console.log("Remove", event.target.innerHTML)
+                $('.uk-badge').remove()
+            }),
+            emptyText: "All options selected"
+        })
+
+    }
+
+    function deploymentsMatchingFilters(deployments, matchFilters) {
+        var matchedDeployments = [];
+
+        deployments.forEach(deployment => {
+            var matchesAllFilters = true;
+            Object.keys(matchFilters).forEach(filterKey => {
+                var filters = matchFilters[filterKey]
+                if (filterKey === 'useCases') {
+                    filters.forEach(filter => {
+                        if (deployment.useCases.indexOf(filter) === -1) {
+                            matchesAllFilters = false
+                        }
+                    })
+                }
+
+            })
+            if (matchesAllFilters) {
+                matchedDeployments.push(deployment)
+            }
+        })
+
+        return matchedDeployments
+    }
+
     function formatData(data) {
         allDeployments = data[0]
         allDeployments.forEach((dataEl) => {
             const useCasePropName = 'Use case'
             if (useCasePropName in dataEl) {
-                dataEl.useCases = dataEl[useCasePropName].split(';')
+                dataEl.useCases = dataEl[useCasePropName].split(';').map(el=>{
+                    return el.trim()
+                })
             }
         })
         console.log('allDeployments', allDeployments)
@@ -390,8 +532,8 @@
         allCountryShapes = data[1]['features']
         console.log('allCountryShapes', allCountryShapes)
 
-        uniqueUseCases = uniqueProperties(allDeployments, 'useCases').sort()
-        console.log('uniqueUseCases', uniqueUseCases)
+        filterOptions.useCases = uniqueProperties(allDeployments, 'useCases').sort()
+        console.log('filterOptions.useCases', filterOptions.useCases)
 
         mapData = allDeployments.reduce((acc, deployment) => {
             deployment.Country = deployment.Country.trim()
