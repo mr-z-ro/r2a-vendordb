@@ -127,6 +127,11 @@
         margin-left: 0px;
         margin-right: 0px;
     }
+
+    .jBox-content>p {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
 </style>
 
 
@@ -158,13 +163,6 @@
         <a href="mailto:R2A@bfaglobal.com">R2A@bfaglobal.com</a>.</p>
 </div>
 
-
-<!-- <div class="sqs-layout sqs-grid-12 columns-12" style="margin:20px 0px;">
-    <div class="row sqs-row">
-        <div class="col sqs-col-4">
-        </div>
-    </div>
-</div> -->
 
 
 <div class="sqs-layout sqs-grid-12 columns-12 content">
@@ -235,6 +233,7 @@
     var allCountryShapes = []
 
     var allDeployments = [];
+    var groupedSolutions = {}
 
     var selectedDeployments = [];
 
@@ -257,15 +256,11 @@
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
         zoomSnap: 0.05,
         minZoom: 1,
-        maxZoom: 4,
-        mapStyle: 'margin-right: 15px;',
-        latLonBounds: [
-            [66.263456, -177.891759],
-            [-27.816707, 144.109652],
-            [62.613873, 178.533777]
-        ]
+        maxZoom: 6,
+        mapStyle: 'margin:0px 15px 10px 0px;',
     }
 
+    var modal
 
     Promise.all([
         d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTYPKjQhh6VuHPB0fezf1fOH4s90BSbrVNjYP5QHGAwtJTeYmB1vGxrZQHKtkgHlNxAsdITJu5g5J6p/pub?gid=553555379&single=true&output=csv"),
@@ -280,9 +275,9 @@
 
         updateSelectedDeployments()
 
-        // setTimeout(()=>{
-        //     UIkit.accordion('#filters').toggle(0, true);
-        // }, 1500)
+        setTimeout(() => {
+            UIkit.accordion('#filters').toggle(0, true);
+        }, 1500)
 
 
         // Legend
@@ -329,7 +324,7 @@
         console.log(deployments);
 
         var targetElement = $(".deployment-list");
-        targetElement.html("");
+        targetElement.empty();
         if (!deployments.length) {
             console.log("no deployments to show");
             var noVendorsMessage = '<p class="no-vendors-message">There are no deployments available with the active filters.<br />\
@@ -338,14 +333,15 @@
         }
 
         deployments.forEach(deployment => {
-            console.log(deployment);
-
             targetElement.append($(`
-                    <div class="new-vendor" data-vendor-id="1` + deployment.key + `">
-
-                        <img class="vendor-image" src="` + deployment.values[0]["Image"] + `" />
-                    </div>`
+                <div class="new-vendor" id="` + deployment.key + `">
+                    <img class="vendor-image" src="` + deployment.values[0]["Image"] + `" />
+                </div>`
             ));
+        })
+
+        $('.new-vendor').click(event => {
+            displayDeployment(event.currentTarget.id)
         })
     }
 
@@ -408,6 +404,7 @@
             style: style,
             onEachFeature: onEachFeature
         }).addTo(map);
+        map.fitBounds(geojsonLayer.getBounds());
     }
 
     function updateAccordianFilters() {
@@ -483,6 +480,17 @@
         })
         console.log('allDeployments', allDeployments)
 
+        var nestedDeployments = d3.nest()
+            .key(function (d) { return d.Agency; })
+            .entries(allDeployments);
+
+        groupedSolutions = nestedDeployments.reduce((acc, element) => {
+            acc[element.key] = element.values
+            return acc
+        }, {})
+        console.log("Nested Deployment", groupedSolutions)
+
+
 
         filterOptions.useCases = uniqueProperties(allDeployments, 'useCases').sort()
         console.log('filterOptions.useCases', filterOptions.useCases)
@@ -535,9 +543,9 @@
         var color = getColor(highestIndexOfDeplyments(feature.properties.deployments))
         return {
             fillColor: color,
-            fillOpacity: 0.5,
+            fillOpacity: 0.8,
             weight: 2,
-            opacity: .5,
+            opacity: .8,
             color: color,
             // dashArray: 3,
         };
@@ -560,4 +568,38 @@
             click: selectedCountry
         });
     }
+
+    function displayDeployment(deploymentId) {
+        console.log(groupedSolutions, deploymentId)
+        var deployments = groupedSolutions[deploymentId]
+
+        modal = $('.vendor').jBox('Modal', {
+            maxWidth: 600
+        });
+
+        title = `<span class="vendor-modal-title-text">` + deployments[0].Agency + `</span>
+                <i class="fa fa-times vendor-modal-close-times" onclick="modal.close();"></i>`
+
+        content = `
+            <div class="sqs-row vendor-modal-logo"> <img src="`+ deployments[0].Image + `" class="vendor-modal-logo-image"> </div>
+            <br>
+            <p><span><strong>Region:</strong> ` + deployments[0].Region + `</span></p>
+            <p><span><strong>Country:</strong> ` + deployments[0].Country + `</span></p>
+            <p><span><strong>Agency Type:</strong> ` + deployments[0]['Type of Agency'] + `</span></p>
+        `
+
+        deployments.forEach(deployment => {
+            content += `<br>
+                <p><span><strong>Use Cases:</strong> ` + deployment['Use case'] + `</span></p>
+                <p><span><strong>Status:</strong> ` + deployment.Status + `</span></p>
+                <p><span><strong>Tech:</strong> ` + deployment.Tech + `</span></p>
+                <p><span><strong>Description:</strong> ` + deployment.Description + `</span></p>
+            `
+            if (deployment.Link.length > 0) {
+                content += `<p><span><strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href="` + deployment.Link + `">` + deployment.Link + `</a></span></p>`
+            }
+        })
+        modal.setTitle(title).setContent(content).open();
+    }
+
 </script>

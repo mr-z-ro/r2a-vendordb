@@ -4,10 +4,5 @@ function createMap(config) {
     var map = L.map(config.mapId, config);
     var osm = new L.TileLayer(config.osmUrl, config);
     map.addLayer(osm);
-    zoomToShowAllBounds(map, config.latLonBounds)
     return map
-}
-
-function zoomToShowAllBounds(map, bounds){
-    map.fitBounds(bounds)
 }

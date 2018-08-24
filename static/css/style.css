@@ -11,7 +11,7 @@
     padding: 96px 32px; 
 }
 
-p {
+.header>p {
     max-width: 932px;
     margin-left: 24px;
 }
