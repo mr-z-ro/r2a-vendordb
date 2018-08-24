@@ -72,6 +72,7 @@
         /*Uncomment below to center horizontally*/
         /*justify-content: center;*/
         align-items: center;
+        width:29%;
     }
 
     .uk-accordion-title,
@@ -100,9 +101,13 @@
         border-width: 2px;
         border-style: solid;
         padding: 10px;
-        margin-right: 5px;
-        margin-bottom: 10px;
+        margin: 10px 5px 10px 0px;
         display: inline-block;
+    }
+
+    .filter>.fa-times {
+        color: #0a2d37;
+        margin-left: 5px;
     }
 
     .filtering-column>ul {
@@ -200,14 +205,9 @@
                     </div>
                 </li>
             </ul>
-
         </div>
 
         <div class="col sqs-col-8">
-
-            <div id="selected-filter">
-
-            </div>
 
             <div id="contents">
                 <div class="loading">
@@ -216,13 +216,10 @@
                 </div>
             </div>
 
-
-            <div class="deployment-list">
-            </div>
-
+            <div id="selected-filter"> </div>
+            <div class="deployment-list"> </div>
         </div>
     </div>
-
 
 </div>
 
@@ -373,46 +370,43 @@
             lMap.zoomControl.setPosition('bottomleft');
         });
 
-        function showDeployments(deploymentsToShow) {
-            console.log(deploymentsToShow);
+    })
+    // }, 3000);
+    function showDeployments(deploymentsToShow) {
+        console.log(deploymentsToShow);
 
-            var deployments = d3.nest()
-                .key(function (d) { return d.Agency; })
-                .entries(deploymentsToShow);
+        var deployments = d3.nest()
+            .key(function (d) { return d.Agency; })
+            .entries(deploymentsToShow);
 
-            console.log(deployments);
+        console.log(deployments);
 
-            var targetElement = $(".deployment-list");
-            targetElement.html("");
-            if (!deployments.length) {
-                console.log("no deployments to show");
-                var noVendorsMessage = '<p class="no-vendors-message">There are no deployments available with the active filters.<br />\
+        var targetElement = $(".deployment-list");
+        targetElement.html("");
+        if (!deployments.length) {
+            console.log("no deployments to show");
+            var noVendorsMessage = '<p class="no-vendors-message">There are no deployments available with the active filters.<br />\
         Review current filters on the left-hand side.</p>';
-                targetElement.append(noVendorsMessage);
-            }
+            targetElement.append(noVendorsMessage);
+        }
 
-            deployments.forEach(deployment => {
-                console.log(deployment);
+        deployments.forEach(deployment => {
+            console.log(deployment);
 
-                targetElement.append($(`
+            targetElement.append($(`
                     <div class="new-vendor" data-vendor-id="1` + deployment.key + `">
 
                         <img class="vendor-image" src="` + deployment.values[0]["Image"] + `" />
                     </div>`
-                ));
-            })
-        }
-    })
-    // }, 3000);
-
+            ));
+        })
+    }
 
     function addFilter(key, value) {
         selectedFilters[key].push(value);
         updateFilterBarList()
         updateSelectedDeployments()
     }
-
-
 
     function updateFilterBarList() {
 
@@ -452,6 +446,7 @@
         $('#solutions-number').html(selectedDeployments.length)
 
         updateAccordianFilters()
+        showDeployments(selectedDeployments)
         // Update Map Here!
     }
 
@@ -459,19 +454,18 @@
 
         remainingUseCases = uniqueProperties(selectedDeployments, 'useCases').sort();
         selectedFilters.useCases.forEach(useCase => {
-            console.log("remainig",remainingUseCases)
+            console.log("remainig", remainingUseCases)
             index = remainingUseCases.indexOf(useCase)
             if (index !== -1) {
-                console.log("removing",useCase)
+                console.log("removing", useCase)
                 remainingUseCases.splice(index, 1)
             }
         })
-        console.log("remainig",remainingUseCases)
+        console.log("remainig", remainingUseCases)
 
         displayAccordianValues(remainingUseCases, {
             elementId: '#use-case-choices',
             selected: (event => {
-                // console.log("Selected", event.target.innerText)
                 $('.uk-badge').remove()
                 addFilter('useCases', event.target.innerText)
             }),
@@ -479,13 +473,10 @@
                 // console.log("Badge Count", event.target.innerText)
                 copiedFilters = jQuery.extend(true, {}, selectedFilters);
                 copiedFilters['useCases'].push(event.target.innerText)
-                console.log(copiedFilters)
                 matched = deploymentsMatchingFilters(selectedDeployments, copiedFilters)
-                console.log("matched", matched)
                 $(event.target).append('<span class="uk-badge">' + matched.length + '</span>')
             }),
             mouseout: (event => {
-                // console.log("Remove", event.target.innerHTML)
                 $('.uk-badge').remove()
             }),
             emptyText: "All options selected"
@@ -522,7 +513,7 @@
         allDeployments.forEach((dataEl) => {
             const useCasePropName = 'Use case'
             if (useCasePropName in dataEl) {
-                dataEl.useCases = dataEl[useCasePropName].split(';').map(el=>{
+                dataEl.useCases = dataEl[useCasePropName].split(';').map(el => {
                     return el.trim()
                 })
             }
