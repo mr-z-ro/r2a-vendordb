@@ -19,7 +19,7 @@ function displayAccordianValues(values, configOptions) {
 
             $(config[elementIdKey]).append($('<ul class="uk-list uk-list-large">' + valueEls + '</ul>'))
 
-            var listElement = $(config[elementIdKey] + '> ul')
+            var listElement = $(config[elementIdKey] + '>ul>li')
 
             if ('selected' in config) {
                 listElement.click(config.selected)
