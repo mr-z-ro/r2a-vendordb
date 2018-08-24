@@ -72,7 +72,7 @@
         /*Uncomment below to center horizontally*/
         /*justify-content: center;*/
         align-items: center;
-        width:29%;
+        width: 29%;
     }
 
     .uk-accordion-title,
@@ -229,12 +229,12 @@
 <script src="./static/js/accordian.js"></script>
 <script>
 
-    // setTimeout(function () { //Simulate loading conditions
+    var map
+    var geojsonLayer
     var categories = ['Exploratory', 'Developmental', 'Operational']
     var allCountryShapes = []
 
     var allDeployments = [];
-    var mapData = []
 
     var selectedDeployments = [];
 
@@ -276,66 +276,13 @@
         formatData(data)
 
         // Display Formatted Data
+        map = createMap(mapConfig)
 
         updateSelectedDeployments()
 
         // setTimeout(()=>{
         //     UIkit.accordion('#filters').toggle(0, true);
         // }, 1500)
-
-        var map = createMap(mapConfig)
-        var geojson = L.geoJson(mapData, { style: style }).addTo(map);
-
-        function getColor(d) {
-            return d >= 2 ? '#1b988a' :
-                d >= 1 ? '#16716a' :
-                    '#104949';
-        }
-
-        function highestIndexOfDeplyments(deployments) {
-            var found = -1
-            categories.slice().reverse().forEach((cat, idx) => {
-                if (deployments.filter(e => { return e.Status.trim() === categories[idx] }).length > 0) {
-                    found = idx
-                }
-            })
-            return found
-        }
-
-        function style(feature) {
-            var color = getColor(highestIndexOfDeplyments(feature.properties.deployments))
-            return {
-                fillColor: color,
-                fillOpacity: 0.5,
-                weight: 2,
-                opacity: .5,
-                color: color,
-                // dashArray: 3,
-            };
-        }
-
-        function selectedCountry(e) {
-            console.log(e.target)
-            showDeployments(e.target.feature.properties.deployments)
-            zoomToFeature(e)
-        }
-
-        function zoomToFeature(e) {
-            map.fitBounds(e.target.getBounds());
-        }
-
-        function onEachFeature(feature, layer) {
-            layer.on({
-                // mouseover: highlightFeature,
-                // mouseout: resetHighlight,
-                click: selectedCountry
-            });
-        }
-
-        geojson = L.geoJson(mapData, {
-            style: style,
-            onEachFeature: onEachFeature
-        }).addTo(map);
 
 
         // Legend
@@ -447,7 +394,20 @@
 
         updateAccordianFilters()
         showDeployments(selectedDeployments)
-        // Update Map Here!
+        updateMapDeployments(selectedDeployments)
+    }
+
+    function updateMapDeployments() {
+        if (geojsonLayer !== undefined) {
+            map.removeLayer(geojsonLayer)
+        }
+
+        mapData = mapFormattedDeployments(selectedDeployments);
+        console.log('mapData', mapData)
+        geojsonLayer = L.geoJson(mapData, {
+            style: style,
+            onEachFeature: onEachFeature
+        }).addTo(map);
     }
 
     function updateAccordianFilters() {
@@ -509,6 +469,9 @@
     }
 
     function formatData(data) {
+        allCountryShapes = data[1]['features']
+        console.log('allCountryShapes', allCountryShapes)
+
         allDeployments = data[0]
         allDeployments.forEach((dataEl) => {
             const useCasePropName = 'Use case'
@@ -520,13 +483,14 @@
         })
         console.log('allDeployments', allDeployments)
 
-        allCountryShapes = data[1]['features']
-        console.log('allCountryShapes', allCountryShapes)
 
         filterOptions.useCases = uniqueProperties(allDeployments, 'useCases').sort()
         console.log('filterOptions.useCases', filterOptions.useCases)
 
-        mapData = allDeployments.reduce((acc, deployment) => {
+    }
+
+    function mapFormattedDeployments(deployments) {
+        return deployments.reduce((acc, deployment) => {
             deployment.Country = deployment.Country.trim()
 
             var countryShape = allCountryShapes.filter(shape => {
@@ -548,8 +512,52 @@
 
             return acc
         }, []);
-
-        console.log("Map Data", mapData)
     }
 
+
+    function getColor(d) {
+        return d >= 2 ? '#1b988a' :
+            d >= 1 ? '#16716a' :
+                '#104949';
+    }
+
+    function highestIndexOfDeplyments(deployments) {
+        var found = -1
+        categories.slice().reverse().forEach((cat, idx) => {
+            if (deployments.filter(e => { return e.Status.trim() === categories[idx] }).length > 0) {
+                found = idx
+            }
+        })
+        return found
+    }
+
+    function style(feature) {
+        var color = getColor(highestIndexOfDeplyments(feature.properties.deployments))
+        return {
+            fillColor: color,
+            fillOpacity: 0.5,
+            weight: 2,
+            opacity: .5,
+            color: color,
+            // dashArray: 3,
+        };
+    }
+
+    function selectedCountry(e) {
+        console.log(e.target)
+        showDeployments(e.target.feature.properties.deployments)
+        zoomToFeature(e)
+    }
+
+    function zoomToFeature(e) {
+        map.fitBounds(e.target.getBounds());
+    }
+
+    function onEachFeature(feature, layer) {
+        layer.on({
+            // mouseover: highlightFeature,
+            // mouseout: resetHighlight,
+            click: selectedCountry
+        });
+    }
 </script>
