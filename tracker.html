@@ -137,6 +137,13 @@
     .uk-accordion-content {
         margin-top: 0px;
     }
+
+    .solution {
+        margin-left: 20px;
+    }
+    .solution>p {
+        margin: 5px 0px;
+    }
 </style>
 
 
@@ -163,7 +170,7 @@
         </div>
     </div>
 
-    <p>This map will be updated to reflect RegTech solution around the world. Don't see your country's solution listed? Contact
+    <p>This map will be updated to reflect RegTech solutions around the world. Don't see your country's solution listed? Contact
         us at
         <a href="mailto:R2A@bfaglobal.com">R2A@bfaglobal.com</a>.</p>
 </div>
@@ -585,7 +592,6 @@
 
     function countryStyle(feature) {
         var color = getColor(highestIndexOfDeplyments(feature.properties.deployments))
-        console.log("Color", color)
         return {
             fillColor: color,
             fillOpacity: 0.8,
@@ -660,7 +666,7 @@
 
     function displayDeployment(deploymentId) {
         console.log(groupedSolutions, deploymentId)
-        var deployments = groupedSolutions[deploymentId]
+        var deployments = deploymentsMatchingFilters( groupedSolutions[deploymentId], selectedFilters)
 
         modal = $('.vendor').jBox('Modal', {
             maxWidth: 600
@@ -679,20 +685,19 @@
             <p><span><strong>Region:</strong> ` + deployments[0].Region + `</span></p>
             <p><span><strong>Country:</strong> ` + deployments[0].Country + `</span></p>
             <p><span><strong>Agency Type:</strong> ` + deployments[0]['Type of Agency'] + `</span></p>
-            <br>
-            <p><span><u><strong style="font-size: 14px; margin-bottom:15px;">Solutions (` + deployments.length + `):</strong></u></span></p>
-        `
+            <br>`
+
+            content += `<p><span><u><strong style="font-size: 14px; margin-bottom:15px;">Solution` + ((deployments.length > 1) ? `s (` + deployments.length + `)` : '') +  `:</strong></u></span></p>  `
 
         deployments.forEach((deployment, index) => {
             content += `
-                <p><span><strong>Use Cases:</strong> ` + deployment['Use case'] + `</span></p>
-                <p><span><strong>Status:</strong> ` + deployment.Status + `</span></p>
-                <p><span><strong>Tech:</strong> ` + deployment.Tech + `</span></p>
-                <p><span><strong>Description:</strong> ` + deployment.Description + `</span></p>
+            <div class="solution">
+                <p><span><strong><i class="fa fa-list"></i> &nbsp; Use Cases:</strong> ` + deployment['Use case'] + `</span></p>
+                <p><span><strong><i class="fa fa-check-circle"></i> &nbsp; Status:</strong> ` + deployment.Status + `</span></p>
+                <p><span><strong><i class="fa fa-cogs"></i> &nbsp;Tech:</strong> ` + deployment.Tech + `</span></p>
+                <p><span><strong><i class="fa fa-align-justify"></i> &nbsp; Description:</strong> ` + deployment.Description + `</span></p>
+            </div>
             `
-            if (deployment.Link.length > 0) {
-                content += `<p><span><strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href="` + deployment.Link + `">` + deployment.Link + `</a></span></p>`
-            }
             if (index != (deployments.length - 1)) {
                 content += "<br>"
             }
@@ -701,3 +706,4 @@
     }
 
 </script>
+
