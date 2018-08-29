@@ -121,6 +121,7 @@
     .uk-badge {
         background-color: #00a69c;
         margin: 0px 10px;
+        line-height: 1.6em;
     }
 
     .sqs-layout>.sqs-row {
@@ -131,6 +132,10 @@
     .jBox-content>p {
         margin-top: 5px;
         margin-bottom: 5px;
+    }
+
+    .uk-accordion-content {
+        margin-top: 0px;
     }
 </style>
 
@@ -209,6 +214,7 @@
             </div>
 
             <div id="selected-filter"> </div>
+            <p>Click on an agency below to explore solutions.</p>
             <div class="deployment-list"> </div>
         </div>
     </div>
@@ -293,6 +299,11 @@
 
         legend.addTo(map);
 
+        // Instruction
+
+        info.addTo(map);
+
+
         String.prototype.trunc =
             function (n) {
                 return this.substr(0, n - 1) + (this.length > n ? '&hellip;' : '');
@@ -327,7 +338,7 @@
         deployments.forEach(deployment => {
             targetElement.append($(`
                 <div class="new-vendor" id="` + deployment.key + `">
-                    <object class="vendor-image" data="./static/images/agency-icons/`+ deployment.key +`.png" type="image/png">
+                    <object class="vendor-image" data="./static/images/agency-icons/`+ deployment.key + `.png" type="image/png">
                         <img class="vendor-image" src="` + deployment.values[0]["Image"] + `" />
                     </object>
                 </div>`
@@ -395,7 +406,7 @@
         mapData = mapFormattedDeployments(selectedDeployments);
         console.log('mapData', mapData)
         geojsonLayer = L.geoJson(mapData, {
-            style: style,
+            style: countryStyle,
             onEachFeature: onEachFeature
         }).addTo(map);
         map.fitBounds(geojsonLayer.getBounds());
@@ -572,8 +583,9 @@
         return found
     }
 
-    function style(feature) {
+    function countryStyle(feature) {
         var color = getColor(highestIndexOfDeplyments(feature.properties.deployments))
+        console.log("Color", color)
         return {
             fillColor: color,
             fillOpacity: 0.8,
@@ -593,9 +605,58 @@
 
     function onEachFeature(feature, layer) {
         layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight,
             click: selectedCountry
         });
     }
+
+
+
+
+    //Hover Over
+
+    var info = L.control({ position: 'bottomleft' });
+
+    info.update = function (props) {
+        style = 'display: ' + ((props !== undefined) ? 'block' : 'none') + ";"
+        this._div.setAttribute('style', style)
+    };
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+        this._div.innerHTML =  'Select to filter by country'
+        this.update();
+        return this._div;
+    };
+
+
+    function highlightFeature(e) {
+        var layer = e.target;
+        var color = getColor(highestIndexOfDeplyments(layer.feature.properties.deployments))
+
+        layer.setStyle({
+            weight: 3,
+            color: color,
+            dashArray: '',
+            fillOpacity: 1.0
+        });
+
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layer.bringToFront();
+        }
+
+        info.update(layer.feature.properties);
+    }
+
+    function resetHighlight(e) {
+        style = countryStyle(e.target.feature)
+        e.target.setStyle(style)
+        info.update();
+    }
+
+
+
 
     function displayDeployment(deploymentId) {
         console.log(groupedSolutions, deploymentId)
@@ -610,7 +671,7 @@
 
         content = `
             <div class="sqs-row vendor-modal-logo"> 
-                <object class="vendor-modal-logo-image" data="./static/images/agency-icons/`+ deploymentId +`.png" type="image/png">
+                <object class="vendor-modal-logo-image" data="./static/images/agency-icons/`+ deploymentId + `.png" type="image/png">
                     <img src="`+ deployments[0].Image + `" class="vendor-modal-logo-image"> 
                 </object>
             </div>
@@ -618,10 +679,12 @@
             <p><span><strong>Region:</strong> ` + deployments[0].Region + `</span></p>
             <p><span><strong>Country:</strong> ` + deployments[0].Country + `</span></p>
             <p><span><strong>Agency Type:</strong> ` + deployments[0]['Type of Agency'] + `</span></p>
+            <br>
+            <p><span><u><strong style="font-size: 14px; margin-bottom:15px;">Solutions (` + deployments.length + `):</strong></u></span></p>
         `
 
-        deployments.forEach(deployment => {
-            content += `<br>
+        deployments.forEach((deployment, index) => {
+            content += `
                 <p><span><strong>Use Cases:</strong> ` + deployment['Use case'] + `</span></p>
                 <p><span><strong>Status:</strong> ` + deployment.Status + `</span></p>
                 <p><span><strong>Tech:</strong> ` + deployment.Tech + `</span></p>
@@ -629,6 +692,9 @@
             `
             if (deployment.Link.length > 0) {
                 content += `<p><span><strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href="` + deployment.Link + `">` + deployment.Link + `</a></span></p>`
+            }
+            if (index != (deployments.length - 1)) {
+                content += "<br>"
             }
         })
         modal.setTitle(title).setContent(content).open();
