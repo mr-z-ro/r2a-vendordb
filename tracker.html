@@ -70,10 +70,14 @@
         padding: 5px;
         white-space: nowrap;
         display: flex;
-        /*Uncomment below to center horizontally*/
-        /*justify-content: center;*/
         align-items: center;
-        width: 29%;
+        width: calc(33.3% - 20px);
+        margin: 5px 5px;
+    }
+
+    #deployment-list {
+        margin: 0px -5px;
+        width: calc(100% + 10px);
     }
 
     .uk-accordion-title,
@@ -178,6 +182,7 @@
         text-align: right;
         margin: 10px 0px;
     }
+     
 </style>
 
 
@@ -211,7 +216,7 @@
 
 
 
-<div class="sqs-layout sqs-grid-12 columns-12">
+<!-- <div class="sqs-layout sqs-grid-12 columns-12">
     <div class="row sqs-row">
 
         <div class="col sqs-col-4 filtering-column">
@@ -221,9 +226,15 @@
 
 
     </div>
+</div> -->
+
+<div class="loading">
+    <h4>Loading...</h4>
+    <i class="fas fa-circle-notch fa-spin"></i>
 </div>
 
-<div class="sqs-layout sqs-grid-12 columns-12 content">
+
+<div id="solutions-tracker" class="sqs-layout sqs-grid-12 columns-12 content" style="display:none; margin-top: 30px;">
     <div class="row sqs-row">
         <div class="col sqs-col-4 filtering-column">
 
@@ -253,14 +264,10 @@
         </div>
 
         <div class="col sqs-col-8">
-            <div class="row sqs-row">
 
+            <div class="row sqs-row">
                 <div class="col sqs-col-8">
                     <div id="map">
-                        <div class="loading">
-                            <h4>Loading...</h4>
-                            <i class="fas fa-circle-notch fa-spin"></i>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -296,11 +303,10 @@
                 </div>
             </div>
 
-            <div class="row sqs-row">
-                <div class="col sqs-col-8">
-                    <div class="deployment-list"> </div>
+            <!-- <div class="row sqs-row"> -->
+                <div id="deployment-list" class="col sqs-col-8">
                 </div>
-            </div>
+            <!-- </div> -->
 
         </div>
     </div>
@@ -401,9 +407,12 @@
             lMap.zoomControl.setPosition('bottomleft');
         });
 
+
+        $(".loading").css("display", "none")
+        $("#solutions-tracker").css("display", "block")
+        
         updateAutocompleteOptions()
         updateUI()
-
     })
 
     function updateAutocompleteOptions() {
@@ -435,7 +444,7 @@
 
         console.log(deployments);
 
-        var targetElement = $(".deployment-list");
+        var targetElement = $("#deployment-list");
         targetElement.empty();
         if (!deployments.length) {
             console.log("no deployments to show");
