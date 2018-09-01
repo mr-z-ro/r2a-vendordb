@@ -182,7 +182,6 @@
         text-align: right;
         margin: 10px 0px;
     }
-     
 </style>
 
 
@@ -255,6 +254,13 @@
                 </li>
                 <li>
                     <a class="uk-accordion-title" href="#">
+                        Status
+                        <i class="fa fa-map m-l-sm"></i>
+                    </a>
+                    <div id='status-choices' class="uk-accordion-content"> </div>
+                </li>
+                <li>
+                    <a class="uk-accordion-title" href="#">
                         Location
                         <i class="fa fa-map m-l-sm"></i>
                     </a>
@@ -304,8 +310,8 @@
             </div>
 
             <!-- <div class="row sqs-row"> -->
-                <div id="deployment-list" class="col sqs-col-8">
-                </div>
+            <div id="deployment-list" class="col sqs-col-8">
+            </div>
             <!-- </div> -->
 
         </div>
@@ -333,12 +339,14 @@
     var filterOptions = {
         useCases: [],
         tech: [],
+        status: [],
         locations: [],
     }
 
     var selectedFilters = {
         useCases: [],
         tech: [],
+        status: [],
         locations: [],
     }
 
@@ -366,64 +374,42 @@
         // Display Formatted Data
         map = createMap(mapConfig)
 
-
-        setTimeout(() => {
-            UIkit.accordion('#filters').toggle(0, true);
-        }, 1000)
-
-
         // Legend
-
         var legend = L.control({ position: 'topright' });
 
         legend.onAdd = function (map) {
-
-            var div = L.DomUtil.create('div', 'info legend'),
-                labels = [];
+            div = L.DomUtil.create('div', 'info legend')
+            labels = [];
 
             for (var i = 0; i < categories.length; i++) {
-                div.innerHTML +=
-                    '<i style="background:' + getColor(i) + '"></i> ' + categories[i] + '<br>';
+                div.innerHTML += '<i style="background:' + getColor(i) + '"></i> ' + categories[i] + '<br>';
             }
-
             return div;
         };
 
         legend.addTo(map);
-
-        // Instruction
-
         info.addTo(map);
-
-
-        String.prototype.trunc =
-            function (n) {
-                return this.substr(0, n - 1) + (this.length > n ? '&hellip;' : '');
-            };
 
         map.invalidateSize()
 
-        jQuery(document).bind('leaflet.map', function (event, map, lMap) {
-            lMap.zoomControl.setPosition('bottomleft');
-        });
-
-
+        // Hide Loading & Show Tracker
         $(".loading").css("display", "none")
         $("#solutions-tracker").css("display", "block")
-        
+
+        // Set the UI
         updateAutocompleteOptions()
         updateUI()
+        setTimeout(() => {
+            UIkit.accordion('#filters').toggle(0, true);
+        }, 1000)
     })
 
     function updateAutocompleteOptions() {
         options = Object.keys(filterOptions).reduce((acc, filterKey) => {
-            console.log("concat:", filterKey, filterOptions[filterKey])
             acc = acc.concat(filterOptions[filterKey])
             return acc
         }, [])
-        // options = filteredFilters('useCases', selectedFilters.useCases)
-        // options = options.concat(filteredFilters('technology', selectedFilters.tech))
-        // options = options.concat(filteredFilters('Country', selectedFilters.locations))
+
         console.log("Autocorrect Options:", options)
         autocomplete(document.getElementById("search-box"), options.sort(), selected => {
             $("#search-box").val("")
@@ -432,15 +418,12 @@
             addFilter(key, selected)
         });
     }
-    // }, 3000);
+
     function updateTiles(deploymentsToShow) {
-        console.log(deploymentsToShow);
 
         var deployments = d3.nest()
             .key(function (d) { return d.Agency; })
             .entries(deploymentsToShow);
-
-        console.log(deployments);
 
         var targetElement = $("#deployment-list");
         targetElement.empty();
@@ -471,7 +454,6 @@
         Object.keys(filterOptions).forEach(filterKey => {
             var index = filterOptions[filterKey].indexOf(value.trim())
             if (index !== -1) {
-                console.log("Found?:", filterKey, filterOptions[filterKey], index)
                 found = filterKey
             }
         });
@@ -480,7 +462,6 @@
 
     function addFilter(key, value) {
         selectedFilters[key].push(value);
-        updateFilterBarList()
         updateUI()
     }
 
@@ -490,6 +471,38 @@
             filterCount += selectedFilters[filterKey].length
         })
         return filterCount
+    }
+
+
+
+    function removeAllFilters() {
+        resetFilterData()
+        updateUI()
+    }
+
+    function resetFilterData() {
+        Object.keys(selectedFilters).forEach(filterKey => {
+            selectedFilters[filterKey] = []
+        })
+    }
+
+    function removeFilter(value) {
+        Object.keys(selectedFilters).forEach(filterKey => {
+            var index = selectedFilters[filterKey].indexOf(value.trim())
+            if (index !== -1) { selectedFilters[filterKey].splice(index, 1) }
+        });
+        updateUI()
+    }
+
+    // UI Updates 
+    function updateUI() {
+        selectedDeployments = deploymentsMatchingFilters(allDeployments, selectedFilters)
+        $('#solutions-number').html(selectedDeployments.length + ' solution' + (selectedDeployments.length !== 1 ? 's' : ''))
+
+        updateFilterBarList()
+        updateAccordianFilters()
+        updateTiles(selectedDeployments)
+        updateMap()
     }
 
     function updateFilterBarList() {
@@ -526,35 +539,6 @@
         removeAllFilters()
     })
 
-    function removeAllFilters() {
-        resetFilterData()
-        updateUI()
-    }
-
-    function resetFilterData() {
-        Object.keys(selectedFilters).forEach(filterKey => {
-            selectedFilters[filterKey] = []
-        })
-    }
-
-    function removeFilter(value) {
-        Object.keys(selectedFilters).forEach(filterKey => {
-            var index = selectedFilters[filterKey].indexOf(value.trim())
-            if (index !== -1) { selectedFilters[filterKey].splice(index, 1) }
-        });
-        updateUI()
-    }
-
-    function updateUI() {
-        selectedDeployments = deploymentsMatchingFilters(allDeployments, selectedFilters)
-        $('#solutions-number').html(selectedDeployments.length + ' solution' + (selectedDeployments.length !== 1 ? 's' : ''))
-
-        updateFilterBarList()
-        updateAccordianFilters()
-        updateTiles(selectedDeployments)
-        updateMap()
-    }
-
     function updateMap() {
         if (geojsonLayer !== undefined) {
             map.removeLayer(geojsonLayer)
@@ -572,9 +556,12 @@
     function updateAccordianFilters() {
         displayAccordianValues(filteredFilters('useCases', selectedFilters.useCases), accordianConfigForFilterKey('useCases'))
         displayAccordianValues(filteredFilters('technology', selectedFilters.tech), accordianConfigForFilterKey('tech'))
+        displayAccordianValues(filteredFilters('Status', selectedFilters.status), accordianConfigForFilterKey('status'))
         displayAccordianValues(filteredFilters('Country', selectedFilters.locations), accordianConfigForFilterKey('locations'))
     }
 
+
+    // Data Formatters
     function filteredFilters(key, selections) {
         remainingFilters = uniqueProperties(selectedDeployments, key).sort();
         selections.forEach(filter => {
@@ -593,7 +580,7 @@
             elementId: '#' + key + '-choices',
             selected: accordianSelectionForFilterType(key),
             mouseover: accordianMouseoverForFilterType(key),
-            mouseout: accordianMouseOut(),
+            mouseout: event => { $('.uk-badge').remove() },
             emptyText: "All options selected"
         }
     }
@@ -614,12 +601,6 @@
         }
     }
 
-    function accordianMouseOut() {
-        return (event) => {
-            $('.uk-badge').remove()
-        }
-    }
-
     function deploymentsMatchingFilters(deployments, matchFilters) {
         var matchedDeployments = [];
 
@@ -637,6 +618,13 @@
                 if (filterKey === 'tech') {
                     filters.forEach(filter => {
                         if (deployment.technology.indexOf(filter) === -1) {
+                            matchesAllFilters = false
+                        }
+                    })
+                }
+                if (filterKey === 'status') {
+                    filters.forEach(filter => {
+                        if (filter !== deployment.Status) {
                             matchesAllFilters = false
                         }
                     })
@@ -693,6 +681,8 @@
         console.log('filterOptions.useCases', filterOptions.useCases)
         filterOptions.tech = uniqueProperties(allDeployments, 'technology').sort()
         console.log('filterOptions.tech', filterOptions.tech)
+        filterOptions.status = uniqueProperties(allDeployments, 'Status').sort()
+        console.log('filterOptions.status', filterOptions.status)
         filterOptions.locations = uniqueProperties(allDeployments, 'Country').sort()
         console.log('filterOptions.locations', filterOptions.locations)
 
