@@ -101,8 +101,17 @@
         color: #0a2d37;
         border-width: 2px;
         border-style: solid;
-        padding: 10px;
+        padding: 2px 8px;
+        ;
         margin: 10px 5px 10px 0px;
+        display: inline-block;
+    }
+
+    .reset-filters {
+        background-color: #0a2d37;
+        color: #ffffff;
+        padding: 10px;
+        margin: 0px 5px 10px 0px;
         display: inline-block;
     }
 
@@ -154,11 +163,20 @@
         transition: background-image .2s ease-out;
         padding: 12px 12px 12px 45px;
         background: url(/static/images/icon-search.png) no-repeat 15px 50%;
-        width: calc(100% - 59px);
+        width: calc(100% - 60px);
         min-height: 20px;
         display: block;
         outline: 0;
         box-sizing: border-box;
+    }
+
+    .instruction-text {
+        margin: 10px 0px;
+    }
+
+    .solutions-number-container {
+        text-align: right;
+        margin: 10px 0px;
     }
 </style>
 
@@ -198,20 +216,10 @@
 
         <div class="col sqs-col-4 filtering-column">
             <div style="margin:10px 0px 20px 24px">
-                <span id="solutions-number"></span> solutions
             </div>
         </div>
 
-        <div class="col sqs-col-4">
-            <span style="width:100%;">&nbsp;</span>
-        </div>
 
-        <div class="col sqs-col-4">
-            <div class="autocomplete">
-
-                <input id="search-box" type="search" class="search-input " value="" placeholder="Search">
-            </div>
-        </div>
     </div>
 </div>
 
@@ -245,17 +253,47 @@
         </div>
 
         <div class="col sqs-col-8">
+            <div class="row sqs-row">
 
-            <div id="contents">
-                <div class="loading">
-                    <h4>Loading...</h4>
-                    <i class="fas fa-circle-notch fa-spin"></i>
+                <div class="col sqs-col-8">
+                    <div id="map">
+                        <div class="loading">
+                            <h4>Loading...</h4>
+                            <i class="fas fa-circle-notch fa-spin"></i>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div id="selected-filter"> </div>
-            <p>Click on an agency below to explore solutions.</p>
-            <div class="deployment-list"> </div>
+                <div class="col sqs-col-4">
+                    <div class="reset-filters">Reset Filters</div>
+                </div>
+
+                <div class="col sqs-col-4">
+                    <div class="autocomplete">
+
+                        <input id="search-box" type="search" class="search-input " value="" placeholder="Search">
+                    </div>
+                </div>
+
+                <div class="col sqs-col-8">
+                    <div id="selected-filter"> </div>
+                </div>
+
+                <div class="col sqs-col-6">
+                    <div class="instruction-text">
+                        <span>Click on an agency below to explore solutions.</span>
+                    </div>
+                </div>
+                <div class="col sqs-col-2">
+                    <div class="solutions-number-container">
+                        <span id="solutions-number"></span> solutions
+                    </div>
+                </div>
+                <div class="col sqs-col-8">
+                    <div class="deployment-list"> </div>
+                </div>
+
+            </div>
         </div>
     </div>
 
@@ -291,7 +329,7 @@
     }
 
     var mapConfig = {
-        containerElementId: 'contents',
+        containerElementId: 'map',
         mapId: 'mapid',
         osmUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
@@ -361,25 +399,26 @@
     })
 
     function updateAutocompleteOptions() {
-        // options = Object.keys(filterOptions).reduce((acc, filterKey) => {
-
-        //     acc = acc.concat(filteredFilters(filterKey, selectedFilters[filterKey]))
-        //     return acc
-        // }, [])
-        options = filteredFilters('useCases', selectedFilters.useCases)
-        options = options.concat(filteredFilters('technology', selectedFilters.tech))
-        options = options.concat(filteredFilters('Country', selectedFilters.locations))
-        console.log(options)
+        options = Object.keys(filterOptions).reduce((acc, filterKey) => {
+            console.log("concat:", filterKey, filterOptions[filterKey])
+            acc = acc.concat(filterOptions[filterKey])
+            return acc
+        }, [])
+        // options = filteredFilters('useCases', selectedFilters.useCases)
+        // options = options.concat(filteredFilters('technology', selectedFilters.tech))
+        // options = options.concat(filteredFilters('Country', selectedFilters.locations))
+        console.log("Autocorrect Options:", options)
         autocomplete(document.getElementById("search-box"), options, selected => {
             $("#search-box").val("")
             console.log(selected)
             key = findFilterKeyForValue(selected)
             console.log(key)
+            resetFilterData()
             addFilter(key, selected)
         });
     }
     // }, 3000);
-    function showDeployments(deploymentsToShow) {
+    function updateTiles(deploymentsToShow) {
         console.log(deploymentsToShow);
 
         var deployments = d3.nest()
@@ -392,7 +431,7 @@
         targetElement.empty();
         if (!deployments.length) {
             console.log("no deployments to show");
-            var noVendorsMessage = '<p class="no-vendors-message">There are no deployments available with the active filters.<br />\
+            var noVendorsMessage = '<p class="no-vendors-message">There are no solutions available with the selected filters.<br />\
         Review current filters on the left-hand side.</p>';
             targetElement.append(noVendorsMessage);
         }
@@ -433,7 +472,8 @@
     function updateFilterBarList() {
 
         $('#selected-filter').empty()
-        var filterHTML = ''
+        var filterHTML = 'Filter(s): &nbsp;&nbsp;'
+
         Object.keys(selectedFilters).forEach(filterKey => {
             var filters = selectedFilters[filterKey]
             console.log(filters);
@@ -448,32 +488,45 @@
         })
     }
 
+    $('.reset-filters').click(event => {
+        removeAllFilters()
+    })
+
+    function removeAllFilters() {
+        resetFilterData()
+        updateUI()
+    }
+
+    function resetFilterData() {
+        Object.keys(selectedFilters).forEach(filterKey => {
+            selectedFilters[filterKey] = []
+        })
+    }
+
     function removeFilter(value) {
-        removeSelectedFilter(value)
+        Object.keys(selectedFilters).forEach(filterKey => {
+            var index = selectedFilters[filterKey].indexOf(value.trim())
+            if (index !== -1) { selectedFilters[filterKey].splice(index, 1) }
+        });
+        updateUI()
+    }
+
+    function updateUI() {
         updateFilterBarList()
         updateSelectedDeployments()
     }
 
-    function removeSelectedFilter(value) {
-        Object.keys(selectedFilters).forEach(filterKey => {
-            var index = selectedFilters[filterKey].indexOf(value.trim())
-            if (index !== -1) {
-                selectedFilters[filterKey].splice(index, 1)
-            }
-        });
-    }
 
     function updateSelectedDeployments() {
         selectedDeployments = deploymentsMatchingFilters(allDeployments, selectedFilters)
         $('#solutions-number').html(selectedDeployments.length)
 
         updateAccordianFilters()
-        updateAutocompleteOptions()
-        showDeployments(selectedDeployments)
-        updateMapDeployments(selectedDeployments)
+        updateTiles(selectedDeployments)
+        updateMap()
     }
 
-    function updateMapDeployments() {
+    function updateMap() {
         if (geojsonLayer !== undefined) {
             map.removeLayer(geojsonLayer)
         }
