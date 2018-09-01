@@ -425,11 +425,9 @@
         // options = options.concat(filteredFilters('technology', selectedFilters.tech))
         // options = options.concat(filteredFilters('Country', selectedFilters.locations))
         console.log("Autocorrect Options:", options)
-        autocomplete(document.getElementById("search-box"), options, selected => {
+        autocomplete(document.getElementById("search-box"), options.sort(), selected => {
             $("#search-box").val("")
-            console.log(selected)
             key = findFilterKeyForValue(selected)
-            console.log(key)
             resetFilterData()
             addFilter(key, selected)
         });

@@ -13,49 +13,67 @@ function autocomplete(inp, arr, selectionCallback) {
     /*the autocomplete function takes two arguments,
     the text field element and an array of possible autocompleted values:*/
     var currentFocus;
-    /*execute a function when someone writes in the text field:*/
-    inp.addEventListener("input", function (e) {
-        var a, b, i, val = this.value;
+
+
+    inp.showOptions = (e, context) => {
+
+        var a, b, i, val = context.value;
         /*close any already open lists of autocompleted values*/
         closeAllLists();
-        if (!val) { return false; }
+        // if (!val) { return false; }
         currentFocus = -1;
         /*create a DIV element that will contain the items (values):*/
         a = document.createElement("DIV");
-        a.setAttribute("id", this.id + "autocomplete-list");
+        a.setAttribute("id", context.id + "autocomplete-list");
         a.setAttribute("class", "autocomplete-items");
         /*append the DIV element as a child of the autocomplete container:*/
-        this.parentNode.appendChild(a);
+        context.parentNode.appendChild(a);
         /*for each item in the array...*/
-        if (val.length >= 2) {
+        if (val.length !== 1) {
             for (i = 0; i < arr.length; i++) {
                 /*check if the item starts with the same letters as the text field value:*/
                 // if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-                if (arr[i].toUpperCase().indexOf(val.toUpperCase()) !== -1) {
+                match = arr[i]
+
+
+                hasOption = match.length > 0
+                showAll = (val.length === 0)
+                showSearchMatches = (val.length > 0 && match.toUpperCase().indexOf(val.toUpperCase()) !== -1)
+
+                if (hasOption && (showAll || showSearchMatches)) {
+
+
+
                     /*create a DIV element for each matching element:*/
                     b = document.createElement("DIV");
 
-                    /*make the matching letters bold:*/
-                    // b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-                    // b.innerHTML += arr[i].substr(val.length);
+                    if (showSearchMatches) {
+                        /*make the matching letters bold:*/
+                        // b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                        // b.innerHTML += arr[i].substr(val.length);
 
-                    match = arr[i]
-                    indexes = []
-                    index = -1
-                    do {
-                        index = match.toUpperCase().indexOf(val.toUpperCase(), index + 1)
-                        if (index !== -1) {
-                            indexes.push(index)
+                        indexes = []
+                        index = -1
+
+                        do {
+                            console.log("In here")
+                            index = match.toUpperCase().indexOf(val.toUpperCase(), index + 1)
+                            if (index !== -1) {
+                                indexes.push(index)
+                            }
                         }
+                        while (index !== -1);
+
+
+                        indexes.slice().reverse().forEach(function (index) {
+                            match = match.splice(index + val.length, 0, "</strong>")
+                            match = match.splice(index, 0, "<strong>")
+                        })
+
                     }
-                    while (index !== -1);
-
-
-                    indexes.slice().reverse().forEach(function (index) {
-                        match = match.splice(index + val.length, 0, "</strong>")
-                        match = match.splice(index, 0, "<strong>")
-                    })
                     b.innerHTML += match;
+
+
 
 
                     /*insert a input field that will hold the current array item's value:*/
@@ -75,6 +93,26 @@ function autocomplete(inp, arr, selectionCallback) {
                 }
             }
         }
+
+        $('.autocomplete-items').css('max-height', getHeight() );
+
+        $(window).scroll(function() {
+            $('.autocomplete-items').css('max-height',getHeight() );
+        })
+    }
+
+    function getHeight () {
+        return Math.min(500, $(window).height() - (offset(inp).top + 100) + $(window).scrollTop())
+    }
+
+    inp.addEventListener("focus", function (e) {
+        inp.showOptions(e, this)
+    })
+
+    /*execute a function when someone writes in the text field:*/
+    inp.addEventListener("input", function (e) {
+        inp.showOptions(e, this)
+
     });
     /*execute a function presses a key on the keyboard:*/
     inp.addEventListener("keydown", function (e) {
@@ -127,6 +165,14 @@ function autocomplete(inp, arr, selectionCallback) {
             }
         }
     }
+
+    function offset(el) {
+        var rect = el.getBoundingClientRect(),
+        scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
+        scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
+    }
+
     /*execute a function when someone clicks in the document:*/
     document.addEventListener("click", function (e) {
         closeAllLists(e.target);
