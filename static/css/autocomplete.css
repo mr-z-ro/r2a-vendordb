@@ -28,7 +28,6 @@
     left: 0;
     right: 0;
 
-    max-height: 500px; /*modify the value to fit your needs, 80px is the position of your floating button*/
     overflow-y: auto;
     /* prevent horizontal scrollbar */
     overflow-x: hidden;

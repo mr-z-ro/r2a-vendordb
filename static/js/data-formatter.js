@@ -8,13 +8,13 @@ function uniqueProperties(data, propertyName) {
             if (property.constructor === Array) {
                 property.forEach(prop => {
                     var trimmedProp = prop.trim()
-                    if (properties.indexOf(trimmedProp) === -1) {
+                    if (trimmedProp.length > 0 && properties.indexOf(trimmedProp) === -1) {
                         properties.push(trimmedProp)
                     }
                 })
             } else {
                 var trimmedProp = property.trim()
-                if (properties.indexOf(trimmedProp) === -1) {
+                if (trimmedProp.length > 0 && properties.indexOf(trimmedProp) === -1) {
                     properties.push(trimmedProp)
                 }
             }

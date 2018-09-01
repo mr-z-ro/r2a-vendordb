@@ -102,8 +102,21 @@
     } */
     .filter {
         padding: 2px 8px;
-        margin: 10px 5px 10px 0px;
+        margin: 5px 5px 0px 0px;
         display: inline-block;
+        transition: all .1s ease-in;
+    }
+
+    .filter:hover {
+        background-color: #0a2d37;
+        color: #ffffff;
+        transition: all .1s ease-in;
+    }
+
+    .filter:active {
+        background-color: #ffffff;
+        color: #0a2d37;
+        transition: all .0s ease-in;
     }
 
     .dark-border {
@@ -119,11 +132,35 @@
         padding: 10px;
         margin: 0px 5px 10px 0px;
         display: inline-block;
+        transition: all .1s ease-in;
+    }
+
+    .reset-filters:hover {
+        background-color: #ffffff;
+        color: #0a2d37;
+        transition: all .1s ease-in;
+    }
+
+    .reset-filters:active {
+        background-color: #0a2d37;
+        color: #ffffff;
+        transition: all .0s ease-in;
     }
 
     .filter>.fa-times {
         color: #0a2d37;
         margin-left: 5px;
+        transition: all .1s ease-in;
+    }
+
+    .filter:hover>.fa-times {
+        color: #ffffff;
+        transition: all .1s ease-in;
+    }
+
+    .filter:active>.fa-times {
+        color: #0a2d37;
+        transition: all .0s ease-in;
     }
 
     .filtering-column>ul {
@@ -134,10 +171,31 @@
         margin-left: 10px;
     }
 
-    .uk-badge {
-        background-color: #00a69c;
-        margin: 0px 10px;
+    .uk-list>li {
+        font-size: .875rem;
         line-height: 1.6em;
+        padding: 0 5px;
+        min-height: 24px;
+        position: relative;
+        padding: 10px 35px 10px 10px;
+        display: block;
+        margin: 0px !important;
+    }
+
+    .uk-list>li:hover {
+        cursor: pointer;
+        background-color: #e9e9e9;
+    }
+
+    .uk-badge {
+        position: absolute;
+        background-color: #00a69c;
+        margin: auto 10px;
+        line-height: 1.6em;
+        right: 0%;
+        top: 50%;
+        transform: translateY(-50%);
+
     }
 
     .sqs-layout>.sqs-row {
@@ -151,7 +209,7 @@
     }
 
     .uk-accordion-content {
-        margin-top: 0px;
+        margin-top: 10px;
     }
 
     .solution {
@@ -212,20 +270,6 @@
         Contact us at
         <a href="mailto:R2A@bfaglobal.com">R2A@bfaglobal.com</a>.</p>
 </div>
-
-
-
-<!-- <div class="sqs-layout sqs-grid-12 columns-12">
-    <div class="row sqs-row">
-
-        <div class="col sqs-col-4 filtering-column">
-            <div style="margin:10px 0px 20px 24px">
-            </div>
-        </div>
-
-
-    </div>
-</div> -->
 
 <div class="loading">
     <h4>Loading...</h4>
@@ -517,7 +561,8 @@
 
         if (filterCount) {
 
-            var filterHTML = 'Filter' + (filterCount !== 1 ? 's' : '') + ': &nbsp;&nbsp;'
+            filterPrefix = 'Filter' + (filterCount !== 1 ? 's' : '') + ': &nbsp;&nbsp;'
+            filterHTML
 
             Object.keys(selectedFilters).forEach(filterKey => {
                 var filters = selectedFilters[filterKey]
@@ -526,6 +571,7 @@
                     filterHTML += '<div class="filter dark-border">' + filter + ' <i class="fa fa-times" aria-hidden="true"></i></div>'
                 });
             });
+            filterHTML = filterPrefix + '<div style="display:inline-block;">' + filterHTML +'</div>'
         }
 
         $('#selected-filter').html(filterHTML)
