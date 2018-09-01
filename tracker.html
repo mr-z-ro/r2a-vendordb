@@ -97,14 +97,16 @@
         padding: 20px;
     } */
     .filter {
+        padding: 2px 8px;
+        margin: 10px 5px 10px 0px;
+        display: inline-block;
+    }
+
+    .dark-border {
         border-color: #0a2d37;
         color: #0a2d37;
         border-width: 2px;
         border-style: solid;
-        padding: 2px 8px;
-        ;
-        margin: 10px 5px 10px 0px;
-        display: inline-block;
     }
 
     .reset-filters {
@@ -158,8 +160,6 @@
 
     .search-input {
         color: #0a2d37;
-        border: 2px solid #0a2d37;
-        opacity: .7;
         transition: background-image .2s ease-out;
         padding: 12px 12px 12px 45px;
         background: url(/static/images/icon-search.png) no-repeat 15px 50%;
@@ -263,22 +263,27 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="row sqs-row" style="margin-bottom: 10px">
                 <div class="col sqs-col-4">
-                    <div class="reset-filters">Reset Filters</div>
+                    <div class="reset-filters dark-border">Reset Filters</div>
+                    <span style="display:inline-block;">&nbsp;</span>
                 </div>
-
                 <div class="col sqs-col-4">
                     <div class="autocomplete">
-
-                        <input id="search-box" type="search" class="search-input " value="" placeholder="Search">
+                        <input id="search-box" type="search" class="search-input dark-border" value="" placeholder="Search">
                     </div>
                 </div>
+            </div>
 
+            <div class="row sqs-row" style="margin-bottom: 10px">
                 <div class="col sqs-col-8">
                     <div id="selected-filter"> </div>
                 </div>
+            </div>
 
+            <div class="row sqs-row">
                 <div class="col sqs-col-6">
                     <div class="instruction-text">
                         <span>Click on an agency below to explore solutions.</span>
@@ -286,14 +291,17 @@
                 </div>
                 <div class="col sqs-col-2">
                     <div class="solutions-number-container">
-                        <span id="solutions-number"></span> solutions
+                        <span id="solutions-number"></span>
                     </div>
                 </div>
+            </div>
+
+            <div class="row sqs-row">
                 <div class="col sqs-col-8">
                     <div class="deployment-list"> </div>
                 </div>
-
             </div>
+
         </div>
     </div>
 
@@ -352,7 +360,6 @@
         // Display Formatted Data
         map = createMap(mapConfig)
 
-        updateSelectedDeployments()
 
         setTimeout(() => {
             UIkit.accordion('#filters').toggle(0, true);
@@ -395,6 +402,7 @@
         });
 
         updateAutocompleteOptions()
+        updateUI()
 
     })
 
@@ -466,21 +474,40 @@
     function addFilter(key, value) {
         selectedFilters[key].push(value);
         updateFilterBarList()
-        updateSelectedDeployments()
+        updateUI()
+    }
+
+    function selectedFilterCount() {
+        filterCount = 0
+        Object.keys(selectedFilters).forEach(filterKey => {
+            filterCount += selectedFilters[filterKey].length
+        })
+        return filterCount
     }
 
     function updateFilterBarList() {
-
         $('#selected-filter').empty()
-        var filterHTML = 'Filter(s): &nbsp;&nbsp;'
 
-        Object.keys(selectedFilters).forEach(filterKey => {
-            var filters = selectedFilters[filterKey]
-            console.log(filters);
-            filters.forEach(filter => {
-                filterHTML += '<div class="filter">' + filter + ' <i class="fa fa-times" aria-hidden="true"></i></div>'
+        var filterHTML = ''
+
+        filterCount = selectedFilterCount()
+
+        style = (filterCount ? 'inline-block' : 'none')
+        $(".reset-filters").css('display', style)
+
+        if (filterCount) {
+
+            var filterHTML = 'Filter' + (filterCount !== 1 ? 's' : '') + ': &nbsp;&nbsp;'
+
+            Object.keys(selectedFilters).forEach(filterKey => {
+                var filters = selectedFilters[filterKey]
+                console.log(filters);
+                filters.forEach(filter => {
+                    filterHTML += '<div class="filter dark-border">' + filter + ' <i class="fa fa-times" aria-hidden="true"></i></div>'
+                });
             });
-        });
+        }
+
         $('#selected-filter').html(filterHTML)
 
         $('.filter').click((event) => {
@@ -512,15 +539,10 @@
     }
 
     function updateUI() {
-        updateFilterBarList()
-        updateSelectedDeployments()
-    }
-
-
-    function updateSelectedDeployments() {
         selectedDeployments = deploymentsMatchingFilters(allDeployments, selectedFilters)
-        $('#solutions-number').html(selectedDeployments.length)
+        $('#solutions-number').html(selectedDeployments.length + ' solution' + (selectedDeployments.length !== 1 ? 's' : ''))
 
+        updateFilterBarList()
         updateAccordianFilters()
         updateTiles(selectedDeployments)
         updateMap()
