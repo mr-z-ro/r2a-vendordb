@@ -4,6 +4,7 @@
 <!-- Make sure you put this AFTER Leaflet's CSS -->
 <script src="static/js/leaflet/leaflet.js"></script>
 <script src="static/js/d3/d3.min.js"></script>
+<link rel="stylesheet" href="static/css/autocomplete.css">
 
 
 <style>
@@ -141,8 +142,23 @@
     .solution {
         margin-left: 20px;
     }
+
     .solution>p {
         margin: 5px 0px;
+    }
+
+    .search-input {
+        color: #0a2d37;
+        border: 2px solid #0a2d37;
+        opacity: .7;
+        transition: background-image .2s ease-out;
+        padding: 12px 12px 12px 45px;
+        background: url(/static/images/icon-search.png) no-repeat 15px 50%;
+        width: calc(100% - 59px);
+        min-height: 20px;
+        display: block;
+        outline: 0;
+        box-sizing: border-box;
     }
 </style>
 
@@ -170,21 +186,38 @@
         </div>
     </div>
 
-    <p>This map will be updated to reflect RegTech solutions around the world. Don't see your country's solution listed? Contact
-        us at
+    <p>This map will be updated to reflect RegTech solutions around the world. Don't see your country's solution listed?
+        Contact us at
         <a href="mailto:R2A@bfaglobal.com">R2A@bfaglobal.com</a>.</p>
 </div>
 
 
 
-<div class="sqs-layout sqs-grid-12 columns-12 content">
+<div class="sqs-layout sqs-grid-12 columns-12">
     <div class="row sqs-row">
-        <div class="col sqs-col-4 filtering-column">
 
+        <div class="col sqs-col-4 filtering-column">
             <div style="margin:10px 0px 20px 24px">
                 <span id="solutions-number"></span> solutions
             </div>
+        </div>
 
+        <div class="col sqs-col-4">
+            <span style="width:100%;">&nbsp;</span>
+        </div>
+
+        <div class="col sqs-col-4">
+            <div class="autocomplete">
+
+                <input id="search-box" type="search" class="search-input " value="" placeholder="Search">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="sqs-layout sqs-grid-12 columns-12 content">
+    <div class="row sqs-row">
+        <div class="col sqs-col-4 filtering-column">
 
             <ul id="filters" uk-accordion="multiple: false">
                 <li>
@@ -232,6 +265,7 @@
 <script src="./static/js/map-utils.js"></script>
 <script src="./static/js/data-formatter.js"></script>
 <script src="./static/js/accordian.js"></script>
+<script src="./static/js/autocomplete.js"></script>
 <script>
 
     var map
@@ -264,7 +298,7 @@
         zoomSnap: 0.05,
         minZoom: 1,
         maxZoom: 6,
-        mapStyle: 'margin:0px 15px 10px 0px;',
+        mapStyle: 'margin:0px 0px 10px 0px;',
     }
 
     var modal
@@ -322,7 +356,28 @@
             lMap.zoomControl.setPosition('bottomleft');
         });
 
+        updateAutocompleteOptions()
+
     })
+
+    function updateAutocompleteOptions() {
+        // options = Object.keys(filterOptions).reduce((acc, filterKey) => {
+
+        //     acc = acc.concat(filteredFilters(filterKey, selectedFilters[filterKey]))
+        //     return acc
+        // }, [])
+        options = filteredFilters('useCases', selectedFilters.useCases)
+        options = options.concat(filteredFilters('technology', selectedFilters.tech))
+        options = options.concat(filteredFilters('Country', selectedFilters.locations))
+        console.log(options)
+        autocomplete(document.getElementById("search-box"), options, selected => {
+            $("#search-box").val("")
+            console.log(selected)
+            key = findFilterKeyForValue(selected)
+            console.log(key)
+            addFilter(key, selected)
+        });
+    }
     // }, 3000);
     function showDeployments(deploymentsToShow) {
         console.log(deploymentsToShow);
@@ -355,6 +410,18 @@
         $('.new-vendor').click(event => {
             displayDeployment(event.currentTarget.id)
         })
+    }
+
+    function findFilterKeyForValue(value) {
+        found = undefined
+        Object.keys(filterOptions).forEach(filterKey => {
+            var index = filterOptions[filterKey].indexOf(value.trim())
+            if (index !== -1) {
+                console.log("Found?:", filterKey, filterOptions[filterKey], index)
+                found = filterKey
+            }
+        });
+        return found
     }
 
     function addFilter(key, value) {
@@ -401,6 +468,7 @@
         $('#solutions-number').html(selectedDeployments.length)
 
         updateAccordianFilters()
+        updateAutocompleteOptions()
         showDeployments(selectedDeployments)
         updateMapDeployments(selectedDeployments)
     }
@@ -541,7 +609,7 @@
 
         filterOptions.useCases = uniqueProperties(allDeployments, 'useCases').sort()
         console.log('filterOptions.useCases', filterOptions.useCases)
-        filterOptions.tech = uniqueProperties(allDeployments, 'Tech').sort()
+        filterOptions.tech = uniqueProperties(allDeployments, 'technology').sort()
         console.log('filterOptions.tech', filterOptions.tech)
         filterOptions.locations = uniqueProperties(allDeployments, 'Country').sort()
         console.log('filterOptions.locations', filterOptions.locations)
@@ -631,7 +699,7 @@
 
     info.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-        this._div.innerHTML =  'Select to filter by country'
+        this._div.innerHTML = 'Select to filter by country'
         this.update();
         return this._div;
     };
@@ -663,10 +731,9 @@
 
 
 
-
     function displayDeployment(deploymentId) {
         console.log(groupedSolutions, deploymentId)
-        var deployments = deploymentsMatchingFilters( groupedSolutions[deploymentId], selectedFilters)
+        var deployments = deploymentsMatchingFilters(groupedSolutions[deploymentId], selectedFilters)
 
         modal = $('.vendor').jBox('Modal', {
             maxWidth: 600
@@ -687,7 +754,7 @@
             <p><span><strong>Agency Type:</strong> ` + deployments[0]['Type of Agency'] + `</span></p>
             <br>`
 
-            content += `<p><span><u><strong style="font-size: 14px; margin-bottom:15px;">Solution` + ((deployments.length > 1) ? `s (` + deployments.length + `)` : '') +  `:</strong></u></span></p>  `
+        content += `<p><span><u><strong style="font-size: 14px; margin-bottom:15px;">Solution` + ((deployments.length > 1) ? `s (` + deployments.length + `)` : '') + `:</strong></u></span></p>  `
 
         deployments.forEach((deployment, index) => {
             content += `
@@ -695,7 +762,7 @@
                 <p><span><strong><i class="fa fa-list"></i> &nbsp; Use Cases:</strong> ` + deployment['Use case'] + `</span></p>
                 <p><span><strong><i class="fa fa-check-circle"></i> &nbsp; Status:</strong> ` + deployment.Status + `</span></p>
                 <p><span><strong><i class="fa fa-cogs"></i> &nbsp;Tech:</strong> ` + deployment.Tech + `</span></p>
-                <p><span><strong><i class="fa fa-align-justify"></i> &nbsp; Description:</strong> ` + deployment.Description + `</span></p>
+                <p><span><strong><i class="fas fa-file-alt" aria-hidden="true"></i> &nbsp;&nbsp; Description:</strong> ` + deployment.Description + `</span></p>
             </div>
             `
             if (index != (deployments.length - 1)) {
@@ -706,4 +773,3 @@
     }
 
 </script>
-
