@@ -3,213 +3,16 @@
 <link rel="stylesheet" href="static/js/leaflet/leaflet.css" />
 <!-- Make sure you put this AFTER Leaflet's CSS -->
 <script src="static/js/leaflet/leaflet.js"></script>
-<script src="static/js/d3/d3.min.js"></script>
-<link rel="stylesheet" href="static/css/autocomplete.css">
 
 
 <style>
-    .header>p>a {
-        color: #2C9385;
-    }
-
     #mapid {
         height: 400px;
-    }
-
-    .loading {
-        text-align: center;
-        margin: 125px 0px;
-    }
-
-    .loading>i {
-        font-size: 40px;
-        color: #2C9385;
-    }
-
-    .info {
-        padding: 6px 8px;
-        font: 14px/16px Arial, Helvetica, sans-serif;
-        background: white;
-        background: rgba(255, 255, 255, 0.8);
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-        border-radius: 5px;
-    }
-
-    .info h4 {
-        margin: 0 0 5px;
-        color: #777;
-    }
-
-    .legend {
-        line-height: 18px;
-        color: #555;
-    }
-
-    .legend i {
-        width: 18px;
-        height: 18px;
-        float: left;
-        margin-right: 8px;
-        opacity: 0.7;
-    }
-
-    .vendor-image {
-        /* display: block; */
-        max-width: calc(100% - 10px);
-        max-height: calc(100% - 10px);
-        width: auto;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-        vertical-align: middle;
-    }
-
-    .new-vendor {
-        text-align: center;
-        vertical-align: middle;
-        padding: 5px;
-        white-space: nowrap;
-        display: flex;
-        align-items: center;
-        width: calc(33.3% - 20px);
-        margin: 5px 5px;
-    }
-
-    #deployment-list {
-        margin: 0px -5px;
-        width: calc(100% + 10px);
-    }
-
-    .uk-accordion-title,
-    .uk-accordion-title:focus,
-    .uk-accordion-title:hover,
-    .uk-accordion-title::after {
-        font-size: 1.2em;
-        font-weight: 400;
-        color: #00a69c;
-        fill: #00a69c;
-    }
-
-    a.uk-accordion-title>i {
-        margin: 0px 10px;
-    }
-
-    /* ul>li {
-        border-color: #0a2d37;
-        border-width: 2px;
-        border-style: solid;
-        padding: 20px;
-    } */
-    .filter {
-        padding: 2px 8px;
-        margin: 5px 5px 0px 0px;
-        display: inline-block;
-        transition: all .1s ease-in;
-    }
-
-    .filter:hover {
-        background-color: #0a2d37;
-        color: #ffffff;
-        transition: all .1s ease-in;
-    }
-
-    .filter:active {
-        background-color: #ffffff;
-        color: #0a2d37;
-        transition: all .0s ease-in;
-    }
-
-    .dark-border {
-        border-color: #0a2d37;
-        color: #0a2d37;
-        border-width: 2px;
-        border-style: solid;
-    }
-
-    .reset-filters {
-        background-color: #0a2d37;
-        color: #ffffff;
-        padding: 10px;
-        margin: 0px 5px 10px 0px;
-        display: inline-block;
-        transition: all .1s ease-in;
-    }
-
-    .reset-filters:hover {
-        background-color: #ffffff;
-        color: #0a2d37;
-        transition: all .1s ease-in;
-    }
-
-    .reset-filters:active {
-        background-color: #0a2d37;
-        color: #ffffff;
-        transition: all .0s ease-in;
-    }
-
-    .filter>.fa-times {
-        color: #0a2d37;
-        margin-left: 5px;
-        transition: all .1s ease-in;
-    }
-
-    .filter:hover>.fa-times {
-        color: #ffffff;
-        transition: all .1s ease-in;
-    }
-
-    .filter:active>.fa-times {
-        color: #0a2d37;
-        transition: all .0s ease-in;
-    }
-
-    .filtering-column>ul {
-        margin: 0px 10px 0px 24px;
-    }
-
-    ul>li>div {
-        margin-left: 10px;
-    }
-
-    .uk-list>li {
-        font-size: .875rem;
-        line-height: 1.6em;
-        padding: 0 5px;
-        min-height: 24px;
-        position: relative;
-        padding: 10px 35px 10px 10px;
-        display: block;
-        margin: 0px !important;
-    }
-
-    .uk-list>li:hover {
-        cursor: pointer;
-        background-color: #e9e9e9;
-    }
-
-    .uk-badge {
-        position: absolute;
-        background-color: #00a69c;
-        margin: auto 10px;
-        line-height: 1.6em;
-        right: 0%;
-        top: 50%;
-        transform: translateY(-50%);
-
-    }
-
-    .sqs-layout>.sqs-row {
-        margin-left: 0px;
-        margin-right: 0px;
     }
 
     .jBox-content>p {
         margin-top: 5px;
         margin-bottom: 5px;
-    }
-
-    .uk-accordion-content {
-        margin-top: 10px;
     }
 
     .solution {
@@ -218,6 +21,11 @@
 
     .solution>p {
         margin: 5px 0px;
+    }
+
+    .reset-filters {
+        margin: 0px 5px 10px 0px;
+        display: inline-block;
     }
 
     .search-input {
@@ -230,15 +38,6 @@
         display: block;
         outline: 0;
         box-sizing: border-box;
-    }
-
-    .instruction-text {
-        margin: 10px 0px;
-    }
-
-    .solutions-number-container {
-        text-align: right;
-        margin: 10px 0px;
     }
 </style>
 
@@ -279,7 +78,7 @@
 
 <div id="solutions-tracker" class="sqs-layout sqs-grid-12 columns-12 content" style="display:none; margin-top: 30px;">
     <div class="row sqs-row">
-        <div class="col sqs-col-4 filtering-column">
+        <div class="col sqs-col-4 accordian-selections">
 
             <ul id="filters" uk-accordion="multiple: false">
                 <li>
@@ -299,7 +98,7 @@
                 <li>
                     <a class="uk-accordion-title" href="#">
                         Status
-                        <i class="fa fa-map m-l-sm"></i>
+                        <i class="fa fa-check-circle m-l-sm"></i>
                     </a>
                     <div id='status-choices' class="uk-accordion-content"> </div>
                 </li>
@@ -324,7 +123,7 @@
 
             <div class="row sqs-row" style="margin-bottom: 10px">
                 <div class="col sqs-col-4">
-                    <div class="reset-filters dark-border">Reset Filters</div>
+                    <div class="reset-filters dark-border dark-button">Reset Filters</div>
                     <span style="display:inline-block;">&nbsp;</span>
                 </div>
                 <div class="col sqs-col-4">
@@ -353,25 +152,35 @@
                 </div>
             </div>
 
-            <!-- <div class="row sqs-row"> -->
-            <div id="deployment-list" class="col sqs-col-8">
+            <div class="row sqs-row">
+                <div id="deployment-list" class="col sqs-col-8 tile-grid">
+                </div>
             </div>
-            <!-- </div> -->
 
         </div>
     </div>
 
 </div>
 
-
-<script src="./static/js/map-utils.js"></script>
 <script src="./static/js/data-formatter.js"></script>
-<script src="./static/js/accordian.js"></script>
-<script src="./static/js/autocomplete.js"></script>
+
+<script src="./static/components/map/map.js"></script>
+<link rel="stylesheet" href="static/components/map/map.css">
+
+<script src="./static/components/accordian/accordian.js"></script>
+<link rel="stylesheet" href="static/components/accordian/accordian.css">
+
+<script src="./static/components/autocomplete/autocomplete.js"></script>
+<link rel="stylesheet" href="static/components/autocomplete/autocomplete.css">
+
+<script src="./static/components/filterbar/filterbar.js"></script>
+<link rel="stylesheet" href="static/components/filterbar/filterbar.css">
+
+<script src="./static/components/tile-grid/tile-grid.js"></script>
+<link rel="stylesheet" href="static/components/tile-grid/tile-grid.css">
+
 <script>
 
-    var map
-    var geojsonLayer
     var categories = ['Exploratory', 'Developmental', 'Operational']
     var allCountryShapes = []
 
@@ -394,6 +203,33 @@
         locations: [],
     }
 
+    var getColor = (d) => {
+        return d >= 2 ? '#1b988a' :
+            d >= 1 ? '#16716a' :
+                '#104949';
+    }
+
+    var getStyle = (feature) => {
+        var color = getColor(indexFromFeature(feature))
+        return {
+            fillColor: color,
+            fillOpacity: 0.8,
+            weight: 2,
+            opacity: .8,
+            color: color,
+        }
+    }
+
+    var indexFromFeature = (feature) => {
+        var found = -1
+        categories.slice().reverse().forEach((cat, idx) => {
+            if (feature.properties.deployments.filter(e => { return e.Status.trim() === categories[idx] }).length > 0) {
+                found = idx
+            }
+        })
+        return found
+    }
+
     var mapConfig = {
         containerElementId: 'map',
         mapId: 'mapid',
@@ -403,6 +239,20 @@
         minZoom: 1,
         maxZoom: 6,
         mapStyle: 'margin:0px 0px 10px 0px;',
+        getColor: getColor,
+        getStyle: getStyle,
+        getHighlightStyle: {
+            weight: 3,
+            dashArray: '',
+            fillOpacity: 1.0
+        },
+        indexFromFeature: indexFromFeature,
+        selection: (e) => {
+            var country = e.target.feature.properties.country_name
+            if (selectedFilters.locations.indexOf(country) === -1) {
+                addFilter('locations', country, updateUI)
+            }
+        }
     }
 
     var modal
@@ -411,29 +261,18 @@
         d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTYPKjQhh6VuHPB0fezf1fOH4s90BSbrVNjYP5QHGAwtJTeYmB1vGxrZQHKtkgHlNxAsdITJu5g5J6p/pub?gid=553555379&single=true&output=csv"),
         d3.json("./static/js/leaflet/countries.json")
     ]).then((data) => {
-        
 
         // Format Data
         formatData(data)
 
-        // Display Formatted Data
+        // Setup Map
         map = createMap(mapConfig)
-
-        // Legend
-        var legend = L.control({ position: 'topright' });
-
-        legend.onAdd = function (map) {
-            div = L.DomUtil.create('div', 'info legend')
-            labels = [];
-
-            for (var i = 0; i < categories.length; i++) {
-                div.innerHTML += '<i style="background:' + getColor(i) + '"></i> ' + categories[i] + '<br>';
-            }
-            return div;
-        };
-
-        legend.addTo(map);
-        info.addTo(map);
+        createLegend({ position: 'topright' }, categories).addTo(map);
+        mapOverlay = createOverlay({
+            position: 'bottomleft',
+            hoverOnly: true,
+            innerHTML: 'Select to filter by country',
+        }).addTo(map);
 
         map.invalidateSize()
 
@@ -442,167 +281,71 @@
         $("#solutions-tracker").css("display", "block")
 
         // Set the UI
-        updateAutocompleteOptions()
+        autocomplete(
+            document.getElementById("search-box"),
+            Object.keys(filterOptions).reduce((acc, filterKey) => {
+                return acc.concat(filterOptions[filterKey])
+            }, []).sort(), selected => {
+                $("#search-box").val("")
+                key = findFilterKeyForValue(filterOptions, selected)
+                removeAllFilters()
+                addFilter(key, selected, updateUI)
+            });
+
         updateUI()
+
         setTimeout(() => {
             UIkit.accordion('#filters').toggle(0, true);
         }, 1000)
     }).catch(error => {
         if (error) {
             console.error("Caught Error:", error)
-        }  
+        }
     })
 
-    function updateAutocompleteOptions() {
-        options = Object.keys(filterOptions).reduce((acc, filterKey) => {
-            acc = acc.concat(filterOptions[filterKey])
-            return acc
-        }, [])
-
-        console.log("Autocorrect Options:", options)
-        autocomplete(document.getElementById("search-box"), options.sort(), selected => {
-            $("#search-box").val("")
-            key = findFilterKeyForValue(selected)
-            resetFilterData()
-            addFilter(key, selected)
-        });
-    }
-
-    function updateTiles(deploymentsToShow) {
-
-        var deployments = d3.nest()
-            .key(function (d) { return d.Agency; })
-            .entries(deploymentsToShow);
-
-        var targetElement = $("#deployment-list");
-        targetElement.empty();
-        if (!deployments.length) {
-            console.log("no deployments to show");
-            var noVendorsMessage = '<p class="no-vendors-message">There are no solutions available with the selected filters.<br />\
-        Review current filters on the left-hand side.</p>';
-            targetElement.append(noVendorsMessage);
-        }
-
-        deployments.forEach(deployment => {
-            targetElement.append($(`
-                <div class="new-vendor" id="` + deployment.key + `">
-                    <object class="vendor-image" data="./static/images/agency-icons/`+ deployment.key + `.png" type="image/png">
-                        <img class="vendor-image" src="` + deployment.values[0]["Image"] + `" />
-                    </object>
-                </div>`
-            ));
-        })
-
-        $('.new-vendor').click(event => {
-            displayDeployment(event.currentTarget.id)
-        })
-    }
-
-    function findFilterKeyForValue(value) {
-        found = undefined
-        Object.keys(filterOptions).forEach(filterKey => {
-            var index = filterOptions[filterKey].indexOf(value.trim())
-            if (index !== -1) {
-                found = filterKey
-            }
-        });
-        return found
-    }
-
-    function addFilter(key, value) {
-        selectedFilters[key].push(value);
-        updateUI()
-    }
-
-    function selectedFilterCount() {
-        filterCount = 0
-        Object.keys(selectedFilters).forEach(filterKey => {
-            filterCount += selectedFilters[filterKey].length
-        })
-        return filterCount
-    }
-
-
-
-    function removeAllFilters() {
-        resetFilterData()
-        updateUI()
-    }
-
-    function resetFilterData() {
-        Object.keys(selectedFilters).forEach(filterKey => {
-            selectedFilters[filterKey] = []
-        })
-    }
-
-    function removeFilter(value) {
-        Object.keys(selectedFilters).forEach(filterKey => {
-            var index = selectedFilters[filterKey].indexOf(value.trim())
-            if (index !== -1) { selectedFilters[filterKey].splice(index, 1) }
-        });
-        updateUI()
-    }
 
     // UI Updates 
     function updateUI() {
         selectedDeployments = deploymentsMatchingFilters(allDeployments, selectedFilters)
         $('#solutions-number').html(selectedDeployments.length + ' solution' + (selectedDeployments.length !== 1 ? 's' : ''))
-
-        updateFilterBarList()
+        updateResetButtonVisibility()
+        updateSelectedFiltersUI('#selected-filter', selectedFilters, (event) => {
+            removeFilter(event.currentTarget.innerText, updateUI)
+        })
+        updateDeploymentTiles()
         updateAccordianFilters()
-        updateTiles(selectedDeployments)
-        updateMap()
+        updateMap(mapFormattedDeployments(selectedDeployments))
     }
 
-    function updateFilterBarList() {
-        $('#selected-filter').empty()
-
-        var filterHTML = ''
-
-        filterCount = selectedFilterCount()
-
-        style = (filterCount ? 'inline-block' : 'none')
+    function updateResetButtonVisibility() {
+        style = (filterCount(selectedFilters) ? 'inline-block' : 'none')
         $(".reset-filters").css('display', style)
-
-        if (filterCount) {
-
-            filterPrefix = 'Filter' + (filterCount !== 1 ? 's' : '') + ': &nbsp;&nbsp;'
-            filterHTML
-
-            Object.keys(selectedFilters).forEach(filterKey => {
-                var filters = selectedFilters[filterKey]
-                console.log(filters);
-                filters.forEach(filter => {
-                    filterHTML += '<div class="filter dark-border">' + filter + ' <i class="fa fa-times" aria-hidden="true"></i></div>'
-                });
-            });
-            filterHTML = filterPrefix + '<div style="display:inline-block;">' + filterHTML +'</div>'
-        }
-
-        $('#selected-filter').html(filterHTML)
-
-        $('.filter').click((event) => {
-            removeFilter(event.currentTarget.innerText)
-        })
     }
 
     $('.reset-filters').click(event => {
-        removeAllFilters()
+        removeAllFilters(updateUI)
     })
 
-    function updateMap() {
-        if (geojsonLayer !== undefined) {
-            map.removeLayer(geojsonLayer)
-        }
-
-        mapData = mapFormattedDeployments(selectedDeployments);
-        console.log('mapData', mapData)
-        geojsonLayer = L.geoJson(mapData, {
-            style: countryStyle,
-            onEachFeature: onEachFeature
-        }).addTo(map);
-        map.fitBounds(geojsonLayer.getBounds());
+    function updateDeploymentTiles() {
+        updateTileGrid(
+            "#deployment-list",
+            d3.nest()
+                .key(function (d) { return d.Agency; })
+                .entries(selectedDeployments)
+            , {
+                emptyText: "There are no solutions available with the selected filters.<br />Review current filters on the left-hand side. ",
+                idMap: (el) => { return el.key },
+                tileContent: (el) => {
+                    return `<object class="tile-image" data="./static/images/agency-icons/` + el.key + `.png" type="image/png">
+                            <img class="tile-image" src="` + el.values[0]["Image"] + `" />
+                        </object>`
+                },
+                tileSelected: (id) => {
+                    displayDeployment(id)
+                }
+            })
     }
+
 
     function updateAccordianFilters() {
         displayAccordianValues(filteredFilters('useCases', selectedFilters.useCases), accordianConfigForFilterKey('useCases'))
@@ -616,10 +359,8 @@
     function filteredFilters(key, selections) {
         remainingFilters = uniqueProperties(selectedDeployments, key).sort();
         selections.forEach(filter => {
-            console.log("remainig", remainingFilters)
             index = remainingFilters.indexOf(filter)
             if (index !== -1) {
-                console.log("removing", filter)
                 remainingFilters.splice(index, 1)
             }
         })
@@ -639,7 +380,7 @@
     function accordianSelectionForFilterType(filterType) {
         return (event) => {
             $('.uk-badge').remove()
-            addFilter(filterType, event.target.innerText)
+            addFilter(filterType, event.target.innerText, updateUI)
         }
     }
 
@@ -764,96 +505,6 @@
         }, []);
     }
 
-
-    function getColor(d) {
-        return d >= 2 ? '#1b988a' :
-            d >= 1 ? '#16716a' :
-                '#104949';
-    }
-
-    function highestIndexOfDeplyments(deployments) {
-        var found = -1
-        categories.slice().reverse().forEach((cat, idx) => {
-            if (deployments.filter(e => { return e.Status.trim() === categories[idx] }).length > 0) {
-                found = idx
-            }
-        })
-        return found
-    }
-
-    function countryStyle(feature) {
-        var color = getColor(highestIndexOfDeplyments(feature.properties.deployments))
-        return {
-            fillColor: color,
-            fillOpacity: 0.8,
-            weight: 2,
-            opacity: .8,
-            color: color,
-            // dashArray: 3,
-        };
-    }
-
-    function selectedCountry(e) {
-        var country = e.target.feature.properties.country_name
-        if (selectedFilters.locations.indexOf(country) === -1) {
-            addFilter('locations', country)
-        }
-    }
-
-    function onEachFeature(feature, layer) {
-        layer.on({
-            mouseover: highlightFeature,
-            mouseout: resetHighlight,
-            click: selectedCountry
-        });
-    }
-
-
-
-
-    //Hover Over
-
-    var info = L.control({ position: 'bottomleft' });
-
-    info.update = function (props) {
-        style = 'display: ' + ((props !== undefined) ? 'block' : 'none') + ";"
-        this._div.setAttribute('style', style)
-    };
-
-    info.onAdd = function (map) {
-        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-        this._div.innerHTML = 'Select to filter by country'
-        this.update();
-        return this._div;
-    };
-
-
-    function highlightFeature(e) {
-        var layer = e.target;
-        var color = getColor(highestIndexOfDeplyments(layer.feature.properties.deployments))
-
-        layer.setStyle({
-            weight: 3,
-            color: color,
-            dashArray: '',
-            fillOpacity: 1.0
-        });
-
-        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-            layer.bringToFront();
-        }
-
-        info.update(layer.feature.properties);
-    }
-
-    function resetHighlight(e) {
-        style = countryStyle(e.target.feature)
-        e.target.setStyle(style)
-        info.update();
-    }
-
-
-
     function displayDeployment(deploymentId) {
         console.log(groupedSolutions, deploymentId)
         var deployments = deploymentsMatchingFilters(groupedSolutions[deploymentId], selectedFilters)
@@ -862,7 +513,7 @@
             maxWidth: 600
         });
 
-        title = `<span class="vendor-modal-title-text">` + deployments[0].Agency + `</span>
+        title = `<span class="vendor-modal-title-text">` + deployments[0]['Agency Full Name'] + `</span>
                 <i class="fa fa-times vendor-modal-close-times" onclick="modal.close();"></i>`
 
         content = `

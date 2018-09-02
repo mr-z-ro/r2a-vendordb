@@ -1,0 +1,22 @@
+
+    .filter {
+        padding: 2px 8px 4px 8px;
+        margin: 5px 5px 0px 0px;
+        display: inline-block;
+    }
+
+    .filter>.fa-times {
+        color: #0a2d37;
+        margin-left: 5px;
+        transition: all .1s ease-in;
+    }
+
+    .filter:hover>.fa-times {
+        color: #ffffff;
+        transition: all .1s ease-in;
+    }
+
+    .filter:active>.fa-times {
+        color: #0a2d37;
+        transition: all .0s ease-in;
+    }

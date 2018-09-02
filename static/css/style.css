@@ -16,10 +16,94 @@
     margin-left: 24px;
 }
 
+.footer>p {
+    max-width: 932px;
+    margin-left: 24px;
+}
+
+.header>p>a {
+    color: #2C9385;
+}
+
+.loading {
+    text-align: center;
+    margin: 125px 0px;
+}
+
+.loading>i {
+    font-size: 40px;
+    color: #2C9385;
+}
+
 h1 {
     margin-top: 0px;
 }
 
 p>em{
     color:rgba(255,255,255,.4);
+}
+
+.instruction-text {
+    margin: 10px 0px;
+}
+
+.solutions-number-container {
+    text-align: right;
+    margin: 10px 0px;
+}
+
+
+.dark-border {
+    border-color: #0a2d37;
+    color: #0a2d37;
+    border-width: 2px;
+    border-style: solid;
+}
+
+.dark-button {
+    background-color: #0a2d37;
+    color: #ffffff;
+    padding: 10px;
+    transition: all .1s ease-in;
+}
+
+.dark-button:hover {
+    background-color: #ffffff;
+    color: #0a2d37;
+    transition: all .1s ease-in;
+}
+
+.dark-button:active {
+    background-color: #0a2d37;
+    color: #ffffff;
+    transition: all .0s ease-in;
+}
+
+.light-button {
+    background-color: #ffffff;
+    color: #0a2d37;
+    transition: all .1s ease-in;
+}
+
+.light-button:hover {
+    background-color: #0a2d37;
+    color: #ffffff;
+    transition: all .1s ease-in;
+}
+
+.light-button:active {
+    background-color: #ffffff;
+    color: #0a2d37;
+    transition: all .0s ease-in;
+}
+
+.sqs-layout>.sqs-row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.modal-content {
+    max-height: 600px;
+    font-size: 1.4em;
+    line-height: 1.4em;
 }

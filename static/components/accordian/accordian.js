@@ -15,7 +15,6 @@ function displayAccordianValues(values, configOptions) {
             values.forEach(value => {
                 valueEls += '<li>' + value + '</li>'
             });
-            console.log('valueEls', valueEls)
 
             $(config[elementIdKey]).append($('<ul class="uk-list uk-list-large">' + valueEls + '</ul>'))
 
