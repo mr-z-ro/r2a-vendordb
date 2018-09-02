@@ -411,6 +411,7 @@
         d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTYPKjQhh6VuHPB0fezf1fOH4s90BSbrVNjYP5QHGAwtJTeYmB1vGxrZQHKtkgHlNxAsdITJu5g5J6p/pub?gid=553555379&single=true&output=csv"),
         d3.json("./static/js/leaflet/countries.json")
     ]).then((data) => {
+        
 
         // Format Data
         formatData(data)
@@ -446,6 +447,10 @@
         setTimeout(() => {
             UIkit.accordion('#filters').toggle(0, true);
         }, 1000)
+    }).catch(error => {
+        if (error) {
+            console.error("Caught Error:", error)
+        }  
     })
 
     function updateAutocompleteOptions() {
