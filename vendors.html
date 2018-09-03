@@ -378,8 +378,8 @@
             if (locationAvailabilityName in vendor) {
                 vendor.locationAvailability = vendor[locationAvailabilityName].split(',')
                 vendor.locationAvailability.forEach(locationAvailabile => {
-                    if (filterOptions.locations.indexOf(locationAvailabile) === -1) {
-                        filterOptions.locations.push(locationAvailabile)
+                    if (filterOptions.locations.indexOf(locationAvailabile.trim()) === -1) {
+                        filterOptions.locations.push(locationAvailabile.trim())
                     }
                 })
             }
