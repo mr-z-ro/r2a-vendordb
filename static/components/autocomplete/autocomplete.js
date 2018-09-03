@@ -28,35 +28,36 @@ function autocomplete(inp, arr, selectionCallback) {
         a.setAttribute("class", "autocomplete-items");
         /*append the DIV element as a child of the autocomplete container:*/
         context.parentNode.appendChild(a);
+
+        matches = arr.reduce((matches, possibleMatch) => {
+
+            hasOption = possibleMatch.length > 0
+            showAll = (val.length === 0)
+            showSearchMatches = (val.length > 0 && possibleMatch.toUpperCase().indexOf(val.toUpperCase()) !== -1)
+
+            if (hasOption && (showAll || showSearchMatches)) {
+                matches.push(possibleMatch)
+            }
+            return matches
+        }, [])
+
         /*for each item in the array...*/
-        if (val.length !== 1) {
-            for (i = 0; i < arr.length; i++) {
-                /*check if the item starts with the same letters as the text field value:*/
-                // if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-                match = arr[i]
-
-
-                hasOption = match.length > 0
-                showAll = (val.length === 0)
-                showSearchMatches = (val.length > 0 && match.toUpperCase().indexOf(val.toUpperCase()) !== -1)
-
-                if (hasOption && (showAll || showSearchMatches)) {
-
-
+        if (matches.length > 0) {
+            if (val.length !== 1) {
+                // if (hasResults) {
+                matches.forEach(match => {
+                    /*check if the item starts with the same letters as the text field value:*/
+                    // if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
 
                     /*create a DIV element for each matching element:*/
                     b = document.createElement("DIV");
 
-                    if (showSearchMatches) {
-                        /*make the matching letters bold:*/
-                        // b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-                        // b.innerHTML += arr[i].substr(val.length);
-
+                    /*make the matching letters bold:*/
+                    if (val.length > 0 && match.toUpperCase().indexOf(val.toUpperCase()) !== -1) {
                         indexes = []
                         index = -1
 
                         do {
-                            console.log("In here")
                             index = match.toUpperCase().indexOf(val.toUpperCase(), index + 1)
                             if (index !== -1) {
                                 indexes.push(index)
@@ -77,7 +78,7 @@ function autocomplete(inp, arr, selectionCallback) {
 
 
                     /*insert a input field that will hold the current array item's value:*/
-                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                    b.innerHTML += "<input type='hidden' value='" + match + "'>";
                     /*execute a function when someone clicks on the item value (DIV element):*/
                     b.addEventListener("click", function (e) {
                         /*insert the value for the autocomplete text field:*/
@@ -90,18 +91,24 @@ function autocomplete(inp, arr, selectionCallback) {
                         closeAllLists();
                     });
                     a.appendChild(b);
-                }
+                })
             }
+        } else {
+            console.log("No Matches for:", val)
+            b = document.createElement("DIV");
+            b.innerHTML += "no matches found";
+            a.appendChild(b);
         }
 
-        $('.autocomplete-items').css('max-height', getHeight() );
 
-        $(window).scroll(function() {
-            $('.autocomplete-items').css('max-height',getHeight() );
+        $('.autocomplete-items').css('max-height', getHeight());
+
+        $(window).scroll(function () {
+            $('.autocomplete-items').css('max-height', getHeight());
         })
     }
 
-    function getHeight () {
+    function getHeight() {
         return Math.min(500, $(window).height() - (offset(inp).top + 100) + $(window).scrollTop())
     }
 
@@ -168,8 +175,8 @@ function autocomplete(inp, arr, selectionCallback) {
 
     function offset(el) {
         var rect = el.getBoundingClientRect(),
-        scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
-        scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
+            scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
     }
 
