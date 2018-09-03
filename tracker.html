@@ -194,6 +194,8 @@
         tech: [],
         status: [],
         locations: [],
+        abrev: [],
+        names: [],
     }
 
     var selectedFilters = {
@@ -201,6 +203,8 @@
         tech: [],
         status: [],
         locations: [],
+        abrev: [],
+        names: [],
     }
 
     var getColor = (d) => {
@@ -288,6 +292,7 @@
             }, []).sort(), selected => {
                 $("#search-box").val("")
                 key = findFilterKeyForValue(filterOptions, selected)
+                console.log("key", key, selected)
                 removeAllFilters()
                 addFilter(key, selected, updateUI)
             });
@@ -297,11 +302,12 @@
         setTimeout(() => {
             UIkit.accordion('#filters').toggle(0, true);
         }, 1000)
-    }).catch(error => {
-        if (error) {
-            console.error("Caught Error:", error)
-        }
     })
+    // .catch(error => {
+    //     if (error) {
+    //         console.error("Caught Error:", error)
+    //     }
+    // })
 
 
     // UI Updates 
@@ -428,6 +434,21 @@
                         }
                     })
                 }
+                if (filterKey === 'names') {
+                    filters.forEach(filter => {
+                        if (deployment['Agency Full Name'].trim() !== filter.trim()) {
+                            matchesAllFilters = false
+                        }
+                    })
+                }
+                if (filterKey === 'abrev') {
+                    filters.forEach(filter => {
+                        if (deployment.Agency.trim() !== filter.trim()) {
+                            matchesAllFilters = false
+                        }
+                    })
+                }
+
 
             })
             if (matchesAllFilters) {
@@ -444,6 +465,16 @@
 
         allDeployments = data[0]
         allDeployments.forEach((dataEl) => {
+            abrev = dataEl.Agency.trim()
+            if (filterOptions.abrev.indexOf(abrev) === -1){
+                filterOptions.abrev.push(abrev)
+            }
+
+            name = dataEl['Agency Full Name'].trim()
+            if (filterOptions.names.indexOf(name) === -1){
+                filterOptions.names.push(name)
+            }
+            
             const useCasePropName = 'Use case'
             if (useCasePropName in dataEl) {
                 dataEl.useCases = dataEl[useCasePropName].split(';').map(el => {
