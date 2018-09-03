@@ -107,3 +107,11 @@ p>em{
     font-size: 1.4em;
     line-height: 1.4em;
 }
+
+.custom-tooltip {
+	font-size: 1em;
+    line-height: 1em;
+    max-width: 400px;
+    text-align: left;
+    /* text-align: justify !important; */
+}

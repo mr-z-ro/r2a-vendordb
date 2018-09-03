@@ -13,7 +13,12 @@ function displayAccordianValues(values, configOptions) {
         if (values.length > 0) {
             valueEls = ''
             values.forEach(value => {
-                valueEls += '<li>' + value + '</li>'
+                if (configOptions.tooltip_text) {
+                    text = configOptions.tooltip_text(value).trim()
+                    valueEls += '<li class="tooltip " title="' + text + '">' + value + "</li>"
+                }else{
+                    valueEls += '<li>' + value + '</li>'
+                }
             });
 
             $(config[elementIdKey]).append($('<ul class="uk-list uk-list-large">' + valueEls + '</ul>'))
@@ -30,9 +35,24 @@ function displayAccordianValues(values, configOptions) {
             if ('mouseout' in config) {
                 listElement.mouseout(config.mouseout)
             }
+
+            new jBox('Tooltip', {
+                attach: '.tooltip',
+                preventDefault: true,
+                closeOnMouseleave: true,
+                addClass: 'custom-tooltip',
+                position: {
+                    x: 'right',
+                    y: 'center'
+                },
+                outside: 'x',
+                adjustPosition: true,
+                adjustTracker: true,
+                delayOpen: 200
+            });
         } else {
             $(config[elementIdKey]).html(config.emptyText);
-        } 
+        }
     }
 
 }

@@ -20,11 +20,9 @@
 
     .jBox-content {
         /* max-height: 600px; */
-        font-size: 1.4em;
-        line-height: 1.4em;
+        font-size: 1.2em;
+        line-height: 1.2em;
     }
-
-
 </style>
 
 <div class="header">
@@ -124,7 +122,7 @@
                 </div>
             </div>
 
-            <div id="selected-filter"  class="row sqs-row" style="margin-bottom: 24px">
+            <div id="selected-filter" class="row sqs-row" style="margin-bottom: 24px">
             </div>
 
             <div class="row sqs-row">
@@ -302,11 +300,12 @@
         $("#vendor-db").css("display", "block")
 
 
-    }).catch(error => {
-        if (error) {
-            console.error("Caught Error:", error)
-        }
     })
+    // .catch(error => {
+    //     if (error) {
+    //         console.error("Caught Error:", error)
+    //     }
+    // })
 
     function applyFiltersInURL() {
 
@@ -452,7 +451,10 @@
             })
         }
         displayAccordianValues(filteredFilters('categories', selectedFilters.categories, availableCategoryFilters), accordianConfigForFilterKey('categories'))
-        displayAccordianValues(filteredFilters('useCases', selectedFilters.useCases, availableUseCaseFilters), accordianConfigForFilterKey('useCases'))
+        displayAccordianValues(filteredFilters('useCases', selectedFilters.useCases, availableUseCaseFilters), {
+            ...accordianConfigForFilterKey('useCases'),
+            tooltip_text: useCase => objectWithValue(useCase, allUseCases, 'name').short_description
+        })
 
         displayAccordianValues(filteredFilters('tech', selectedFilters.tech), accordianConfigForFilterKey('tech'))
         displayAccordianValues(filteredFilters('locationAvailability', selectedFilters.locations), accordianConfigForFilterKey('locations'))
@@ -463,8 +465,9 @@
             elementId: '#' + key + '-choices',
             selected: accordianSelectionForFilterType(key),
             mouseover: accordianMouseoverForFilterType(key),
-            mouseout: event => { $('.uk-badge').remove() },
-            emptyText: "All options selected"
+            mouseout: event => { $('.uk-badge').remove(); $('.use-case-tooltip').remove(); },
+            emptyText: "All options selected",
+
         }
     }
 
@@ -483,6 +486,7 @@
             $(event.target).append('<span class="uk-badge">' + matched.length + '</span>')
         }
     }
+
 
     function displayVendor(vendorId) {
         vendor = objectWithValue(vendorId, allVendors)
