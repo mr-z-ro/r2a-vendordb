@@ -245,6 +245,9 @@
 
 <script>
 
+
+
+
     var allVendors = [];
     var allCategories = [];
     var allUseCases = [];
@@ -300,6 +303,7 @@
             UIkit.accordion('#filters').toggle(1, true);
         }, 1000)
 
+        applyFiltersInURL()
 
         // Hide Loading & Show Tracker
         $(".loading").css("display", "none")
@@ -312,7 +316,27 @@
         }
     })
 
+    function applyFiltersInURL() {
 
+        applyQueryParamFilter('use-case', allUseCases, 'useCases', (value) => value.name.trim())
+        applyQueryParamFilter('technology', allTech, 'tech', (value) => value.name.trim())
+        applyQueryParamFilter('country', filterOptions.locations, 'locations')
+
+        updateUI()
+    }
+
+    function applyQueryParamFilter(queryParam, arr, filterGroup, unpack) {
+        param = (new URL(location)).searchParams.get(queryParam)
+        console.log("param", param, arr)
+        if (param != undefined && param != '') {
+            if (unpack !== undefined) {
+                value = unpack(objectFromID(param, arr))
+                addFilter(filterGroup, value)
+            } else {
+                addFilter(filterGroup, param)
+            }
+        }
+    }
 
     // Format Data
     function formatData(data) {
@@ -332,7 +356,7 @@
             if (useCasePropName in vendor) {
                 vendor.objectiveIds = vendor[useCasePropName].split(',')
                 vendor.useCases = vendor.objectiveIds.map(objectiveId => {
-                    return objectForID(objectiveId, allUseCases).name.trim()
+                    return objectFromID(objectiveId, allUseCases).name.trim()
                 })
                 vendor.categoryIDs = []
                 vendor.categories = []
@@ -349,7 +373,7 @@
             if (techPropName in vendor) {
                 vendor.technologyIds = vendor[techPropName].split(',')
                 vendor.tech = vendor.technologyIds.map(technologyId => {
-                    return objectForID(technologyId, allTech).name.trim()
+                    return objectFromID(technologyId, allTech).name.trim()
                 })
             }
 
@@ -390,7 +414,7 @@
     // UI Updates 
     function updateUI() {
         selectedVendors = vendorsMatchingFilters(allVendors, selectedFilters)
-        $('#solutions-number').html(selectedVendors.length + ' solution' + (selectedVendors.length !== 1 ? 's' : ''))
+        $('#solutions-number').html(selectedVendors.length + (selectedVendors.length === 1 ? ' company' : ' companies'))
         updateResetButtonVisibility()
         updateSelectedFiltersUI('#selected-filter', selectedFilters, (event) => {
             removeFilter(event.currentTarget.innerText, updateUI)
@@ -456,7 +480,7 @@
     }
 
     function displayVendor(vendorId) {
-        vendor = objectForID(vendorId, allVendors)
+        vendor = objectFromID(vendorId, allVendors)
         console.log("Display", vendor)
 
         modal = $('.vendor').jBox('Modal', {
@@ -560,7 +584,7 @@
         return remainingFilters
     }
 
-    function objectForID(id, arr) {
+    function objectFromID(id, arr) {
         return arr.reduce((acc, el) => {
             if (el.id === id) {
                 // console.log ("NFI", id, arr, el, acc)
