@@ -1,39 +1,57 @@
 const elementIdKey = 'elementId'
 
-function displayAccordianValues(values, configOptions) {
+function displayAccordianValues(values, selections, configOptions) {
     var config = {
         elementIdKey: '',
         selected: () => { },
         ...configOptions
     }
+    console.log(values, selections, configOptions)
 
     if (validConfig(config)) {
         $(config[elementIdKey]).empty();
 
+        values = values.concat(selections).sort()
+
         if (values.length > 0) {
+
+
             valueEls = ''
             values.forEach(value => {
+                isSelection = (selections.indexOf(value) !== -1)
+                console.log("Is Selection", isSelection, value, selections)
+
+                text = undefined
                 if (configOptions.tooltip_text) {
                     text = configOptions.tooltip_text(value).trim()
-                    valueEls += '<li class="tooltip " title="' + text + '">' + value + "</li>"
-                }else{
-                    valueEls += '<li>' + value + '</li>'
                 }
-            });
 
+                valueEls += `<li class ="` + (isSelection ? 'selection' : 'option') + " " + ((text && text.length > 0) ? 'tooltip' : '') + `"` + 
+                ((text && text.length > 0) ? (` title="` + text + `"`) : '') +`>`
+                    + value +
+                    (isSelection ? `<span class="uk-badge delete-badge"><i class="fas fa-times"></i></span>` : '')
+                    + `</li>`
+
+            });
             $(config[elementIdKey]).append($('<ul class="uk-list uk-list-large">' + valueEls + '</ul>'))
 
-            var listElement = $(config[elementIdKey] + '>ul>li')
+            var listOptions = $(config[elementIdKey] + '>ul>li.option')
 
             if ('selected' in config) {
-                listElement.click(config.selected)
+                listOptions.click(config.selected)
             }
 
             if ('mouseover' in config) {
-                listElement.mouseover(config.mouseover)
+                listOptions.mouseover(config.mouseover)
             }
             if ('mouseout' in config) {
-                listElement.mouseout(config.mouseout)
+                listOptions.mouseout(config.mouseout)
+            }
+
+            var selectedElements = $(config[elementIdKey] + '>ul>li.selection')
+            if ('deselected' in config) {
+                $('.jBox-wrapper').remove()
+                selectedElements.click(config.deselected)
             }
 
             new jBox('Tooltip', {
@@ -51,7 +69,14 @@ function displayAccordianValues(values, configOptions) {
                 delayOpen: 200
             });
         } else {
+            html = valueEls += '<li>' + value + '</li>'
+
             $(config[elementIdKey]).html(config.emptyText);
+
+            var listElement = $(config[elementIdKey] + '>ul>li')
+            if ('selected' in config) {
+                listElement.click(config.selected)
+            }
         }
     }
 

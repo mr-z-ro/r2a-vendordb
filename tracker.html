@@ -344,19 +344,27 @@
 
 
     function updateAccordianFilters() {
-        displayAccordianValues(filteredFilters('useCases', selectedFilters.useCases), accordianConfigForFilterKey('useCases'))
-        displayAccordianValues(filteredFilters('technology', selectedFilters.tech), accordianConfigForFilterKey('tech'))
-        displayAccordianValues(filteredFilters('Status', selectedFilters.status), accordianConfigForFilterKey('status'))
-        displayAccordianValues(filteredFilters('Country', selectedFilters.locations), accordianConfigForFilterKey('locations'))
+        displayAccordianOptions('useCases', selectedFilters.useCases)
+        displayAccordianOptions('technology', selectedFilters.tech, 'tech')
+        displayAccordianOptions('Status', selectedFilters.status, 'status')
+        displayAccordianOptions('Country', selectedFilters.locations, 'locations' )
     }
 
 
     // Data Formatters
+    function displayAccordianOptions (filterOptionKey, selections, id){
+        if (!id) id = filterOptionKey
+        displayAccordianValues(filteredFilters(filterOptionKey, selections), selections, accordianConfigForFilterKey(id))
+
+    }
     function filteredFilters(key, selections) {
         remainingFilters = uniqueProperties(selectedDeployments, key).sort();
+        console.log("Remaining Filters",remainingFilters, selections)
         selections.forEach(filter => {
             index = remainingFilters.indexOf(filter)
             if (index !== -1) {
+                console.log("Removing Matched Filters", filter)
+
                 remainingFilters.splice(index, 1)
             }
         })
@@ -367,16 +375,25 @@
         return {
             elementId: '#' + key + '-choices',
             selected: accordianSelectionForFilterType(key),
+            deselected: accordianDeselectionForFilterType(key),
             mouseover: accordianMouseoverForFilterType(key),
-            mouseout: event => { $('.uk-badge').remove() },
+            mouseout: event => { $('.badge-count').remove() },
             emptyText: "All options selected"
         }
     }
 
     function accordianSelectionForFilterType(filterType) {
         return (event) => {
-            $('.uk-badge').remove()
+            $('.badge-count').remove()
             addFilter(filterType, event.target.innerText, updateUI)
+        }
+    }
+
+    function accordianDeselectionForFilterType(filterType) {
+        return (event) => {
+            console.log("Deselected")
+            $('.badge-count').remove()
+            removeFilter(event.target.innerText, updateUI)
         }
     }
 
@@ -385,7 +402,7 @@
             copiedFilters = jQuery.extend(true, {}, selectedFilters);
             copiedFilters[filterType].push(event.target.innerText)
             matched = deploymentsMatchingFilters(selectedDeployments, copiedFilters)
-            $(event.target).append('<span class="uk-badge">' + matched.length + '</span>')
+            $(event.target).append('<span class="uk-badge badge-count">' + matched.length + '</span>')
         }
     }
 
@@ -412,14 +429,14 @@
                 }
                 if (filterKey === 'status') {
                     filters.forEach(filter => {
-                        if (filter !== deployment.Status) {
+                        if (filter !== deployment.Status.trim()) {
                             matchesAllFilters = false
                         }
                     })
                 }
                 if (filterKey === 'locations') {
                     filters.forEach(filter => {
-                        if (filter !== deployment.Country) {
+                        if (filter !== deployment.Country.trim()) {
                             matchesAllFilters = false
                         }
                     })

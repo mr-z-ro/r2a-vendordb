@@ -453,22 +453,28 @@
                 return objectWithValue(useCaseID, allUseCases).name.trim()
             })
         }
-        displayAccordianValues(filteredFilters('categories', selectedFilters.categories, availableCategoryFilters), accordianConfigForFilterKey('categories'))
-        displayAccordianValues(filteredFilters('useCases', selectedFilters.useCases, availableUseCaseFilters), {
+        displayAccordianValues(filteredFilters('categories', selectedFilters.categories, availableCategoryFilters), selectedFilters.categories, accordianConfigForFilterKey('categories'))
+        displayAccordianValues(filteredFilters('useCases', selectedFilters.useCases, availableUseCaseFilters), selectedFilters.useCases, {
             ...accordianConfigForFilterKey('useCases'),
             tooltip_text: useCase => objectWithValue(useCase, allUseCases, 'name').short_description
         })
 
-        displayAccordianValues(filteredFilters('tech', selectedFilters.tech), accordianConfigForFilterKey('tech'))
-        displayAccordianValues(filteredFilters('locationAvailability', selectedFilters.locations), accordianConfigForFilterKey('locations'))
+        displayAccordianOptions('tech', selectedFilters.tech)
+        displayAccordianOptions('locationAvailability', selectedFilters.locations, 'locations')
+    }
+
+    function displayAccordianOptions(filterOptionKey, selections, id) {
+        if (!id) id = filterOptionKey
+        displayAccordianValues(filteredFilters(filterOptionKey, selections), selections, accordianConfigForFilterKey(id))
     }
 
     function accordianConfigForFilterKey(key) {
         return {
             elementId: '#' + key + '-choices',
             selected: accordianSelectionForFilterType(key),
+            deselected: accordianDeselectionForFilterType(key),
             mouseover: accordianMouseoverForFilterType(key),
-            mouseout: event => { $('.uk-badge').remove(); $('.use-case-tooltip').remove(); },
+            mouseout: event => { $('.badge-count').remove(); $('.use-case-tooltip').remove(); },
             emptyText: "All options selected",
 
         }
@@ -476,8 +482,16 @@
 
     function accordianSelectionForFilterType(filterType) {
         return (event) => {
-            $('.uk-badge').remove()
+            $('.badge-count').remove()
             addFilter(filterType, event.target.innerText, updateUI)
+        }
+    }
+
+    function accordianDeselectionForFilterType(filterType) {
+        return (event) => {
+            console.log("Deselected")
+            $('.badge-count').remove()
+            removeFilter(event.target.innerText, updateUI)
         }
     }
 
@@ -486,7 +500,7 @@
             copiedFilters = jQuery.extend(true, {}, selectedFilters);
             copiedFilters[filterType].push(event.target.innerText)
             matched = vendorsMatchingFilters(selectedVendors, copiedFilters)
-            $(event.target).append('<span class="uk-badge">' + matched.length + '</span>')
+            $(event.target).append('<span class="uk-badge badge-count">' + matched.length + '</span>')
         }
     }
 
