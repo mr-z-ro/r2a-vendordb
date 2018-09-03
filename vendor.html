@@ -329,11 +329,12 @@
         param = (new URL(location)).searchParams.get(queryParam)
         console.log("param", param, arr)
         if (param != undefined && param != '') {
+            value = param
             if (unpack !== undefined) {
-                value = unpack(objectFromID(param, arr))
+                value = unpack(objectWithValue(param, arr))
+            }
+            if (filterOptions[filterGroup].indexOf(value) !== -1){
                 addFilter(filterGroup, value)
-            } else {
-                addFilter(filterGroup, param)
             }
         }
     }
@@ -356,7 +357,7 @@
             if (useCasePropName in vendor) {
                 vendor.objectiveIds = vendor[useCasePropName].split(',')
                 vendor.useCases = vendor.objectiveIds.map(objectiveId => {
-                    return objectFromID(objectiveId, allUseCases).name.trim()
+                    return objectWithValue(objectiveId, allUseCases).name.trim()
                 })
                 vendor.categoryIDs = []
                 vendor.categories = []
@@ -373,7 +374,7 @@
             if (techPropName in vendor) {
                 vendor.technologyIds = vendor[techPropName].split(',')
                 vendor.tech = vendor.technologyIds.map(technologyId => {
-                    return objectFromID(technologyId, allTech).name.trim()
+                    return objectWithValue(technologyId, allTech).name.trim()
                 })
             }
 
@@ -447,8 +448,19 @@
     }
 
     function updateAccordianFilters() {
-        displayAccordianValues(filteredFilters('categories', selectedFilters.categories), accordianConfigForFilterKey('categories'))
-        displayAccordianValues(filteredFilters('useCases', selectedFilters.useCases), accordianConfigForFilterKey('useCases'))
+
+        availableCategoryFilters = undefined
+        availableUseCaseFilters = undefined
+        if (selectedFilters.categories.length >= 1) {
+            availableCategoryFilters = []
+            category = objectWithValue(selectedFilters.categories[0], allCategories, 'name')
+            availableUseCaseFilters = category.objectiveArr.map(useCaseID => {
+                return objectWithValue(useCaseID, allUseCases).name.trim()
+            })
+        }
+        displayAccordianValues(filteredFilters('categories', selectedFilters.categories, availableCategoryFilters), accordianConfigForFilterKey('categories'))
+        displayAccordianValues(filteredFilters('useCases', selectedFilters.useCases, availableUseCaseFilters), accordianConfigForFilterKey('useCases'))
+
         displayAccordianValues(filteredFilters('tech', selectedFilters.tech), accordianConfigForFilterKey('tech'))
         displayAccordianValues(filteredFilters('locationAvailability', selectedFilters.locations), accordianConfigForFilterKey('locations'))
     }
@@ -480,7 +492,7 @@
     }
 
     function displayVendor(vendorId) {
-        vendor = objectFromID(vendorId, allVendors)
+        vendor = objectWithValue(vendorId, allVendors)
         console.log("Display", vendor)
 
         modal = $('.vendor').jBox('Modal', {
@@ -573,8 +585,8 @@
         return matchedVendors
     }
 
-    function filteredFilters(key, selections) {
-        remainingFilters = uniqueProperties(selectedVendors, key).sort();
+    function filteredFilters(key, selections, remainingFilters) {
+        if (!remainingFilters) remainingFilters = uniqueProperties(selectedVendors, key).sort();
         selections.forEach(filter => {
             index = remainingFilters.indexOf(filter)
             if (index !== -1) {
@@ -584,14 +596,17 @@
         return remainingFilters
     }
 
-    function objectFromID(id, arr) {
-        return arr.reduce((acc, el) => {
-            if (el.id === id) {
-                // console.log ("NFI", id, arr, el, acc)
+    function objectWithValue(id, arr, property) {
+        if (!property) property = 'id';
+        areturn = arr.reduce((acc, el) => {
+            foundProperty = el[property]
+            if (foundProperty && foundProperty.trim() === id.trim()) {
                 acc = el
             }
             return acc;
         }, '')
+        return areturn
+
     }
 
 </script>
