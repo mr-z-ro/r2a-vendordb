@@ -52,6 +52,7 @@ function autocomplete(inp, arr, selectionCallback) {
                     /*create a DIV element for each matching element:*/
                     b = document.createElement("DIV");
 
+                    html = match
                     /*make the matching letters bold:*/
                     if (val.length > 0 && match.toUpperCase().indexOf(val.toUpperCase()) !== -1) {
                         indexes = []
@@ -67,12 +68,12 @@ function autocomplete(inp, arr, selectionCallback) {
 
 
                         indexes.slice().reverse().forEach(function (index) {
-                            match = match.splice(index + val.length, 0, "</strong>")
-                            match = match.splice(index, 0, "<strong>")
+                            html = html.splice(index + val.length, 0, "</strong>")
+                            html = html.splice(index, 0, "<strong>")
                         })
 
                     }
-                    b.innerHTML += match;
+                    b.innerHTML += html;
 
 
 
