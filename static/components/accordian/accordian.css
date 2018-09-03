@@ -13,11 +13,11 @@
         margin-top: 10px;
     }
     a.uk-accordion-title>i {
-        margin: 0px 10px;
+        margin: 0 5px;
     }
 
     .accordian-selections>ul {
-        margin: 0px 10px 0px 24px;
+        margin: 0px 24px !important; 
     }
 
     .uk-list>li {

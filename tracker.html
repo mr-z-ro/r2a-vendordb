@@ -115,13 +115,10 @@
         <div class="col sqs-col-8">
 
             <div class="row sqs-row">
-                <div class="col sqs-col-8">
-                    <div id="map">
-                    </div>
-                </div>
+                <div id="map"></div>
             </div>
 
-            <div class="row sqs-row" style="margin-bottom: 10px">
+            <div class="row sqs-row" style="margin-bottom: 24px">
                 <div class="col sqs-col-4">
                     <div class="reset-filters dark-border dark-button">Reset Filters</div>
                     <span style="display:inline-block;">&nbsp;</span>
@@ -133,11 +130,7 @@
                 </div>
             </div>
 
-            <div class="row sqs-row" style="margin-bottom: 10px">
-                <div class="col sqs-col-8">
-                    <div id="selected-filter"> </div>
-                </div>
-            </div>
+            <div id="selected-filter" class="row sqs-row" style="margin-bottom: 24px"> </div>
 
             <div class="row sqs-row">
                 <div class="col sqs-col-6">
@@ -152,10 +145,7 @@
                 </div>
             </div>
 
-            <div class="row sqs-row">
-                <div id="deployment-list" class="col sqs-col-8 tile-grid">
-                </div>
-            </div>
+            <div id="deployment-list" class="row sqs-row tile-grid"></div>
 
         </div>
     </div>
@@ -463,51 +453,69 @@
         allCountryShapes = data[1]['features']
         console.log('allCountryShapes', allCountryShapes)
 
-        allDeployments = data[0]
-        allDeployments.forEach((dataEl) => {
-            abrev = dataEl.Agency.trim()
-            if (filterOptions.abrev.indexOf(abrev) === -1){
-                filterOptions.abrev.push(abrev)
-            }
-
-            name = dataEl['Agency Full Name'].trim()
-            if (filterOptions.names.indexOf(name) === -1){
-                filterOptions.names.push(name)
-            }
-            
-            const useCasePropName = 'Use case'
-            if (useCasePropName in dataEl) {
-                dataEl.useCases = dataEl[useCasePropName].split(';').map(el => {
-                    return el.trim()
+        allDeployments = data[0].reduce((acc, deployment) => {
+            splitAgency = deployment.Agency.split(';')
+            if (splitAgency.length > 1) {
+                splitAgency.forEach((el, index) => {
+                    newDeployment = JSON.parse(JSON.stringify(deployment));;
+                    newDeployment.Agency = deployment.Agency.split(';')[index].trim()
+                    newDeployment["Agency Full Name"] = deployment["Agency Full Name"].split(';')[index].trim()
+                    console.log("Agency Full Name",newDeployment["Agency Full Name"])
+                    acc.push(newDeployment)
                 })
+            } else {
+                acc.push(deployment)
             }
-            const techPropName = 'Tech'
-            if (techPropName in dataEl) {
-                dataEl.technology = dataEl[techPropName].split(';').map(el => {
-                    return el.trim()
-                })
-            }
-        })
-        console.log('allDeployments', allDeployments)
-
-        var nestedDeployments = d3.nest()
-            .key(function (d) { return d.Agency; })
-            .entries(allDeployments);
-
-        groupedSolutions = nestedDeployments.reduce((acc, element) => {
-            acc[element.key] = element.values
             return acc
-        }, {})
+        }, [])
 
 
-        filterOptions.useCases = uniqueProperties(allDeployments, 'useCases').sort()
-        console.log('filterOptions.useCases', filterOptions.useCases)
-        filterOptions.tech = uniqueProperties(allDeployments, 'technology').sort()
-        console.log('filterOptions.tech', filterOptions.tech)
-        filterOptions.status = uniqueProperties(allDeployments, 'Status').sort()
-        console.log('filterOptions.status', filterOptions.status)
-        filterOptions.locations = uniqueProperties(allDeployments, 'Country').sort()
-        console.log('filterOptions.locations', filterOptions.locations)
+        allDeployments.forEach((dataEl) => {
+            console.log(dataEl)
+
+        abrev = dataEl.Agency.trim()
+        if (filterOptions.abrev.indexOf(abrev) === -1) {
+            filterOptions.abrev.push(abrev)
+        }
+
+        name = dataEl['Agency Full Name'].trim()
+        if (filterOptions.names.indexOf(name) === -1) {
+            filterOptions.names.push(name)
+        }
+
+        const useCasePropName = 'Use case'
+        if (useCasePropName in dataEl) {
+            dataEl.useCases = dataEl[useCasePropName].split(';').map(el => {
+                return el.trim()
+            })
+        }
+        const techPropName = 'Tech'
+        if (techPropName in dataEl) {
+            dataEl.technology = dataEl[techPropName].split(';').map(el => {
+                return el.trim()
+            })
+        }
+    })
+    console.log('allDeployments', allDeployments)
+
+    var nestedDeployments = d3.nest()
+        .key(function (d) { return d.Agency; })
+        .entries(allDeployments);
+
+    groupedSolutions = nestedDeployments.reduce((acc, element) => {
+        acc[element.key] = element.values
+        return acc
+    }, {})
+
+
+    filterOptions.useCases = uniqueProperties(allDeployments, 'useCases').sort()
+    console.log('filterOptions.useCases', filterOptions.useCases)
+    filterOptions.tech = uniqueProperties(allDeployments, 'technology').sort()
+    console.log('filterOptions.tech', filterOptions.tech)
+    filterOptions.status = uniqueProperties(allDeployments, 'Status').sort()
+    console.log('filterOptions.status', filterOptions.status)
+    filterOptions.locations = uniqueProperties(allDeployments, 'Country').sort()
+    console.log('filterOptions.locations', filterOptions.locations)
 
     }
 

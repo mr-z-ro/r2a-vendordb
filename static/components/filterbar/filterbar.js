@@ -52,7 +52,8 @@ function updateSelectedFiltersUI(selector, filters, selectionCallback) {
     $(selector).empty()
     filterHTML = ''
 
-    if (filterCount(selectedFilters) > 0) {
+    var hasFilters = filterCount(selectedFilters) > 0
+    if (hasFilters) {
         Object.keys(filters).forEach(filterKey => {
             var sectionFilters = filters[filterKey]
             console.log(sectionFilters);
@@ -62,7 +63,10 @@ function updateSelectedFiltersUI(selector, filters, selectionCallback) {
         });
         filterPrefix = 'Filter' + (numFilters !== 1 ? 's' : '') + ': &nbsp;&nbsp;'
         filterHTML = filterPrefix + '<div style="display:inline-block;">' + filterHTML + '</div>'
+        
     }
+
+    $(selector).css('display', hasFilters ? 'block' : 'none')
 
     $(selector).html(filterHTML)
 

@@ -3,7 +3,7 @@
         var targetElement = $(selector);
         targetElement.empty();
         if (!tileElements.length) {
-            var noVendorsMessage = '<p class="empty-tile-grid-message">' + tileGridConfig.emptyText + '</p>';
+            var noVendorsMessage = '<p class="empty-tile-grid-message" style="text-align: center;">' + tileGridConfig.emptyText + '</p>';
             targetElement.append(noVendorsMessage);
         }
 
