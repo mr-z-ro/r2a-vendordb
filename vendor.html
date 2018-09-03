@@ -179,7 +179,7 @@
         </div>
     </div>
     <p>By using this resource, you understand that R<sup>2</sup>A is not endorsing any of the vendors listed below, and bears
-        no responsibility for any subsequent contact, conversation, transfer of information, procurement, and legal contracting.
+        no responsibility for any subsequent contact, conversation, transfer of information, procurement, or legal contracting.
         The tool is intended as a reference for regulators and financial authorities seeking information on potential vendors
         for technology that can aid in the creation of RegTech solutions.</p>
 </div>
@@ -333,7 +333,10 @@
     // Format Data
     function formatData(data) {
 
-        allVendors = data[0]
+        allVendors = data[0].sort(function (a, b) {
+            return (a.name.toUpperCase() > b.name.toUpperCase()) ? 1 :
+                ((b.name.toUpperCase() > a.name.toUpperCase()) ? -1 : 0);
+        })
         allCategories = data[1]
         allUseCases = data[2]
         allTech = data[3]

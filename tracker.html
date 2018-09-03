@@ -467,7 +467,10 @@
                 acc.push(deployment)
             }
             return acc
-        }, [])
+        }, []).sort(function (a, b) {
+            return (a["Agency Full Name"].toUpperCase() > b["Agency Full Name"].toUpperCase()) ? 1 :
+                ((b["Agency Full Name"].toUpperCase() > a["Agency Full Name"].toUpperCase()) ? -1 : 0);
+        })
 
 
         allDeployments.forEach((dataEl) => {
