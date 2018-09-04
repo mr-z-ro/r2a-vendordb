@@ -171,6 +171,9 @@
 
 <script>
 
+    $(".tracker").addClass("active")
+
+
     var categories = ['Exploratory', 'Developmental', 'Operational']
     var allCountryShapes = []
 
@@ -244,6 +247,8 @@
         selection: (e) => {
             var country = e.target.feature.properties.country_name
             if (selectedFilters.locations.indexOf(country) === -1) {
+                selectedFilters.locations = []
+                customGA('send', 'event', 'Solution Filter: ' + 'locations', 'add', filter);
                 addFilter('locations', country, updateUI)
             }
         }
@@ -283,6 +288,7 @@
                 $("#search-box").val("")
                 key = findFilterKeyForValue(filterOptions, selected)
                 removeAllFilters()
+                customGA('send', 'event', 'Solution Search: ' + key, 'remove', selected);
                 addFilter(key, selected, updateUI)
             });
 
@@ -305,11 +311,13 @@
         $('#solutions-number').html(selectedDeployments.length + ' solution' + (selectedDeployments.length !== 1 ? 's' : ''))
         updateResetButtonVisibility()
         updateSelectedFiltersUI('#selected-filter', selectedFilters, (event) => {
-            removeFilter(event.currentTarget.innerText, updateUI)
+            filterValue = event.currentTarget.innerText
+            customGA('send', 'event', 'Solution Filter: ' + findFilterKeyForValue(filterOptions, filterValue), 'remove', filterValue);
+            removeFilter(filterValue, updateUI)
         })
         updateDeploymentTiles()
         updateAccordianFilters()
-        updateMap(mapFormattedDeployments(selectedDeployments))
+        updateMap(mapFormattedDeployments(deploymentsMatchingFilters(allDeployments, selectedFilters, true)))
     }
 
     function updateResetButtonVisibility() {
@@ -318,6 +326,7 @@
     }
 
     $('.reset-filters').click(event => {
+        customGA('send', 'event', 'Solution Filter', 'reset', '');
         removeAllFilters(updateUI)
     })
 
@@ -380,14 +389,19 @@
     function accordianSelectionForFilterType(filterType) {
         return (event) => {
             $('.badge-count').remove()
-            addFilter(filterType, event.target.innerText, updateUI)
+            filterValue = event.currentTarget.innerText
+            customGA('send', 'event', 'Solution Filter: ' + filterType, 'add', filterValue);
+            addFilter(filterType, filterValue, updateUI)
         }
     }
 
     function accordianDeselectionForFilterType(filterType) {
         return (event) => {
             $('.badge-count').remove()
-            removeFilter(event.currentTarget.innerText, updateUI)
+            filterValue = event.currentTarget.innerText
+            console.log(filterValue)
+            customGA('send', 'event', 'Solution Filter: ' + findFilterKeyForValue(filterOptions, filterValue), 'remove', filterValue);
+            removeFilter(filterValue, updateUI)
         }
     }
 
@@ -400,7 +414,7 @@
         }
     }
 
-    function deploymentsMatchingFilters(deployments, matchFilters) {
+    function deploymentsMatchingFilters(deployments, matchFilters, ignoreLocation) {
         var matchedDeployments = [];
 
         deployments.forEach(deployment => {
@@ -428,7 +442,7 @@
                         }
                     })
                 }
-                if (filterKey === 'locations') {
+                if (filterKey === 'locations' && !ignoreLocation) {
                     filters.forEach(filter => {
                         if (filter !== deployment.Country.trim()) {
                             matchesAllFilters = false
@@ -592,6 +606,8 @@
             }
         })
         modal.setTitle(title).setContent(content).open();
+        customGA('send', 'event', 'Solutions', 'Display Details', deployments);
+
     }
 
 </script>

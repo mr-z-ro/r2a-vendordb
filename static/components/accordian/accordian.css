@@ -6,7 +6,7 @@
 }
 
 .selection {
-    background-color: #d6f0ef;
+    background-color: #d6f0ef !important; 
 }
 
 .delete-badge>i {

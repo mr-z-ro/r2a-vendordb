@@ -233,8 +233,7 @@
 
 <script>
 
-
-
+    $(".vendordb").addClass("active")
 
     var allVendors = [];
     var allCategories = [];
@@ -281,7 +280,8 @@
                 $("#search-box").val("")
                 key = findFilterKeyForValue(filterOptions, selected)
                 removeAllFilters()
-                addFilter(key, selected, updateUI)
+                customGA('send', 'event', 'Vendor Search: ' + key, 'remove', selected);
+                addFilter(key, selected, updateUI)           
             });
 
         updateUI()
@@ -321,6 +321,7 @@
                 value = unpack(objectWithValue(param, arr))
             }
             if (filterOptions[filterGroup].indexOf(value) !== -1) {
+                customGA('send', 'event', 'Vendor Filter: ' + filterGroup, 'add', value);
                 addFilter(filterGroup, value)
             }
         }
@@ -398,7 +399,9 @@
         $('#solutions-number').html(selectedVendors.length + (selectedVendors.length === 1 ? ' company' : ' companies'))
         updateResetButtonVisibility()
         updateSelectedFiltersUI('#selected-filter', selectedFilters, (event) => {
-            removeFilter(event.currentTarget.innerText, updateUI)
+            filterValue = event.currentTarget.innerText
+            customGA('send', 'event', 'Vendor Filter: ' + findFilterKeyForValue(filterOptions, filterValue), 'remove', filterValue);
+            removeFilter(filterValue, updateUI)
         })
         updateVendorTiles()
         updateAccordianFilters()
@@ -410,6 +413,7 @@
     }
 
     $('.reset-filters').click(event => {
+        customGA('send', 'event', 'Vendor Filter', 'reset', '');
         removeAllFilters(updateUI)
     })
 
@@ -468,7 +472,9 @@
     function accordianSelectionForFilterType(filterType) {
         return (event) => {
             $('.badge-count').remove()
-            addFilter(filterType, event.target.innerText, updateUI)
+            value = event.target.innerText
+            customGA('send', 'event', 'Vendor Filter: ' + filterType, 'add', value);
+            addFilter(filterType, value, updateUI)
         }
     }
 
@@ -526,6 +532,8 @@
         </div>`
 
         modal.setContent(content).open();
+        customGA('send', 'event', 'Vendor', 'Display Details', vendor);
+
     }
 
     function imageForVendor(vendor) {
