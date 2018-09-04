@@ -282,7 +282,6 @@
             }, []).sort(), selected => {
                 $("#search-box").val("")
                 key = findFilterKeyForValue(filterOptions, selected)
-                console.log("key", key, selected)
                 removeAllFilters()
                 addFilter(key, selected, updateUI)
             });
@@ -347,24 +346,20 @@
         displayAccordianOptions('useCases', selectedFilters.useCases)
         displayAccordianOptions('technology', selectedFilters.tech, 'tech')
         displayAccordianOptions('Status', selectedFilters.status, 'status')
-        displayAccordianOptions('Country', selectedFilters.locations, 'locations' )
+        displayAccordianOptions('Country', selectedFilters.locations, 'locations')
     }
 
-
-    // Data Formatters
-    function displayAccordianOptions (filterOptionKey, selections, id){
+    function displayAccordianOptions(filterOptionKey, selections, id) {
         if (!id) id = filterOptionKey
         displayAccordianValues(filteredFilters(filterOptionKey, selections), selections, accordianConfigForFilterKey(id))
-
     }
+
+    // Data Formatters
     function filteredFilters(key, selections) {
         remainingFilters = uniqueProperties(selectedDeployments, key).sort();
-        console.log("Remaining Filters",remainingFilters, selections)
         selections.forEach(filter => {
             index = remainingFilters.indexOf(filter)
             if (index !== -1) {
-                console.log("Removing Matched Filters", filter)
-
                 remainingFilters.splice(index, 1)
             }
         })
@@ -391,9 +386,8 @@
 
     function accordianDeselectionForFilterType(filterType) {
         return (event) => {
-            console.log("Deselected")
             $('.badge-count').remove()
-            removeFilter(event.target.innerText, updateUI)
+            removeFilter(event.currentTarget.innerText, updateUI)
         }
     }
 
@@ -468,7 +462,6 @@
 
     function formatData(data) {
         allCountryShapes = data[1]['features']
-        console.log('allCountryShapes', allCountryShapes)
 
         allDeployments = data[0].reduce((acc, deployment) => {
             splitAgency = deployment.Agency.split(';')
@@ -477,7 +470,6 @@
                     newDeployment = JSON.parse(JSON.stringify(deployment));;
                     newDeployment.Agency = deployment.Agency.split(';')[index].trim()
                     newDeployment["Agency Full Name"] = deployment["Agency Full Name"].split(';')[index].trim()
-                    console.log("Agency Full Name",newDeployment["Agency Full Name"])
                     acc.push(newDeployment)
                 })
             } else {
@@ -491,51 +483,49 @@
 
 
         allDeployments.forEach((dataEl) => {
-            console.log(dataEl)
 
-        abrev = dataEl.Agency.trim()
-        if (filterOptions.abrev.indexOf(abrev) === -1) {
-            filterOptions.abrev.push(abrev)
-        }
+            abrev = dataEl.Agency.trim()
+            if (filterOptions.abrev.indexOf(abrev) === -1) {
+                filterOptions.abrev.push(abrev)
+            }
 
-        name = dataEl['Agency Full Name'].trim()
-        if (filterOptions.names.indexOf(name) === -1) {
-            filterOptions.names.push(name)
-        }
+            name = dataEl['Agency Full Name'].trim()
+            if (filterOptions.names.indexOf(name) === -1) {
+                filterOptions.names.push(name)
+            }
 
-        const useCasePropName = 'Use case'
-        if (useCasePropName in dataEl) {
-            dataEl.useCases = dataEl[useCasePropName].split(';').map(el => {
-                return el.trim()
-            })
-        }
-        const techPropName = 'Tech'
-        if (techPropName in dataEl) {
-            dataEl.technology = dataEl[techPropName].split(';').map(el => {
-                return el.trim()
-            })
-        }
-    })
-    console.log('allDeployments', allDeployments)
+            const useCasePropName = 'Use case'
+            if (useCasePropName in dataEl) {
+                dataEl.useCases = dataEl[useCasePropName].split(';').map(el => {
+                    return el.trim()
+                })
+            }
+            const techPropName = 'Tech'
+            if (techPropName in dataEl) {
+                dataEl.technology = dataEl[techPropName].split(';').map(el => {
+                    return el.trim()
+                })
+            }
+        })
 
-    var nestedDeployments = d3.nest()
-        .key(function (d) { return d.Agency; })
-        .entries(allDeployments);
+        var nestedDeployments = d3.nest()
+            .key(function (d) { return d.Agency; })
+            .entries(allDeployments);
 
-    groupedSolutions = nestedDeployments.reduce((acc, element) => {
-        acc[element.key] = element.values
-        return acc
-    }, {})
+        groupedSolutions = nestedDeployments.reduce((acc, element) => {
+            acc[element.key] = element.values
+            return acc
+        }, {})
 
 
-    filterOptions.useCases = uniqueProperties(allDeployments, 'useCases').sort()
-    console.log('filterOptions.useCases', filterOptions.useCases)
-    filterOptions.tech = uniqueProperties(allDeployments, 'technology').sort()
-    console.log('filterOptions.tech', filterOptions.tech)
-    filterOptions.status = uniqueProperties(allDeployments, 'Status').sort()
-    console.log('filterOptions.status', filterOptions.status)
-    filterOptions.locations = uniqueProperties(allDeployments, 'Country').sort()
-    console.log('filterOptions.locations', filterOptions.locations)
+        filterOptions.useCases = uniqueProperties(allDeployments, 'useCases').sort()
+        // console.log('filterOptions.useCases', filterOptions.useCases)
+        filterOptions.tech = uniqueProperties(allDeployments, 'technology').sort()
+        // console.log('filterOptions.tech', filterOptions.tech)
+        filterOptions.status = uniqueProperties(allDeployments, 'Status').sort()
+        // console.log('filterOptions.status', filterOptions.status)
+        filterOptions.locations = uniqueProperties(allDeployments, 'Country').sort()
+        // console.log('filterOptions.locations', filterOptions.locations)
 
     }
 
@@ -565,7 +555,6 @@
     }
 
     function displayDeployment(deploymentId) {
-        console.log(groupedSolutions, deploymentId)
         var deployments = deploymentsMatchingFilters(groupedSolutions[deploymentId], selectedFilters)
 
         modal = $('.vendor').jBox('Modal', {

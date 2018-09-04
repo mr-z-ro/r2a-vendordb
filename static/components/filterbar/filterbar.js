@@ -56,7 +56,6 @@ function updateSelectedFiltersUI(selector, filters, selectionCallback) {
     if (hasFilters) {
         Object.keys(filters).forEach(filterKey => {
             var sectionFilters = filters[filterKey]
-            console.log(sectionFilters);
             sectionFilters.forEach(filter => {
                 filterHTML += '<div class="filter dark-border light-button">' + filter + ' <i class="fa fa-times" aria-hidden="true"></i></div>'
             });

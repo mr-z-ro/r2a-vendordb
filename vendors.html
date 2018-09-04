@@ -1,4 +1,4 @@
-<!-- <link rel="stylesheet" href="static/css/site.css"> -->
+<link rel="stylesheet" href="static/css/site.css">
 
 <style>
     .reset-filters {
@@ -269,11 +269,8 @@
         d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5KSq8h57Cvah8_VknwXIu7WM1VsZ9Z1Rm1JQ8i2ETOdRttk3H4X24Q-ZaAEheEfI12x5IPrkqL0Ok/pub?gid=1600251903&single=true&output=csv"),
     ]).then((data) => {
 
-        console.log(data)
-
         // Format Data
         formatData(data)
-
 
         // Set the UI
         autocomplete(
@@ -318,7 +315,6 @@
 
     function applyQueryParamFilter(queryParam, arr, filterGroup, unpack) {
         param = (new URL(location)).searchParams.get(queryParam)
-        console.log("param", param, arr)
         if (param != undefined && param != '') {
             value = param
             if (unpack !== undefined) {
@@ -384,25 +380,14 @@
                 })
             }
         })
-        console.log('allVendors', allVendors)
-
-        // var nestedVendors = d3.nest()
-        //     .key(function (d) { return d.Agency; })
-        //     .entries(allVendors);
-
-        // groupedSolutions = nestedVendors.reduce((acc, element) => {
-        //     acc[element.key] = element.values
-        //     return acc
-        // }, {})
-
 
         filterOptions.categories = uniqueProperties(allVendors, 'categories').sort()
-        console.log('filterOptions.categories', filterOptions.categories)
+        // console.log('filterOptions.categories', filterOptions.categories)
         filterOptions.useCases = uniqueProperties(allVendors, 'useCases').sort()
-        console.log('filterOptions.useCases', filterOptions.useCases)
+        // console.log('filterOptions.useCases', filterOptions.useCases)
         filterOptions.tech = uniqueProperties(allVendors, 'tech').sort()
-        console.log('filterOptions.tech', filterOptions.tech)
-        console.log('filterOptions.locations', filterOptions.locations)
+        // console.log('filterOptions.tech', filterOptions.tech)
+        // console.log('filterOptions.locations', filterOptions.locations)
 
     }
 
@@ -489,9 +474,8 @@
 
     function accordianDeselectionForFilterType(filterType) {
         return (event) => {
-            console.log("Deselected")
             $('.badge-count').remove()
-            removeFilter(event.target.innerText, updateUI)
+            removeFilter(event.currentTarget.innerText, updateUI)
         }
     }
 
@@ -507,7 +491,6 @@
 
     function displayVendor(vendorId) {
         vendor = objectWithValue(vendorId, allVendors)
-        console.log("Display", vendor)
 
         modal = $('.vendor').jBox('Modal', {
             maxWidth: 600
@@ -524,7 +507,7 @@
             <div class="sqs-row vendor-modal-details">`
 
         content += vendor.location ? `<p><span><i class="fa fa-map-marker m-r-sm"></i><strong>Location: </strong>` + vendor.location + `</span></p>` : '';
-        console.log(content)
+
         if (vendor.contact.indexOf('@') >= 0) {
             content += vendor.contact ? `<p><span><i class="fa fa-envelope m-r-sm"></i><strong>Email: </strong><a class="vendor-modal-url" target="_blank" href="mailto:` + vendor.contact + `"> ` + vendor.contact + `</a></span></p>` : '';
         } else {

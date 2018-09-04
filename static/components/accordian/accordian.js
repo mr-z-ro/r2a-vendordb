@@ -6,7 +6,6 @@ function displayAccordianValues(values, selections, configOptions) {
         selected: () => { },
         ...configOptions
     }
-    console.log(values, selections, configOptions)
 
     if (validConfig(config)) {
         $(config[elementIdKey]).empty();
@@ -19,7 +18,6 @@ function displayAccordianValues(values, selections, configOptions) {
             valueEls = ''
             values.forEach(value => {
                 isSelection = (selections.indexOf(value) !== -1)
-                console.log("Is Selection", isSelection, value, selections)
 
                 text = undefined
                 if (configOptions.tooltip_text) {
@@ -48,10 +46,9 @@ function displayAccordianValues(values, selections, configOptions) {
                 listOptions.mouseout(config.mouseout)
             }
 
-            var selectedElements = $(config[elementIdKey] + '>ul>li.selection')
             if ('deselected' in config) {
                 $('.jBox-wrapper').remove()
-                selectedElements.click(config.deselected)
+                $(config[elementIdKey] + '>ul>li.selection').click(config.deselected)
             }
 
             new jBox('Tooltip', {
