@@ -1,5 +1,4 @@
 <!-- <link rel="stylesheet" href="static/css/filtering-ui.css"> -->
-<link rel="stylesheet" href="static/css/site.css">
 <link rel="stylesheet" href="static/js/leaflet/leaflet.css" />
 <!-- Make sure you put this AFTER Leaflet's CSS -->
 <script src="static/js/leaflet/leaflet.js"></script>
@@ -39,6 +38,18 @@
         outline: 0;
         box-sizing: border-box;
     }
+
+    .error {
+        margin: 125px 0px;
+        text-align: center;
+        display: none;
+    }
+
+    .fa-exclamation-triangle {
+        font-size: 4em;
+        color: #2C9385;
+
+    }
 </style>
 
 
@@ -75,6 +86,12 @@
     <i class="fas fa-circle-notch fa-spin"></i>
 </div>
 
+<div class="error">
+    <i class="fas fa-exclamation-triangle"></i>
+    <h4>Uh oh. An error has occurred.</h4>
+    <p>Please refresh or try again later. You can also contact <a href="mailto:R2A@bfaglobal.com">R2A@bfaglobal.com</a>.</p>
+    </p>
+</div>
 
 <div id="solutions-tracker" class="sqs-layout sqs-grid-12 columns-12 content" style="display:none; margin-top: 30px;">
     <div class="row sqs-row">
@@ -261,6 +278,7 @@
         d3.json("./static/js/leaflet/countries.json")
     ]).then((data) => {
 
+        console.log(data)
         // Format Data
         formatData(data)
 
@@ -298,11 +316,13 @@
             UIkit.accordion('#filters').toggle(0, true);
         }, 1000)
     })
-    // .catch(error => {
-    //     if (error) {
-    //         console.error("Caught Error:", error)
-    //     }
-    // })
+        .catch(error => {
+            if (error) {
+                console.error("Caught Error:", error)
+                $(".loading").css("display", "none")
+                $(".error").css("display", "block")
+            }
+        })
 
 
     // UI Updates 
