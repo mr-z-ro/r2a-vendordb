@@ -43,7 +43,7 @@ function createLegend(legendConfig, legendCategories) {
         labels = [];
 
         for (var i = 0; i < legendCategories.length; i++) {
-            div.innerHTML += '<i style="background:' + mapConfig.getColor(i) + '"></i> ' + legendCategories[i] + '<br>';
+            div.innerHTML += '<div class="map-legend-item"><i style="background:' + mapConfig.getColor(i) + '"></i> ' + legendCategories[i] + '</div>';
         }
         return div;
     };

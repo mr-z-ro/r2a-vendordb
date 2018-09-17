@@ -1,4 +1,3 @@
-
 <style>
     .reset-filters {
         margin: 0px 5px 10px 0px;
@@ -22,6 +21,11 @@
         font-size: 1.2em;
         line-height: 1.2em;
     }
+
+    .autocomplete {
+        margin: 0 24px;
+        margin-bottom: 24px;
+    }
 </style>
 
 <div class="header">
@@ -34,14 +38,16 @@
         <div class="sqs-block-content" id="yui_3_17_2_1_1534208712486_120">
             <div class="image-block-outer-wrapper layout-caption-hidden design-layout-inline   " id="yui_3_17_2_1_1534208712486_119">
                 <div class="intrinsic" style="max-width:2500.0px;" id="yui_3_17_2_1_1534208712486_118">
-                    <div style="padding-bottom: 0.8%; overflow: hidden;" class="image-block-wrapper   has-aspect-ratio" data-description="" id="yui_3_17_2_1_1534208712486_117">
+                    <div style="padding-bottom: 0.8%; overflow: hidden;" class="image-block-wrapper   has-aspect-ratio"
+                        data-description="" id="yui_3_17_2_1_1534208712486_117">
                         <noscript>
                             <img src="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/" />
                         </noscript>
                         <img class="thumb-image loaded" data-src="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/"
                             data-image="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/"
-                            data-image-dimensions="2500x20" data-image-focal-point="0.5,0.5" data-load="false" data-image-id="58ae0a57be659483ad503888"
-                            data-type="image" data-position-mode="standard" src="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/?format=1000w"
+                            data-image-dimensions="2500x20" data-image-focal-point="0.5,0.5" data-load="false"
+                            data-image-id="58ae0a57be659483ad503888" data-type="image" data-position-mode="standard"
+                            src="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/?format=1000w"
                             data-image-resolution="1000w" style="left: -2.30126%; top: 0%; width: 104.603%; height: 100%; position: absolute;">
                     </div>
                 </div>
@@ -49,7 +55,8 @@
         </div>
     </div>
 
-    <p>Welcome to the RegTech/SupTech vendor database! Take a closer look at the companies by clicking on one or more of
+    <p>Welcome to the RegTech/SupTech vendor database! Take a closer look at the companies by clicking on one or more
+        of
         the filter tabs below. You can start with any of the filter tabs. </p>
 
 </div>
@@ -65,7 +72,11 @@
     <div class="row sqs-row">
         <div class="col sqs-col-4 accordian-selections">
 
-            <ul id="filters" uk-accordion="multiple: false">
+            <div class="autocomplete">
+                <input id="search-box" type="search" class="search-input dark-border" value="" placeholder="Search">
+            </div>
+
+            <ul id="filters" uk-accordion="multiple: true">
                 <!-- Why does this prevent opening mail? -->
                 <li style="display:none;">
                     <a class="uk-accordion-title" href="#">
@@ -109,26 +120,13 @@
 
         <div class="col sqs-col-8">
 
-            <div class="row sqs-row" style="margin-bottom: 24px">
-                <div class="col sqs-col-4">
-                    <div class="reset-filters dark-border dark-button">Reset Filters</div>
-                    <span style="display:inline-block;">&nbsp;</span>
-                </div>
-                <div class="col sqs-col-4">
-                    <div class="autocomplete">
-                        <input id="search-box" type="search" class="search-input dark-border" value="" placeholder="Search">
-                    </div>
-                </div>
-            </div>
-
             <div id="selected-filter" class="row sqs-row" style="margin-bottom: 24px">
             </div>
 
             <div class="row sqs-row">
                 <div class="col sqs-col-6">
-                    <div class="instruction-text">
-                        <span>Click on a company below to explore.</span>
-                    </div>
+                    <div class="reset-filters dark-border dark-button">Reset Filters</div>
+                    <span style="display:inline-block;">&nbsp;</span>
                 </div>
                 <div class="col sqs-col-2">
                     <div class="solutions-number-container">
@@ -142,20 +140,26 @@
 
 
             <div class="row sqs-row" style="margin-top: 60px;">
-                <div class="sqs-block button-block sqs-block-button" data-block-type="53" id="block-yui_3_17_2_1_1524083958927_9987" style="padding-top: 20px;">
+                <div class="sqs-block button-block sqs-block-button" data-block-type="53" id="block-yui_3_17_2_1_1524083958927_9987"
+                    style="padding-top: 20px;">
                     <div class="sqs-block-content" id="yui_3_17_2_1_1534259152465_183">
-                        <div class="sqs-block-button-container--center" data-alignment="center" data-button-size="medium" id="yui_3_17_2_1_1534259152465_182">
-                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSc4srjLTgwozGTdQbWDyH6BHTFWpO7YREbJ8qu8Am6JrEWl4Q/viewform" class="sqs-block-button-element--medium sqs-block-button-element"
-                                data-initialized="true" target="_blank" id="yui_3_17_2_1_1534259152465_387">Don't
+                        <div class="sqs-block-button-container--center" data-alignment="center" data-button-size="medium"
+                            id="yui_3_17_2_1_1534259152465_182">
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSc4srjLTgwozGTdQbWDyH6BHTFWpO7YREbJ8qu8Am6JrEWl4Q/viewform"
+                                class="sqs-block-button-element--medium sqs-block-button-element" data-initialized="true"
+                                target="_blank" id="yui_3_17_2_1_1534259152465_387">Don't
                                 see your company listed? Apply here.</a>
                         </div>
                     </div>
                 </div>
 
-                <div class="sqs-block button-block sqs-block-button" data-block-type="53" id="block-yui_3_17_2_1_1524083958927_9987" style="padding-top: 20px;">
+                <div class="sqs-block button-block sqs-block-button" data-block-type="53" id="block-yui_3_17_2_1_1524083958927_9987"
+                    style="padding-top: 20px;">
                     <div class="sqs-block-content" id="yui_3_17_2_1_1534259152465_183">
-                        <div class="sqs-block-button-container--center" data-alignment="center" data-button-size="medium" id="yui_3_17_2_1_1534259152465_182">
-                            <a href="mailto:R2A@bfaglobal.com" class="sqs-block-button-element--medium sqs-block-button-element" data-initialized="true">Contact
+                        <div class="sqs-block-button-container--center" data-alignment="center" data-button-size="medium"
+                            id="yui_3_17_2_1_1534259152465_182">
+                            <a href="mailto:R2A@bfaglobal.com" class="sqs-block-button-element--medium sqs-block-button-element"
+                                data-initialized="true">Contact
                                 Us
                             </a>
                         </div>
@@ -176,9 +180,12 @@
             <hr>
         </div>
     </div>
-    <p>By using this resource, you understand that R<sup>2</sup>A is not endorsing any of the vendors listed below, and bears
-        no responsibility for any subsequent contact, conversation, transfer of information, procurement, or legal contracting.
-        The tool is intended as a reference for regulators and financial authorities seeking information on potential vendors
+    <p>By using this resource, you understand that R<sup>2</sup>A is not endorsing any of the vendors listed below, and
+        bears
+        no responsibility for any subsequent contact, conversation, transfer of information, procurement, or legal
+        contracting.
+        The tool is intended as a reference for regulators and financial authorities seeking information on potential
+        vendors
         for technology that can aid in the creation of RegTech solutions.</p>
 </div>
 
@@ -233,6 +240,7 @@
 
     $(".vendordb").addClass("active")
 
+    var filterGroups = ['placeholder', 'categories', 'useCases', 'tech', 'locations' ]
     var allVendors = [];
     var allCategories = [];
     var allUseCases = [];
@@ -279,13 +287,13 @@
                 key = findFilterKeyForValue(filterOptions, selected)
                 removeAllFilters()
                 customGA('send', 'event', 'Vendor Search: ' + key, 'remove', selected);
-                addFilter(key, selected, updateUI)           
+                addFilter(key, selected, updateUI)
             });
 
         updateUI()
 
         setTimeout(() => {
-            UIkit.accordion('#filters').toggle(1, true);
+            unfoldFilterGroup('categories')
         }, 1000)
 
         applyFiltersInURL()
@@ -358,6 +366,10 @@
                 })
             }
 
+            if (vendor.url && !vendor.url.startsWith('http')) {
+                vendor.url = 'http://' + vendor.url
+            }
+
             const techPropName = 'technology'
             if (techPropName in vendor) {
                 vendor.technologyIds = vendor[techPropName].split(',')
@@ -386,16 +398,16 @@
 
     }
 
-    function propertiesForIDs(ids, array, property){
+    function propertiesForIDs(ids, array, property) {
         return ids.reduce((acc, id) => {
-                    foundObject = objectWithValue(id, array)
-                    foundValue = undefined
-                    if (foundObject && property in foundObject){
-                        foundValue = objectWithValue(id, array)[property].trim()
-                        acc.push(foundValue)
-                    }
-                    return acc
-                },[])
+            foundObject = objectWithValue(id, array)
+            foundValue = undefined
+            if (foundObject && property in foundObject) {
+                foundValue = objectWithValue(id, array)[property].trim()
+                acc.push(foundValue)
+            }
+            return acc
+        }, [])
     }
     // UI Updates 
     function updateUI() {
@@ -469,7 +481,6 @@
             mouseover: accordianMouseoverForFilterType(key),
             mouseout: event => { $('.badge-count').remove(); $('.use-case-tooltip').remove(); },
             emptyText: "All options selected",
-
         }
     }
 
@@ -479,6 +490,18 @@
             value = event.target.innerText
             customGA('send', 'event', 'Vendor Filter: ' + filterType, 'add', value);
             addFilter(filterType, value, updateUI)
+            unfoldFilterGroup(filterType, true)
+        }
+    }
+
+    function unfoldFilterGroup(groupName, next) {
+        console.log("groupName", groupName)
+        index = filterGroups.indexOf(groupName)
+        if (index != -1) {
+            if (next) { index += 1 }
+            if (index < filterGroups.length) {
+                UIkit.accordion('#filters').toggle(index, true);
+            }
         }
     }
 
@@ -526,7 +549,7 @@
 
         content += vendor.url ? `
                 <p><span><i class="fa fa-external-link-square-alt m-r-sm"></i><strong>Website: </strong> 
-                    <span class="vendor-modal-url"><a target="_blank" href="http://` + vendor.url + `">` + vendor.url + `</a></span>
+                    <span class="vendor-modal-url"><a target="_blank" href="` + vendor.url + `">` + vendor.url + `</a></span>
                 </span></p>` : ''
 
         content += `

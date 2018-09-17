@@ -15,6 +15,14 @@
 .map-legend {
     line-height: 18px;
     color: #555;
+    display:flex;
+    flex-direction: column;
+}
+
+.map-legend-item {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: nowrap
 }
 
 .map-legend i {

@@ -48,7 +48,23 @@
     .fa-exclamation-triangle {
         font-size: 4em;
         color: #2C9385;
+    }
 
+    .autocomplete {
+        margin: 0 24px;
+        margin-bottom: 24px;
+    }
+
+    .footer > p {
+        text-align: center;
+    } 
+
+    a {
+        color: #2C9385;
+    }
+
+    .sqs-block-horizontalrule {
+        margin-top: 60px;
     }
 </style>
 
@@ -61,14 +77,16 @@
         <div class="sqs-block-content" id="yui_3_17_2_1_1534208712486_120">
             <div class="image-block-outer-wrapper layout-caption-hidden design-layout-inline   " id="yui_3_17_2_1_1534208712486_119">
                 <div class="intrinsic" style="max-width:2500.0px;" id="yui_3_17_2_1_1534208712486_118">
-                    <div style="padding-bottom: 0.8%; overflow: hidden;" class="image-block-wrapper   has-aspect-ratio" data-description="" id="yui_3_17_2_1_1534208712486_117">
+                    <div style="padding-bottom: 0.8%; overflow: hidden;" class="image-block-wrapper   has-aspect-ratio"
+                        data-description="" id="yui_3_17_2_1_1534208712486_117">
                         <noscript>
                             <img src="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/" />
                         </noscript>
                         <img class="thumb-image loaded" data-src="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/"
                             data-image="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/"
-                            data-image-dimensions="2500x20" data-image-focal-point="0.5,0.5" data-load="false" data-image-id="58ae0a57be659483ad503888"
-                            data-type="image" data-position-mode="standard" src="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/?format=1000w"
+                            data-image-dimensions="2500x20" data-image-focal-point="0.5,0.5" data-load="false"
+                            data-image-id="58ae0a57be659483ad503888" data-type="image" data-position-mode="standard"
+                            src="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/?format=1000w"
                             data-image-resolution="1000w" style="left: -2.30126%; top: 0%; width: 104.603%; height: 100%; position: absolute; noWrap: true;">
                     </div>
                 </div>
@@ -76,7 +94,8 @@
         </div>
     </div>
 
-    <p>This map will be updated to reflect RegTech solutions around the world. Don't see your country's solution listed?
+    <p>This map will be updated to reflect RegTech solutions around the world. Don't see your country's solution
+        listed?
         Contact us at
         <a href="mailto:R2A@bfaglobal.com">R2A@bfaglobal.com</a>.</p>
 </div>
@@ -97,7 +116,11 @@
     <div class="row sqs-row">
         <div class="col sqs-col-4 accordian-selections">
 
-            <ul id="filters" uk-accordion="multiple: false">
+            <div class="autocomplete">
+                <input id="search-box" type="search" class="search-input dark-border" value="" placeholder="Search">
+            </div>
+
+            <ul id="filters" uk-accordion="multiple: true">
                 <li>
                     <a class="uk-accordion-title" href="#">
                         Use Cases
@@ -135,25 +158,12 @@
                 <div id="map"></div>
             </div>
 
-            <div class="row sqs-row" style="margin-bottom: 24px">
-                <div class="col sqs-col-4">
-                    <div class="reset-filters dark-border dark-button">Reset Filters</div>
-                    <span style="display:inline-block;">&nbsp;</span>
-                </div>
-                <div class="col sqs-col-4">
-                    <div class="autocomplete">
-                        <input id="search-box" type="search" class="search-input dark-border" value="" placeholder="Search">
-                    </div>
-                </div>
-            </div>
-
             <div id="selected-filter" class="row sqs-row" style="margin-bottom: 24px"> </div>
 
             <div class="row sqs-row">
                 <div class="col sqs-col-6">
-                    <div class="instruction-text">
-                        <span>Click on an agency below to explore solutions.</span>
-                    </div>
+                    <div class="reset-filters dark-border dark-button">Reset Filters</div>
+                    <span style="display:inline-block;">&nbsp;</span>
                 </div>
                 <div class="col sqs-col-2">
                     <div class="solutions-number-container">
@@ -166,6 +176,17 @@
 
         </div>
     </div>
+
+    <div class="footer">
+        <div class="sqs-block horizontalrule-block sqs-block-horizontalrule" data-block-type="47" id="block-yui_3_17_2_17_1485376301511_24615">
+            <div class="sqs-block-content">
+                <hr>
+            </div>
+        </div>
+        <p>Maps provided by <a href="http://leafletjs.com/">Leaflet</a> and © <a href="https://openstreetmap.org">OpenStreetMap</a>
+            contributors</p>
+    </div>
+
 
 </div>
 
@@ -192,6 +213,7 @@
 
 
     var categories = ['Exploratory', 'Developmental', 'Operational']
+    var filterGroups = ['useCases', 'tech', 'status', 'locations']
     var allCountryShapes = []
 
     var allDeployments = [];
@@ -248,10 +270,10 @@
         containerElementId: 'map',
         mapId: 'mapid',
         osmUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        attributionControl: false,
         zoomSnap: 0.05,
         minZoom: 1,
-        maxZoom: 6,
+        maxZoom: 7,
         mapStyle: 'margin:0px 0px 10px 0px;',
         getColor: getColor,
         getStyle: getStyle,
@@ -265,7 +287,7 @@
             var country = e.target.feature.properties.country_name
             if (selectedFilters.locations.indexOf(country) === -1) {
                 selectedFilters.locations = []
-                customGA('send', 'event', 'Solution Filter: ' + 'locations', 'add', filter);
+                customGA('send', 'event', 'Solution Filter: ' + 'locations', 'add', country);
                 addFilter('locations', country, updateUI)
             }
         }
@@ -308,6 +330,7 @@
                 removeAllFilters()
                 customGA('send', 'event', 'Solution Search: ' + key, 'remove', selected);
                 addFilter(key, selected, updateUI)
+                unfoldFilterGroup(key)
             });
 
         updateUI()
@@ -360,9 +383,7 @@
                 emptyText: "There are no solutions available with the selected filters.<br />Review current filters on the left-hand side. ",
                 idMap: (el) => { return el.key },
                 tileContent: (el) => {
-                    return `<object class="tile-image" data="./static/images/agency-icons/` + el.key + `.png" type="image/png">
-                            <img class="tile-image" src="` + el.values[0]["Image"] + `" />
-                        </object>`
+                    return `<img class="tile-image" src="` + el.values[0]["Image"] + `" />`
                 },
                 tileSelected: (id) => {
                     displayDeployment(id)
@@ -412,6 +433,20 @@
             filterValue = event.currentTarget.innerText
             customGA('send', 'event', 'Solution Filter: ' + filterType, 'add', filterValue);
             addFilter(filterType, filterValue, updateUI)
+            unfoldFilterGroup(filterType, true);
+        }
+    }
+
+    function unfoldFilterGroup(groupName, next) {
+        console.log("groupName", groupName)
+
+        index = filterGroups.indexOf(groupName)
+        if (index != -1) {
+            if (next) { index += 1 }
+            if (index < filterGroups.length) {
+                console.log("index", index)
+                UIkit.accordion('#filters').toggle(index, true);
+            }
         }
     }
 
@@ -600,9 +635,7 @@
 
         content = `
             <div class="sqs-row vendor-modal-logo"> 
-                <object class="vendor-modal-logo-image" data="./static/images/agency-icons/`+ deploymentId + `.png" type="image/png">
                     <img src="`+ deployments[0].Image + `" class="vendor-modal-logo-image"> 
-                </object>
             </div>
             <br>
             <p><span><strong>Region:</strong> ` + deployments[0].Region + `</span></p>
