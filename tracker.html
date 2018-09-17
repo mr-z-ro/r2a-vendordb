@@ -438,13 +438,10 @@
     }
 
     function unfoldFilterGroup(groupName, next) {
-        console.log("groupName", groupName)
-
         index = filterGroups.indexOf(groupName)
         if (index != -1) {
             if (next) { index += 1 }
             if (index < filterGroups.length) {
-                console.log("index", index)
                 UIkit.accordion('#filters').toggle(index, true);
             }
         }
