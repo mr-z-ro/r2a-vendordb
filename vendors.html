@@ -77,42 +77,33 @@
             </div>
 
             <ul id="filters" uk-accordion="multiple: true">
-                <!-- Why does this prevent opening mail? -->
-                <li style="display:none;">
-                    <a class="uk-accordion-title" href="#">
-                        Category
-                        <i class="fa fa-industry m-l-sm"></i>
-                    </a>
-                    <div id='category-choices' class="uk-accordion-content"> </div>
-                </li>
-
-
+      
                 <li style="margin-top:0px;">
-                    <a class="uk-accordion-title" href="#">
+                    <span class="uk-accordion-title" >
                         Category
                         <i class="fa fa-industry m-l-sm"></i>
-                    </a>
+                    </span>
                     <div id='categories-choices' class="uk-accordion-content"> </div>
                 </li>
                 <li>
-                    <a class="uk-accordion-title" href="#">
+                    <span class="uk-accordion-title" >
                         Use Cases
                         <i class="fa fa-list m-l-sm"></i>
-                    </a>
+                    </span>
                     <div id='useCases-choices' class="uk-accordion-content"> </div>
                 </li>
                 <li>
-                    <a class="uk-accordion-title" href="#">
+                    <span class="uk-accordion-title" >
                         Technology
                         <i class="fa fa-cogs m-l-sm"></i>
-                    </a>
+                    </span>
                     <div id='tech-choices' class="uk-accordion-content"> </div>
                 </li>
                 <li>
-                    <a class="uk-accordion-title" href="#">
+                    <span class="uk-accordion-title" >
                         Location Availability
                         <i class="fa fa-map m-l-sm"></i>
-                    </a>
+                    </span>
                     <div id='locations-choices' class="uk-accordion-content"> </div>
                 </li>
             </ul>
@@ -240,7 +231,7 @@
 
     $(".vendordb").addClass("active")
 
-    var filterGroups = ['placeholder', 'categories', 'useCases', 'tech', 'locations' ]
+    var filterGroups = ['categories', 'useCases', 'tech', 'locations' ]
     var allVendors = [];
     var allCategories = [];
     var allUseCases = [];
