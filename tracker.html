@@ -122,31 +122,31 @@
 
             <ul id="filters" uk-accordion="multiple: true">
                 <li>
-                    <a class="uk-accordion-title" href="#">
+                    <span class="uk-accordion-title">
                         Use Cases
                         <i class="fa fa-list m-l-sm"></i>
-                    </a>
+                    </span>
                     <div id='useCases-choices' class="uk-accordion-content"> </div>
                 </li>
                 <li>
-                    <a class="uk-accordion-title" href="#">
+                    <span class="uk-accordion-title">
                         Technology
                         <i class="fa fa-cogs m-l-sm"></i>
-                    </a>
+                    </span>
                     <div id='tech-choices' class="uk-accordion-content"> </div>
                 </li>
                 <li>
-                    <a class="uk-accordion-title" href="#">
+                    <span class="uk-accordion-title">
                         Status
                         <i class="fa fa-check-circle m-l-sm"></i>
-                    </a>
+                    </span>
                     <div id='status-choices' class="uk-accordion-content"> </div>
                 </li>
                 <li>
-                    <a class="uk-accordion-title" href="#">
+                    <span class="uk-accordion-title">
                         Location
                         <i class="fa fa-map m-l-sm"></i>
-                    </a>
+                    </span>
                     <div id='locations-choices' class="uk-accordion-content"> </div>
                 </li>
             </ul>
@@ -336,7 +336,7 @@
         updateUI()
 
         setTimeout(() => {
-            UIkit.accordion('#filters').toggle(0, true);
+            unfoldFilterGroup('useCases')
         }, 1000)
     })
         .catch(error => {
@@ -442,7 +442,8 @@
         if (index != -1) {
             if (next) { index += 1 }
             if (index < filterGroups.length) {
-                UIkit.accordion('#filters').toggle(index, true);
+                accordion = UIkit.accordion('#filters')
+                accordion.toggle(index, true);
             }
         }
     }
