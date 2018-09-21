@@ -33,6 +33,7 @@
         display: none;
     }
 
+
 </style>
 
 <div class="header">
@@ -62,9 +63,7 @@
         </div>
     </div>
 
-    <p>Welcome to the RegTech/SupTech vendor database! Take a closer look at the companies by clicking on one or more
-        of
-        the filter tabs below. You can start with any of the filter tabs. </p>
+    <p>Welcome to the RegTech/SupTech vendor database! Find a company that provides a solution for your use case by clicking on the filters to the left, or explore the companies below. </p>
 
 </div>
 
@@ -457,6 +456,28 @@
 
         availableCategoryFilters = undefined
         availableUseCaseFilters = undefined
+
+        // Make sure parent category for use case is selected. 
+        if (selectedFilters.useCases.length >= 1){
+            useCase = objectWithValue(selectedFilters.useCases[0], allUseCases, 'name')
+            if (useCase){
+                allCategories.forEach(category => {
+                    categoryUseCaseIDs = category.objectives.split(',').map(e => +e)
+                    if (categoryUseCaseIDs.indexOf(+useCase.id) !== -1){
+                        console.log("Selected Categories", selectedFilters.categories)
+                        console.log("Matched Cateogry", categoryUseCaseIDs, useCase.id, category)
+                        selectedFilters.categories = []
+                        addFilter("categories", category.name)
+                        setTimeout(()=>{
+                            unfoldFilterGroup('categories')
+                        },10)
+                    }
+                })
+                
+            }
+            console.log("Selected Use Case", selectedFilters.useCases[0], useCase)
+
+        }
         if (selectedFilters.categories.length >= 1) {
             availableCategoryFilters = []
             category = objectWithValue(selectedFilters.categories[0], allCategories, 'name')
@@ -495,24 +516,32 @@
             $('.badge-count').remove()
             value = event.target.innerText
             customGA('send', 'event', 'Vendor Filter: ' + filterType, 'add', value);
+            console.log(filterType)
             addFilter(filterType, value, updateUI)
             unfoldFilterGroup(filterType, true)
         }
     }
 
     function unfoldFilterGroup(groupName, next) {
-        console.log("groupName", groupName)
         index = filterGroups.indexOf(groupName)
         if (index != -1) {
             if (next) { index += 1 }
-            if (index < filterGroups.length) {
+            if (index < filterGroups.length && filterGroupIsClosed(index)) {
                 UIkit.accordion('#filters').toggle(index, true);
             }
         }
     }
 
+    function filterGroupIsClosed(index){
+        var attr = $('ul.uk-accordion>li:nth-child('+ (index+1) + ")>div").attr('hidden')
+        return typeof attr !== typeof undefined && attr !== false
+    }
+
     function accordianDeselectionForFilterType(filterType) {
         return (event) => {
+            if(filterType === "categories"){
+                selectedFilters.useCases = []
+            }
             $('.badge-count').remove()
             removeFilter(event.currentTarget.innerText, updateUI)
         }

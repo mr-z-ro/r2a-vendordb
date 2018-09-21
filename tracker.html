@@ -441,12 +441,17 @@
         index = filterGroups.indexOf(groupName)
         if (index != -1) {
             if (next) { index += 1 }
-            if (index < filterGroups.length) {
-                accordion = UIkit.accordion('#filters')
-                accordion.toggle(index, true);
+            if (index < filterGroups.length && filterGroupIsClosed(index)) {
+                UIkit.accordion('#filters').toggle(index, true);
             }
         }
     }
+
+    function filterGroupIsClosed(index) {
+        var attr = $('ul.uk-accordion>li:nth-child(' + (index + 1) + ")>div").attr('hidden')
+        return typeof attr !== typeof undefined && attr !== false
+    }
+
 
     function accordianDeselectionForFilterType(filterType) {
         return (event) => {
