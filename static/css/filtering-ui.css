@@ -8,16 +8,16 @@ body {
 .content {
     max-width: 1500px;
 	margin: auto;
-	background-color: #f3f3f3;
+	/* background-color: #f3f3f3; */
 	border-radius: 10px 10px 0px 0px;
     margin-bottom: 40px;
     padding-bottom: 20px;
 }
 
 .vendors-header {
-    background-color: #f3f3f3;
+    /* background-color: #f3f3f3; */
 	color: #1f1f1f;
-	font-size: 1.5em;
+	font-size: 01em;
     padding: 10px 10px 10px 30px;
     font-weight: 600;
     letter-spacing: 1.5px;
@@ -26,7 +26,7 @@ body {
 }
 
 .filtering-column-content {
-	background-color: #f3f3f3;
+	/* background-color: #f3f3f3; */
 	padding: 10px;
 }
 
@@ -81,7 +81,7 @@ body {
 }
 
 .choice:hover {
-    background-color: #f3f3f3;
+    /* background-color: #f3f3f3; */
 }
 
 .choice > .fa-info-circle, .choice > span .fa-times {
@@ -168,7 +168,7 @@ body {
 /* chatbot */
 #chatbot {
 	position: fixed;
-	bottom: -10px;
+	bottom: -0px;
 	right: 20px;
 	z-index: 9999;
     background: #ebebeb;
@@ -184,13 +184,13 @@ body {
 	line-height: 1.4em;
     font-weight: 400;
     background: #622269;
-    background: #00a69c;
+    background: #1B988A;
     color: white;
     border-radius: 16px 16px 0 0;
 }
 
 .chatbot-title {
-	display: none;
+	/* display: none; */
 	cursor: pointer;
 }
 

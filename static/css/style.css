@@ -1,0 +1,25 @@
+.fa-times {
+    color: #20988A;
+}
+
+.choice-selected > span .fa-times {
+    font-size: 1em;
+}
+
+#page {
+    max-width: 956px;
+    padding: 96px 32px; 
+}
+
+.header>p {
+    max-width: 932px;
+    margin-left: 24px;
+}
+
+h1 {
+    margin-top: 0px;
+}
+
+p>em{
+    color:rgba(255,255,255,.4);
+}

@@ -1,0 +1,898 @@
+<!-- <link rel="stylesheet" href="static/css/filtering-ui.css"> -->
+<link rel="stylesheet" href="static/css/site.css">
+<link rel="stylesheet" href="static/js/leaflet/leaflet.css" />
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script src="static/js/leaflet/leaflet.js"></script>
+<script src="static/js/d3/d3.min.js"></script>
+<link rel="stylesheet" href="static/css/autocomplete.css">
+
+
+<style>
+    .header>p>a {
+        color: #2C9385;
+    }
+
+    #mapid {
+        height: 400px;
+    }
+
+    .loading {
+        text-align: center;
+        margin: 125px 0px;
+    }
+
+    .loading>i {
+        font-size: 40px;
+        color: #2C9385;
+    }
+
+    .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+    }
+
+    .info h4 {
+        margin: 0 0 5px;
+        color: #777;
+    }
+
+    .legend {
+        line-height: 18px;
+        color: #555;
+    }
+
+    .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+    }
+
+    .vendor-image {
+        /* display: block; */
+        max-width: calc(100% - 10px);
+        max-height: calc(100% - 10px);
+        width: auto;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        vertical-align: middle;
+    }
+
+    .new-vendor {
+        text-align: center;
+        vertical-align: middle;
+        padding: 5px;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        width: calc(33.3% - 20px);
+        margin: 5px 5px;
+    }
+
+    #deployment-list {
+        margin: 0px -5px;
+        width: calc(100% + 10px);
+    }
+
+    .uk-accordion-title,
+    .uk-accordion-title:focus,
+    .uk-accordion-title:hover,
+    .uk-accordion-title::after {
+        font-size: 1.2em;
+        font-weight: 400;
+        color: #00a69c;
+        fill: #00a69c;
+    }
+
+    a.uk-accordion-title>i {
+        margin: 0px 10px;
+    }
+
+    /* ul>li {
+        border-color: #0a2d37;
+        border-width: 2px;
+        border-style: solid;
+        padding: 20px;
+    } */
+    .filter {
+        padding: 2px 8px;
+        margin: 5px 5px 0px 0px;
+        display: inline-block;
+        transition: all .1s ease-in;
+    }
+
+    .filter:hover {
+        background-color: #0a2d37;
+        color: #ffffff;
+        transition: all .1s ease-in;
+    }
+
+    .filter:active {
+        background-color: #ffffff;
+        color: #0a2d37;
+        transition: all .0s ease-in;
+    }
+
+    .dark-border {
+        border-color: #0a2d37;
+        color: #0a2d37;
+        border-width: 2px;
+        border-style: solid;
+    }
+
+    .reset-filters {
+        background-color: #0a2d37;
+        color: #ffffff;
+        padding: 10px;
+        margin: 0px 5px 10px 0px;
+        display: inline-block;
+        transition: all .1s ease-in;
+    }
+
+    .reset-filters:hover {
+        background-color: #ffffff;
+        color: #0a2d37;
+        transition: all .1s ease-in;
+    }
+
+    .reset-filters:active {
+        background-color: #0a2d37;
+        color: #ffffff;
+        transition: all .0s ease-in;
+    }
+
+    .filter>.fa-times {
+        color: #0a2d37;
+        margin-left: 5px;
+        transition: all .1s ease-in;
+    }
+
+    .filter:hover>.fa-times {
+        color: #ffffff;
+        transition: all .1s ease-in;
+    }
+
+    .filter:active>.fa-times {
+        color: #0a2d37;
+        transition: all .0s ease-in;
+    }
+
+    .filtering-column>ul {
+        margin: 0px 10px 0px 24px;
+    }
+
+    ul>li>div {
+        margin-left: 10px;
+    }
+
+    .uk-list>li {
+        font-size: .875rem;
+        line-height: 1.6em;
+        padding: 0 5px;
+        min-height: 24px;
+        position: relative;
+        padding: 10px 35px 10px 10px;
+        display: block;
+        margin: 0px !important;
+    }
+
+    .uk-list>li:hover {
+        cursor: pointer;
+        background-color: #e9e9e9;
+    }
+
+    .uk-badge {
+        position: absolute;
+        background-color: #00a69c;
+        margin: auto 10px;
+        line-height: 1.6em;
+        right: 0%;
+        top: 50%;
+        transform: translateY(-50%);
+
+    }
+
+    .sqs-layout>.sqs-row {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .jBox-content>p {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .uk-accordion-content {
+        margin-top: 10px;
+    }
+
+    .solution {
+        margin-left: 20px;
+    }
+
+    .solution>p {
+        margin: 5px 0px;
+    }
+
+    .search-input {
+        color: #0a2d37;
+        transition: background-image .2s ease-out;
+        padding: 12px 12px 12px 45px;
+        background: url(/static/images/icon-search.png) no-repeat 15px 50%;
+        width: calc(100% - 60px);
+        min-height: 20px;
+        display: block;
+        outline: 0;
+        box-sizing: border-box;
+    }
+
+    .instruction-text {
+        margin: 10px 0px;
+    }
+
+    .solutions-number-container {
+        text-align: right;
+        margin: 10px 0px;
+    }
+</style>
+
+
+
+<div class="header">
+    <h1>RegTech<sup>2</sup>/SupTech Solution Tracker</h1>
+
+    <div class="sqs-block image-block sqs-block-image sqs-text-ready" data-block-type="5" id="block-bb71bcf01551221b5acb">
+        <div class="sqs-block-content" id="yui_3_17_2_1_1534208712486_120">
+            <div class="image-block-outer-wrapper layout-caption-hidden design-layout-inline   " id="yui_3_17_2_1_1534208712486_119">
+                <div class="intrinsic" style="max-width:2500.0px;" id="yui_3_17_2_1_1534208712486_118">
+                    <div style="padding-bottom: 0.8%; overflow: hidden;" class="image-block-wrapper   has-aspect-ratio" data-description="" id="yui_3_17_2_1_1534208712486_117">
+                        <noscript>
+                            <img src="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/" />
+                        </noscript>
+                        <img class="thumb-image loaded" data-src="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/"
+                            data-image="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/"
+                            data-image-dimensions="2500x20" data-image-focal-point="0.5,0.5" data-load="false" data-image-id="58ae0a57be659483ad503888"
+                            data-type="image" data-position-mode="standard" src="https://static1.squarespace.com/static/583ddaade4fcb5082fec58f4/t/58ae0a57be659483ad503888/1481310406265/?format=1000w"
+                            data-image-resolution="1000w" style="left: -2.30126%; top: 0%; width: 104.603%; height: 100%; position: absolute; noWrap: true;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p>This map will be updated to reflect RegTech solutions around the world. Don't see your country's solution listed?
+        Contact us at
+        <a href="mailto:R2A@bfaglobal.com">R2A@bfaglobal.com</a>.</p>
+</div>
+
+<div class="loading">
+    <h4>Loading...</h4>
+    <i class="fas fa-circle-notch fa-spin"></i>
+</div>
+
+
+<div id="solutions-tracker" class="sqs-layout sqs-grid-12 columns-12 content" style="display:none; margin-top: 30px;">
+    <div class="row sqs-row">
+        <div class="col sqs-col-4 filtering-column">
+
+            <ul id="filters" uk-accordion="multiple: false">
+                <li>
+                    <a class="uk-accordion-title" href="#">
+                        Use Cases
+                        <i class="fa fa-list m-l-sm"></i>
+                    </a>
+                    <div id='useCases-choices' class="uk-accordion-content"> </div>
+                </li>
+                <li>
+                    <a class="uk-accordion-title" href="#">
+                        Technology
+                        <i class="fa fa-cogs m-l-sm"></i>
+                    </a>
+                    <div id='tech-choices' class="uk-accordion-content"> </div>
+                </li>
+                <li>
+                    <a class="uk-accordion-title" href="#">
+                        Status
+                        <i class="fa fa-map m-l-sm"></i>
+                    </a>
+                    <div id='status-choices' class="uk-accordion-content"> </div>
+                </li>
+                <li>
+                    <a class="uk-accordion-title" href="#">
+                        Location
+                        <i class="fa fa-map m-l-sm"></i>
+                    </a>
+                    <div id='locations-choices' class="uk-accordion-content"> </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col sqs-col-8">
+
+            <div class="row sqs-row">
+                <div class="col sqs-col-8">
+                    <div id="map">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row sqs-row" style="margin-bottom: 10px">
+                <div class="col sqs-col-4">
+                    <div class="reset-filters dark-border">Reset Filters</div>
+                    <span style="display:inline-block;">&nbsp;</span>
+                </div>
+                <div class="col sqs-col-4">
+                    <div class="autocomplete">
+                        <input id="search-box" type="search" class="search-input dark-border" value="" placeholder="Search">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row sqs-row" style="margin-bottom: 10px">
+                <div class="col sqs-col-8">
+                    <div id="selected-filter"> </div>
+                </div>
+            </div>
+
+            <div class="row sqs-row">
+                <div class="col sqs-col-6">
+                    <div class="instruction-text">
+                        <span>Click on an agency below to explore solutions.</span>
+                    </div>
+                </div>
+                <div class="col sqs-col-2">
+                    <div class="solutions-number-container">
+                        <span id="solutions-number"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="row sqs-row"> -->
+            <div id="deployment-list" class="col sqs-col-8">
+            </div>
+            <!-- </div> -->
+
+        </div>
+    </div>
+
+</div>
+
+
+<script src="./static/js/map-utils.js"></script>
+<script src="./static/js/data-formatter.js"></script>
+<script src="./static/js/accordian.js"></script>
+<script src="./static/js/autocomplete.js"></script>
+<script>
+
+    var map
+    var geojsonLayer
+    var categories = ['Exploratory', 'Developmental', 'Operational']
+    var allCountryShapes = []
+
+    var allDeployments = [];
+    var groupedSolutions = {}
+
+    var selectedDeployments = [];
+
+    var filterOptions = {
+        useCases: [],
+        tech: [],
+        status: [],
+        locations: [],
+    }
+
+    var selectedFilters = {
+        useCases: [],
+        tech: [],
+        status: [],
+        locations: [],
+    }
+
+    var mapConfig = {
+        containerElementId: 'map',
+        mapId: 'mapid',
+        osmUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        zoomSnap: 0.05,
+        minZoom: 1,
+        maxZoom: 6,
+        mapStyle: 'margin:0px 0px 10px 0px;',
+    }
+
+    var modal
+
+    Promise.all([
+        d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTYPKjQhh6VuHPB0fezf1fOH4s90BSbrVNjYP5QHGAwtJTeYmB1vGxrZQHKtkgHlNxAsdITJu5g5J6p/pub?gid=553555379&single=true&output=csv"),
+        d3.json("./static/js/leaflet/countries.json")
+    ]).then((data) => {
+        
+
+        // Format Data
+        formatData(data)
+
+        // Display Formatted Data
+        map = createMap(mapConfig)
+
+        // Legend
+        var legend = L.control({ position: 'topright' });
+
+        legend.onAdd = function (map) {
+            div = L.DomUtil.create('div', 'info legend')
+            labels = [];
+
+            for (var i = 0; i < categories.length; i++) {
+                div.innerHTML += '<i style="background:' + getColor(i) + '"></i> ' + categories[i] + '<br>';
+            }
+            return div;
+        };
+
+        legend.addTo(map);
+        info.addTo(map);
+
+        map.invalidateSize()
+
+        // Hide Loading & Show Tracker
+        $(".loading").css("display", "none")
+        $("#solutions-tracker").css("display", "block")
+
+        // Set the UI
+        updateAutocompleteOptions()
+        updateUI()
+        setTimeout(() => {
+            UIkit.accordion('#filters').toggle(0, true);
+        }, 1000)
+    }).catch(error => {
+        if (error) {
+            console.error("Caught Error:", error)
+        }  
+    })
+
+    function updateAutocompleteOptions() {
+        options = Object.keys(filterOptions).reduce((acc, filterKey) => {
+            acc = acc.concat(filterOptions[filterKey])
+            return acc
+        }, [])
+
+        console.log("Autocorrect Options:", options)
+        autocomplete(document.getElementById("search-box"), options.sort(), selected => {
+            $("#search-box").val("")
+            key = findFilterKeyForValue(selected)
+            resetFilterData()
+            addFilter(key, selected)
+        });
+    }
+
+    function updateTiles(deploymentsToShow) {
+
+        var deployments = d3.nest()
+            .key(function (d) { return d.Agency; })
+            .entries(deploymentsToShow);
+
+        var targetElement = $("#deployment-list");
+        targetElement.empty();
+        if (!deployments.length) {
+            console.log("no deployments to show");
+            var noVendorsMessage = '<p class="no-vendors-message">There are no solutions available with the selected filters.<br />\
+        Review current filters on the left-hand side.</p>';
+            targetElement.append(noVendorsMessage);
+        }
+
+        deployments.forEach(deployment => {
+            targetElement.append($(`
+                <div class="new-vendor" id="` + deployment.key + `">
+                    <object class="vendor-image" data="./static/images/agency-icons/`+ deployment.key + `.png" type="image/png">
+                        <img class="vendor-image" src="` + deployment.values[0]["Image"] + `" />
+                    </object>
+                </div>`
+            ));
+        })
+
+        $('.new-vendor').click(event => {
+            displayDeployment(event.currentTarget.id)
+        })
+    }
+
+    function findFilterKeyForValue(value) {
+        found = undefined
+        Object.keys(filterOptions).forEach(filterKey => {
+            var index = filterOptions[filterKey].indexOf(value.trim())
+            if (index !== -1) {
+                found = filterKey
+            }
+        });
+        return found
+    }
+
+    function addFilter(key, value) {
+        selectedFilters[key].push(value);
+        updateUI()
+    }
+
+    function selectedFilterCount() {
+        filterCount = 0
+        Object.keys(selectedFilters).forEach(filterKey => {
+            filterCount += selectedFilters[filterKey].length
+        })
+        return filterCount
+    }
+
+
+
+    function removeAllFilters() {
+        resetFilterData()
+        updateUI()
+    }
+
+    function resetFilterData() {
+        Object.keys(selectedFilters).forEach(filterKey => {
+            selectedFilters[filterKey] = []
+        })
+    }
+
+    function removeFilter(value) {
+        Object.keys(selectedFilters).forEach(filterKey => {
+            var index = selectedFilters[filterKey].indexOf(value.trim())
+            if (index !== -1) { selectedFilters[filterKey].splice(index, 1) }
+        });
+        updateUI()
+    }
+
+    // UI Updates 
+    function updateUI() {
+        selectedDeployments = deploymentsMatchingFilters(allDeployments, selectedFilters)
+        $('#solutions-number').html(selectedDeployments.length + ' solution' + (selectedDeployments.length !== 1 ? 's' : ''))
+
+        updateFilterBarList()
+        updateAccordianFilters()
+        updateTiles(selectedDeployments)
+        updateMap()
+    }
+
+    function updateFilterBarList() {
+        $('#selected-filter').empty()
+
+        var filterHTML = ''
+
+        filterCount = selectedFilterCount()
+
+        style = (filterCount ? 'inline-block' : 'none')
+        $(".reset-filters").css('display', style)
+
+        if (filterCount) {
+
+            filterPrefix = 'Filter' + (filterCount !== 1 ? 's' : '') + ': &nbsp;&nbsp;'
+            filterHTML
+
+            Object.keys(selectedFilters).forEach(filterKey => {
+                var filters = selectedFilters[filterKey]
+                console.log(filters);
+                filters.forEach(filter => {
+                    filterHTML += '<div class="filter dark-border">' + filter + ' <i class="fa fa-times" aria-hidden="true"></i></div>'
+                });
+            });
+            filterHTML = filterPrefix + '<div style="display:inline-block;">' + filterHTML +'</div>'
+        }
+
+        $('#selected-filter').html(filterHTML)
+
+        $('.filter').click((event) => {
+            removeFilter(event.currentTarget.innerText)
+        })
+    }
+
+    $('.reset-filters').click(event => {
+        removeAllFilters()
+    })
+
+    function updateMap() {
+        if (geojsonLayer !== undefined) {
+            map.removeLayer(geojsonLayer)
+        }
+
+        mapData = mapFormattedDeployments(selectedDeployments);
+        console.log('mapData', mapData)
+        geojsonLayer = L.geoJson(mapData, {
+            style: countryStyle,
+            onEachFeature: onEachFeature
+        }).addTo(map);
+        map.fitBounds(geojsonLayer.getBounds());
+    }
+
+    function updateAccordianFilters() {
+        displayAccordianValues(filteredFilters('useCases', selectedFilters.useCases), accordianConfigForFilterKey('useCases'))
+        displayAccordianValues(filteredFilters('technology', selectedFilters.tech), accordianConfigForFilterKey('tech'))
+        displayAccordianValues(filteredFilters('Status', selectedFilters.status), accordianConfigForFilterKey('status'))
+        displayAccordianValues(filteredFilters('Country', selectedFilters.locations), accordianConfigForFilterKey('locations'))
+    }
+
+
+    // Data Formatters
+    function filteredFilters(key, selections) {
+        remainingFilters = uniqueProperties(selectedDeployments, key).sort();
+        selections.forEach(filter => {
+            console.log("remainig", remainingFilters)
+            index = remainingFilters.indexOf(filter)
+            if (index !== -1) {
+                console.log("removing", filter)
+                remainingFilters.splice(index, 1)
+            }
+        })
+        return remainingFilters
+    }
+
+    function accordianConfigForFilterKey(key) {
+        return {
+            elementId: '#' + key + '-choices',
+            selected: accordianSelectionForFilterType(key),
+            mouseover: accordianMouseoverForFilterType(key),
+            mouseout: event => { $('.uk-badge').remove() },
+            emptyText: "All options selected"
+        }
+    }
+
+    function accordianSelectionForFilterType(filterType) {
+        return (event) => {
+            $('.uk-badge').remove()
+            addFilter(filterType, event.target.innerText)
+        }
+    }
+
+    function accordianMouseoverForFilterType(filterType) {
+        return (event) => {
+            copiedFilters = jQuery.extend(true, {}, selectedFilters);
+            copiedFilters[filterType].push(event.target.innerText)
+            matched = deploymentsMatchingFilters(selectedDeployments, copiedFilters)
+            $(event.target).append('<span class="uk-badge">' + matched.length + '</span>')
+        }
+    }
+
+    function deploymentsMatchingFilters(deployments, matchFilters) {
+        var matchedDeployments = [];
+
+        deployments.forEach(deployment => {
+            var matchesAllFilters = true;
+            Object.keys(matchFilters).forEach(filterKey => {
+                var filters = matchFilters[filterKey]
+                if (filterKey === 'useCases') {
+                    filters.forEach(filter => {
+                        if (deployment.useCases.indexOf(filter) === -1) {
+                            matchesAllFilters = false
+                        }
+                    })
+                }
+                if (filterKey === 'tech') {
+                    filters.forEach(filter => {
+                        if (deployment.technology.indexOf(filter) === -1) {
+                            matchesAllFilters = false
+                        }
+                    })
+                }
+                if (filterKey === 'status') {
+                    filters.forEach(filter => {
+                        if (filter !== deployment.Status) {
+                            matchesAllFilters = false
+                        }
+                    })
+                }
+                if (filterKey === 'locations') {
+                    filters.forEach(filter => {
+                        if (filter !== deployment.Country) {
+                            matchesAllFilters = false
+                        }
+                    })
+                }
+
+            })
+            if (matchesAllFilters) {
+                matchedDeployments.push(deployment)
+            }
+        })
+
+        return matchedDeployments
+    }
+
+    function formatData(data) {
+        allCountryShapes = data[1]['features']
+        console.log('allCountryShapes', allCountryShapes)
+
+        allDeployments = data[0]
+        allDeployments.forEach((dataEl) => {
+            const useCasePropName = 'Use case'
+            if (useCasePropName in dataEl) {
+                dataEl.useCases = dataEl[useCasePropName].split(';').map(el => {
+                    return el.trim()
+                })
+            }
+            const techPropName = 'Tech'
+            if (techPropName in dataEl) {
+                dataEl.technology = dataEl[techPropName].split(';').map(el => {
+                    return el.trim()
+                })
+            }
+        })
+        console.log('allDeployments', allDeployments)
+
+        var nestedDeployments = d3.nest()
+            .key(function (d) { return d.Agency; })
+            .entries(allDeployments);
+
+        groupedSolutions = nestedDeployments.reduce((acc, element) => {
+            acc[element.key] = element.values
+            return acc
+        }, {})
+
+
+        filterOptions.useCases = uniqueProperties(allDeployments, 'useCases').sort()
+        console.log('filterOptions.useCases', filterOptions.useCases)
+        filterOptions.tech = uniqueProperties(allDeployments, 'technology').sort()
+        console.log('filterOptions.tech', filterOptions.tech)
+        filterOptions.status = uniqueProperties(allDeployments, 'Status').sort()
+        console.log('filterOptions.status', filterOptions.status)
+        filterOptions.locations = uniqueProperties(allDeployments, 'Country').sort()
+        console.log('filterOptions.locations', filterOptions.locations)
+
+    }
+
+    function mapFormattedDeployments(deployments) {
+        return deployments.reduce((acc, deployment) => {
+            deployment.Country = deployment.Country.trim()
+
+            var countryShape = allCountryShapes.filter(shape => {
+                return shape.properties.country_name === deployment.Country |
+                    (shape.properties.alternative_names.indexOf(deployment.Country) !== -1)
+            })[0]
+
+            if (countryShape !== undefined) {
+                var foundShapeDeployment = acc.filter(shapeDeployments => {
+                    return shapeDeployments.properties.country_name === countryShape.properties.country_name
+                })[0]
+                if (foundShapeDeployment !== undefined) {
+                    foundShapeDeployment.properties.deployments.push(deployment)
+                } else {
+                    countryShape.properties.deployments = [deployment];
+                    acc.push(countryShape)
+                }
+            } else { console.warn("Could Not Find Shape for Country", deployment.Country) }
+
+            return acc
+        }, []);
+    }
+
+
+    function getColor(d) {
+        return d >= 2 ? '#1b988a' :
+            d >= 1 ? '#16716a' :
+                '#104949';
+    }
+
+    function highestIndexOfDeplyments(deployments) {
+        var found = -1
+        categories.slice().reverse().forEach((cat, idx) => {
+            if (deployments.filter(e => { return e.Status.trim() === categories[idx] }).length > 0) {
+                found = idx
+            }
+        })
+        return found
+    }
+
+    function countryStyle(feature) {
+        var color = getColor(highestIndexOfDeplyments(feature.properties.deployments))
+        return {
+            fillColor: color,
+            fillOpacity: 0.8,
+            weight: 2,
+            opacity: .8,
+            color: color,
+            // dashArray: 3,
+        };
+    }
+
+    function selectedCountry(e) {
+        var country = e.target.feature.properties.country_name
+        if (selectedFilters.locations.indexOf(country) === -1) {
+            addFilter('locations', country)
+        }
+    }
+
+    function onEachFeature(feature, layer) {
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight,
+            click: selectedCountry
+        });
+    }
+
+
+
+
+    //Hover Over
+
+    var info = L.control({ position: 'bottomleft' });
+
+    info.update = function (props) {
+        style = 'display: ' + ((props !== undefined) ? 'block' : 'none') + ";"
+        this._div.setAttribute('style', style)
+    };
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+        this._div.innerHTML = 'Select to filter by country'
+        this.update();
+        return this._div;
+    };
+
+
+    function highlightFeature(e) {
+        var layer = e.target;
+        var color = getColor(highestIndexOfDeplyments(layer.feature.properties.deployments))
+
+        layer.setStyle({
+            weight: 3,
+            color: color,
+            dashArray: '',
+            fillOpacity: 1.0
+        });
+
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layer.bringToFront();
+        }
+
+        info.update(layer.feature.properties);
+    }
+
+    function resetHighlight(e) {
+        style = countryStyle(e.target.feature)
+        e.target.setStyle(style)
+        info.update();
+    }
+
+
+
+    function displayDeployment(deploymentId) {
+        console.log(groupedSolutions, deploymentId)
+        var deployments = deploymentsMatchingFilters(groupedSolutions[deploymentId], selectedFilters)
+
+        modal = $('.vendor').jBox('Modal', {
+            maxWidth: 600
+        });
+
+        title = `<span class="vendor-modal-title-text">` + deployments[0].Agency + `</span>
+                <i class="fa fa-times vendor-modal-close-times" onclick="modal.close();"></i>`
+
+        content = `
+            <div class="sqs-row vendor-modal-logo"> 
+                <object class="vendor-modal-logo-image" data="./static/images/agency-icons/`+ deploymentId + `.png" type="image/png">
+                    <img src="`+ deployments[0].Image + `" class="vendor-modal-logo-image"> 
+                </object>
+            </div>
+            <br>
+            <p><span><strong>Region:</strong> ` + deployments[0].Region + `</span></p>
+            <p><span><strong>Country:</strong> ` + deployments[0].Country + `</span></p>
+            <p><span><strong>Agency Type:</strong> ` + deployments[0]['Type of Agency'] + `</span></p>
+            <br>`
+
+        content += `<p><span><u><strong style="font-size: 14px; margin-bottom:15px;">Solution` + ((deployments.length > 1) ? `s (` + deployments.length + `)` : '') + `:</strong></u></span></p>  `
+
+        deployments.forEach((deployment, index) => {
+            content += `
+            <div class="solution">
+                <p><span><strong><i class="fa fa-list"></i> &nbsp; Use Cases:</strong> ` + deployment['Use case'] + `</span></p>
+                <p><span><strong><i class="fa fa-check-circle"></i> &nbsp; Status:</strong> ` + deployment.Status + `</span></p>
+                <p><span><strong><i class="fa fa-cogs"></i> &nbsp;Tech:</strong> ` + deployment.Tech + `</span></p>
+                <p><span><strong><i class="fas fa-file-alt" aria-hidden="true"></i> &nbsp;&nbsp; Description:</strong> ` + deployment.Description + `</span></p>
+            </div>
+            `
+            if (index != (deployments.length - 1)) {
+                content += "<br>"
+            }
+        })
+        modal.setTitle(title).setContent(content).open();
+    }
+
+</script>

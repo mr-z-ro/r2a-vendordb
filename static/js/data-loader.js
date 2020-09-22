@@ -56,6 +56,7 @@ function isFilterPresent(step, filter) {
 var vendorsToShow = getVendorsToShow();
 
 $.getJSON("db.json").done(function(json) {
+    console.log(json)
     objectives = json.objectives;
     personas = json.personas;
     technologies = json.technologies;

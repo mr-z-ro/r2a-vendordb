@@ -154,7 +154,7 @@ var CHATSTATE = 'chatbotstate';
 function hideChatbot() {
     $(".chatbot-main").hide(400, function() {
         $(".chatbot-collapse-arrow").removeClass('fa-angle-down').addClass('fa-angle-up');
-        $(".chatbot-title").show();
+        // $(".chatbot-title").show();
     });
     localStorage.setItem(CHATSTATE, MINIMIZED);
 }
@@ -162,7 +162,7 @@ function hideChatbot() {
 function showChatbot() {
     $(".chatbot-main").show(400, function() {
         $(".chatbot-collapse-arrow").addClass('fa-angle-down').removeClass('fa-angle-up');
-        $(".chatbot-title").hide();
+        // $(".chatbot-title").hide();
     });
     localStorage.setItem(CHATSTATE, MAXIMIZED);
 }
@@ -219,7 +219,7 @@ function refreshUI() {
 }
 
 function showNumberOfVendors() {
-    $(".vendors-number").html(": " + parseInt(vendorsToShow.length));
+    $(".vendors-number").html(parseInt(vendorsToShow.length));
 }
 
 function attachTooltipPlugin() {
@@ -240,15 +240,15 @@ function attachTooltipPlugin() {
 
 function attachTooltipFeedback() {
     new jBox('Tooltip', {
-        attach: '.tooltip-left',
+        attach: '.tooltip-bottom',
         preventDefault: true,
         closeOnMouseleave: true,
         addClass: 'custom-tooltip',
         position: {
-            x: 'left',
-            y: 'center'
+            x: 'center',
+            y: 'bottom'
         },
-        outside: 'x',
+        outside: 'y',
         adjustPosition: true,
         adjustTracker: true,
         delayOpen: 200
