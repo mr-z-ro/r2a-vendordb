@@ -296,7 +296,7 @@
     var modal
 
     Promise.all([
-        d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTYPKjQhh6VuHPB0fezf1fOH4s90BSbrVNjYP5QHGAwtJTeYmB1vGxrZQHKtkgHlNxAsdITJu5g5J6p/pub?gid=553555379&single=true&output=csv"),
+        d3.csv("https://bfa-cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vTYPKjQhh6VuHPB0fezf1fOH4s90BSbrVNjYP5QHGAwtJTeYmB1vGxrZQHKtkgHlNxAsdITJu5g5J6p/pub?gid=553555379&single=true&output=csv"),
         d3.json("./static/js/leaflet/countries.json")
     ]).then((data) => {
 
@@ -380,7 +380,7 @@
                 .key(function (d) { return d.Agency; })
                 .entries(selectedDeployments)
             , {
-                emptyText: "There are no solutions available with the selected filters.<br />Review current filters on the left-hand side. ",
+                emptyText: "There are currently no solutions available that match the selected filters.<br />Review current filters on the left-hand side. ",
                 idMap: (el) => { return el.key },
                 tileContent: (el) => {
                     return `<img class="tile-image" src="` + el.values[0]["Image"] + `" />`
